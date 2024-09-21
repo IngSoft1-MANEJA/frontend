@@ -1,0 +1,44 @@
+/* ModalCrearPartida CSS */
+
+.modal-action{
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .boton-crear-partida{
+    justify-content: flex-start;
+    margin-top: 20px;
+  }
+  
+  .crear-partida-form{
+    width: 100%;
+  }
+  
+  label .label-modal-crear-partida{
+    width: 100%;
+  }
+  
+  label .input-modal-crear-partida{
+    width: 100%;
+    text-align: left;
+  }
+  
+  .formButtons{
+    display: flex;
+    justify-content: center;
+  }
+  
+  .submit-crear-partida{
+    margin-top: 20px;
+    width: 160px;
+    text-align: center;
+    justify-content: flex-end;
+  }
+  
+  .message{
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  /* --- */

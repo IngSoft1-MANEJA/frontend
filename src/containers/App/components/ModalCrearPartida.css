@@ -15,30 +15,30 @@
     width: 100%;
   }
   
-  label .label-modal-crear-partida{
+  .label-modal-crear-partida{
     width: 100%;
+    align-items: center;
   }
   
-  label .input-modal-crear-partida{
+  .input-modal-crear-partida{
     width: 100%;
     text-align: left;
   }
   
-  .formButtons{
-    display: flex;
-    justify-content: center;
-  }
-  
   .submit-crear-partida{
+    display: flex;
     margin-top: 20px;
     width: 160px;
-    text-align: center;
-    justify-content: flex-end;
   }
-  
-  .message{
-    margin-top: 20px;
-    text-align: center;
+
+  .error {
+    color: rgba(221, 27, 27, 0.781);
+    padding: 10px;
   }
-  
+
+  .message {
+    color: rgba(19, 214, 45, 0.781);
+    padding: 10px;
+  }  
+
   /* --- */

@@ -1,113 +1,119 @@
 import React from 'react'
 import { useState } from 'react'
-import { redirect } from 'react-router-dom'
+// import { useNavigate } from "react-router";
+import { useForm } from 'react-hook-form'
+import { SuccessAlert } from './SuccessAlert';
 import './ModalCrearPartida.css'
 
 export const ModalCrearPartida = () => {
-    const [nameState, setNameState] = useState("");
-    const [lobbyNameState, setLobbyNameState] = useState("");
-    const [playerAmountState, setPlayerAmountState] = useState("");
+    // const navigate = useNavigate();
+    const [showSuccess, setShowSuccess] = useState(false);
     const [message, setMessage] = useState("");
 
-    const formData = {
-        name: nameState,
-        lobbyName: lobbyNameState,
-        playerAmount: playerAmountState,
-    };
-
-    // handle form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (nameState < 3 || nameState > 20) {
-            setMessage('Player name must be between 3 and 20');
-            return;
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+        reset
+    } = useForm({
+        defaultValues: {
+            playerName: "",
+            lobbyName: "",
+            playerAmount: ""
         }
-        if (lobbyNameState.length < 3 || playerAmountState.length > 20) {
-            setMessage('Lobby name must be between 3 and 20');
-            return;
-        }
-        if (playerAmountState < 2 || playerAmountState > 4) {
-            setMessage('Player amount must be between 2 and 4');
-            return;
-        }
+    });
 
+    const playerNameWatch = watch("playerName");
+    const lobbyNameWatch = watch("lobbyName");
+    const playerAmountWatch = watch("playerAmount");
+
+    const onSubmit = async (e) => {
         try {
           let res = await fetch("https://httpbin.org/post", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
               },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({playerName: playerNameWatch,lobbyName: lobbyNameWatch,playerAmount: playerAmountWatch}),
           });
           let resJson = await res.json();
           if (res.ok) {
-            setNameState("");
-            setLobbyNameState("");
-            setPlayerAmountState("");
             setMessage("Lobby created successfully");
-            console.log(resJson);
-
+            setShowSuccess(true);
+            setTimeout(() => {
+                setShowSuccess(false);
+                console.log(resJson);
+            }, 1000);
             setTimeout(() => {
                 document.getElementById('my_modal_1').close()
+            }, 1000);
+            
+            setTimeout(() => {
                 setMessage('');
-              }, 2000);
-            redirect("/lobby");
-          } else {
-            setMessage("An error occurred while creating the lobby");
+                reset();
+                // navigate("/");
+              }, 1000);
           }
         } catch (err) {
           console.log(err);
-          setMessage("An error occurred while creating the lobby");
         }
     };
 
     // handle closure of modal
     const handleClose = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        setNameState("");
-        setLobbyNameState("");
-        setPlayerAmountState("");
-        setMessage("");
+        reset();
         document.getElementById('my_modal_1').close();
     }
 
     return (
         <div>
-            <button className="boton-crear-partida btn btn-lg" onClick={()=>document.getElementById('my_modal_1').showModal()}>Crear Partida</button>
+            {showSuccess ? <SuccessAlert message={message}/> : null}
+            <button className="boton-crear-partida btn btn-lg" onClick={()=>document.getElementById('my_modal_1').showModal()}>Create match lobby</button>
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">Crete your own match lobby!</h3>
+                    <h3 className="font-bold text-lg">Create your own match lobby!</h3>
                     <div className="modal-action">
-                        <form id="crear_partida_form" className="crear-partida-form" method="dialog" onSubmit={handleSubmit}>
+                        <form id="crear_partida_form" className="crear-partida-form" method="dialog" onSubmit={handleSubmit(onSubmit)}>
                             {/* if there is a button in form, it will close the modal */}
                             <button 
                                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" 
                                 onClick={handleClose}>✕</button>
-                                
                             <label className="label-modal-crear-partida form-control w-full" >
                                 <input 
-                                    type="text" 
-                                    placeholder="Elige tu nombre de jugador" 
+                                    type="text"
+                                    aria-label="playerName"
+                                    placeholder="Choose your player name"
+                                    value={playerNameWatch}
                                     className="input-modal-crear-partida input input-bordered w-full" 
-                                    value={nameState} 
-                                    onChange={(e) => setNameState(e.target.value)} 
+                                    {...register("playerName", 
+                                        {required: {value: true, message: "This field is required"}, 
+                                        maxLength: {value: 10, message: "Player name must be shorter than 10 characters"}})}
                                 />
+                                <span className="error">{errors.playerName?.message}</span>
+                                <input 
+                                    type="text"
+                                    aria-label="lobbyName"
+                                    placeholder="Choose your lobby name" 
+                                    value={lobbyNameWatch}
+                                    className="input-modal-crear-partida input input-bordered w-full"
+                                    {...register("lobbyName", 
+                                        {required: {value: true, message: "This field is required"}, 
+                                        maxLength: {value: 10, message: "Lobby name must be shorter than 10 characters"}})}
+                                />
+                                <span className="error">{errors.lobbyName?.message}</span>
                                 <input 
                                     type="text" 
-                                    placeholder="Nombre de tu sala" 
-                                    className="input-modal-crear-partida input input-bordered w-full" 
-                                    value={lobbyNameState}  
-                                    onChange={(e) => setLobbyNameState(e.target.value)} 
+                                    aria-label="playerAmount"
+                                    placeholder="Select the maximum amount of players (2-4)" 
+                                    value={playerAmountWatch}
+                                    className="input-modal-crear-partida input input-bordered w-full"
+                                    {...register("playerAmount", 
+                                        {required: {value: true, message: "This field is required"},
+                                        min: {value: 2, message: "Lobby has a minimum amount of players of 2"},
+                                        max: {value: 4, message: "Lobby has a maximum amount of players of 4"}})}
                                 />
-                                <input 
-                                    type="number" 
-                                    placeholder="Cantidad maxima de jugadores (entre 2 y 4)" 
-                                    className="input-modal-crear-partida input input-bordered w-full" 
-                                    value={playerAmountState} 
-                                    onChange={(e) => setPlayerAmountState(e.target.value)} 
-                                />
+                                <span className="error">{errors.playerAmount?.message}</span>
                             </label>
                             <div className="formButtons">
                                 <input 
@@ -116,7 +122,6 @@ export const ModalCrearPartida = () => {
                                     value="Create lobby"
                                 />
                             </div>
-                            <div className="message">{message ? <p>{message}</p> : null}</div>
                         </form>
                     </div>
                 </div>

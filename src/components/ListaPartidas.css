@@ -1,10 +1,18 @@
 /* ListaPartidas.css */
 .Partidas {
-    padding: 10px;
-    gap: 10px;
+    margin: 0 auto; /* Centra el div horizontalmente */
+    padding: 10px; /* Añade un relleno interno de 10px */
+    gap: 10px; /* Espacio entre los elementos */
     border: 1px solid #ccc;
     border-radius: 5px;
-    display: flex;
+    display: flex; /* Utiliza flexbox para alinear los elementos */
+    justify-content: space-between; /* Alinea los elementos horizontalmente */
+    width: 50%;
+  }
+  
+  .Partidas .table-container {
+    max-height: 500px; /* Altura máxima del contenedor */
+    overflow-y: auto; /* Habilita el desplazamiento vertical */
   }
   
   .Partidas table {
@@ -15,6 +23,11 @@
   .Partidas th, .Partidas td {
     padding: 10px;
     text-align: left;
+    vertical-align: middle;
+  }
+
+  .Partidas th.cantidad-jugadores, .Partidas td.cantidad-jugadores {
+    text-align: center; /* Centra el contenido de la columna "Jugadores" */
   }
   
   .Partidas button {
@@ -26,6 +39,11 @@
     border-radius: 5px;
     cursor: pointer;
   }
+
+  .same-size {
+    width: 80%;
+    margin: 0 auto; /* Centra el div horizontalmente */
+  }
   
   .refresh-button {
     display: flex;
@@ -33,20 +51,9 @@
     justify-content: center;
     padding: 10px 20px;
     background-color: #007bff;
-    color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .refresh-button:hover {
-    background-color: #0056b3;
-  }
-
-  .refresh-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
   }
 
   .refresh-button svg {
@@ -55,7 +62,7 @@
       height: 16px; /* Ajusta la altura del icono */
   }
 
-  .buttons {
+  .buttons-menu {
     margin-top: 10px;
     min-width: 150px;
     justify-content: flex-start;

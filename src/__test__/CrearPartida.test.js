@@ -211,5 +211,10 @@ describe("CrearPartida", () => {
         }),
       );
     });
+
+    await waitFor(() => {
+      expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
+      expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby");
+    });
   });
 });

@@ -1,7 +1,7 @@
 import { BACKEND_URL } from "../appConfigVars";
 
 export class MatchService {
-  static ENDPOINT_GROUP = "match";
+  static ENDPOINT_GROUP = "matches";
 
   static async joinMatch(matchId, playerName) {
     const response = await fetch(

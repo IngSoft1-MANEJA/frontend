@@ -1,11 +1,11 @@
-import UnirsePartida from "./components/UnirsePartida.jsx";
+import "./App.css";
+import ListaPartidas from "./components/ListaPartidas.jsx";
 
 function App() {
-
   return (
-    <>
-      <UnirsePartida idPartida={1} />
-    </>
+    <div>
+      <ListaPartidas />
+    </div>
   );
 }
 

@@ -12,5 +12,6 @@ module.exports = {
       '\\.(css|less)$': '<rootDir>/src/__mocks__/SuccessAlertStyleMock.jsx'
     },
     setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+    moduleFileExtensions: ["js", "jsx"],
     testEnvironment: 'jest-fixed-jsdom'
 }

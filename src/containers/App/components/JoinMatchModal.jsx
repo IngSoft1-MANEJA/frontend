@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MatchService } from "../../../services/MatchService";
 
-function JoinMatchButton({ matchId, setShowAlert, setAlertMessage }) {
+function JoinMatchModal({ matchId }) {
   const [userName, setUserName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -10,25 +10,25 @@ function JoinMatchButton({ matchId, setShowAlert, setAlertMessage }) {
 
   const handleJoin = async (e) => {
     e.preventDefault();
-    console.log(userName);
     if (userName) {
       try {
         setIsLoading(true);
         await MatchService.joinMatch(matchId, userName);
         setIsLoading(false);
         navigate("/lobby");
+        console.log("lobby called");
       } catch (error) {
         console.error(error.message);
         setIsLoading(false);
-        setAlertMessage("Error al unirse a la partida");
-        setShowAlert(true);
       }
     } else {
       setErrorMessage("Por favor, ingrese un nombre de usuario");
     }
   };
 
-  const clearModal = () => {
+  const closeModal = (e) => {
+    e.stopPropagation();
+    document.getElementById("join_match_modal").close();
     setErrorMessage("");
     setUserName("");
   };
@@ -43,14 +43,12 @@ function JoinMatchButton({ matchId, setShowAlert, setAlertMessage }) {
       </button>
       <dialog id="join_match_modal" className="modal">
         <div className="modal-box">
-          <form method="dialog">
-            <button
-              onClick={clearModal}
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            >
-              ✕
-            </button>
-          </form>
+          <button
+            onClick={closeModal}
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          >
+            ✕
+          </button>
           <div className="flex items-center">
             <form className="flex flex-col items-start">
               <label className="form-control mb-6">
@@ -73,11 +71,8 @@ function JoinMatchButton({ matchId, setShowAlert, setAlertMessage }) {
                 </div>
               </label>
               <button className="btn" onClick={handleJoin}>
-                {!isLoading ? (
-                  "Unirse"
-                ) : (
-                  <span className="loading loading-spinner"></span>
-                )}
+                  Unirse
+                {isLoading && <span className="loading loading-spinner"/>}
               </button>
             </form>
           </div>
@@ -87,4 +82,4 @@ function JoinMatchButton({ matchId, setShowAlert, setAlertMessage }) {
   );
 }
 
-export default JoinMatchButton;
+export default JoinMatchModal;

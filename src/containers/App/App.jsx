@@ -1,5 +1,5 @@
 import { useState } from "react";
-import JoinMatchButton from "./components/JoinMatchButton";
+import JoinMatchModal from "./components/JoinMatchModal.jsx";
 import Alert from "../../components/Alert.jsx";
 
 function App() {
@@ -8,11 +8,11 @@ function App() {
 
   return (
     <>
-      <JoinMatchButton
+      <JoinMatchModal
         matchId={1}
         setShowAlert={setShowAlert}
         setAlertMessage={setAlertMessage}
-      ></JoinMatchButton>
+      />
       <Alert
         setShowAlert={setShowAlert}
         showAlert={showAlert}

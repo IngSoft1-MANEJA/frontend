@@ -1,11 +1,12 @@
 export const CrearPartidaMock = {
-    playerName: "playerName",
-    lobbyName:"lobbyName",
-    playerAmount: '2'
-}
+  nombreJugador: "nombreJugador",
+  nombreSala: "nombreSala",
+  cantidadJugadores: "2",
+};
 
 export const CrearPartidaMockError = {
-    playerName: "playerNameIsTooLongForTheForm",
-    lobbyName: "lobbyName",
-    playerAmount: '34'
-}
+  nombreJugador:
+    "nombreJugadorEsDemasiadoLargoParaSerUsadoEnElCampoDeNombreJugador",
+  nombreSala: "nombreSala",
+  cantidadJugadores: "74",
+};

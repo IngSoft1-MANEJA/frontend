@@ -1,26 +1,35 @@
-import React from 'react';
-import { render, screen, fireEvent, cleanup, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { jest } from '@jest/globals';
-import { CrearPartida } from '../containers/App/components/CrearPartida.jsx';
-import { CrearPartidaMock, CrearPartidaMockError } from '../__mocks__/CrearPartidaForm.mock.js';
-import * as reactRouterDom from 'react-router-dom';
+import React from "react";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { jest } from "@jest/globals";
+import { CrearPartida } from "../containers/App/components/CrearPartida.jsx";
+import {
+  CrearPartidaMock,
+  CrearPartidaMockError,
+} from "../__mocks__/CrearPartidaForm.mock.js";
+import * as reactRouterDom from "react-router-dom";
 
 const mockedUsedNavigate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
   useNavigate: () => mockedUsedNavigate,
 }));
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
+    ok: true,
     json: () => Promise.resolve({}),
-  })
+  }),
 );
 
-describe('CrearPartida', () => {
-
+describe("CrearPartida", () => {
   beforeAll(() => {
     HTMLDialogElement.prototype.showModal = jest.fn();
     HTMLDialogElement.prototype.close = jest.fn();
@@ -31,103 +40,118 @@ describe('CrearPartida', () => {
     jest.clearAllMocks();
   });
 
-  test('renders CrearPartida component', () => {
+  test("renders CrearPartida component", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
-      expect(screen.getByText('Create match lobby')).toBeInTheDocument();
+    expect(screen.getByText("Crear sala")).toBeInTheDocument();
   });
 
-  test('opens the modal correctly after clicking the button', () => {
+  test("opens the modal correctly after clicking the button", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
-    const openButton = screen.getByText('Create match lobby');
+    const openButton = screen.getByText("Crear sala");
     fireEvent.click(openButton);
 
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
   });
 
-  test('closes the modal correctly after clicking the close button', () => {
+  test("closes the modal correctly after clicking the close button", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
-    const openButton = screen.getByText('Create match lobby');
+    const openButton = screen.getByText("Crear sala");
     fireEvent.click(openButton);
 
-    const closeButton = screen.getByText('✕');
+    const closeButton = screen.getByText("✕");
     fireEvent.click(closeButton);
 
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
   });
 
-  test('inputs get cleared after closing the modal', async () => {
+  test("inputs get cleared after closing the modal", async () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
-    const openButton = screen.getByText('Create match lobby');
+    const openButton = screen.getByText("Crear sala");
     fireEvent.click(openButton);
 
-    const playerNameInput = screen.getByLabelText('playerName');
-    const lobbyNameInput = screen.getByLabelText('lobbyName');
-    const playerAmountInput = screen.getByLabelText('playerAmount');
+    const nombreJugadorInput = screen.getByLabelText("nombreJugador");
+    const nombreSalaInput = screen.getByLabelText("nombreSala");
+    const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
 
-    await userEvent.type(playerNameInput, CrearPartidaMock.playerName);
-    await userEvent.type(lobbyNameInput, CrearPartidaMock.lobbyName);
-    await userEvent.type(playerAmountInput, CrearPartidaMock.playerAmount);
+    await userEvent.type(nombreJugadorInput, CrearPartidaMock.nombreJugador);
+    await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
+    await userEvent.type(
+      cantidadJugadoresInput,
+      CrearPartidaMock.cantidadJugadores,
+    );
 
     await waitFor(() => {
-      expect(playerNameInput).toHaveValue(CrearPartidaMock.playerName);
-      expect(lobbyNameInput).toHaveValue(CrearPartidaMock.lobbyName);
-      expect(playerAmountInput).toHaveValue(CrearPartidaMock.playerAmount);
+      expect(nombreJugadorInput).toHaveValue(CrearPartidaMock.nombreJugador);
+      expect(nombreSalaInput).toHaveValue(CrearPartidaMock.nombreSala);
+      expect(cantidadJugadoresInput).toHaveValue(
+        CrearPartidaMock.cantidadJugadores.toString(),
+      );
     });
 
-    const closeButton = screen.getByText('✕');
+    const closeButton = screen.getByText("✕");
     fireEvent.click(closeButton);
 
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
 
     fireEvent.click(openButton);
 
-    expect(playerNameInput).toHaveValue('');
-    expect(lobbyNameInput).toHaveValue('');
-    expect(playerAmountInput).toHaveValue('');
+    expect(nombreJugadorInput).toHaveValue("");
+    expect(nombreSalaInput).toHaveValue("");
+    expect(cantidadJugadoresInput).toHaveValue("");
   });
 
-  test('fetch is not called when input values are incorrect', async () => {
+  test("fetch is not called when input values are incorrect", async () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
-    const openButton = screen.getByText('Create match lobby');
+    const openButton = screen.getByText("Crear sala");
     fireEvent.click(openButton);
 
-    const playerNameInput = screen.getByLabelText('playerName');
-    const lobbyNameInput = screen.getByLabelText('lobbyName');
-    const playerAmountInput = screen.getByLabelText('playerAmount');
-    const submitButton = screen.getByText('Create lobby');
+    const nombreJugadorInput = screen.getByLabelText("nombreJugador");
+    const nombreSalaInput = screen.getByLabelText("nombreSala");
+    const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
+    const submitButton = screen.getByText("Crear sala");
 
-    await userEvent.type(playerNameInput, CrearPartidaMockError.playerName);
-    await userEvent.type(lobbyNameInput, CrearPartidaMockError.lobbyName);
-    await userEvent.type(playerAmountInput, CrearPartidaMockError.playerAmount);
+    await userEvent.type(
+      nombreJugadorInput,
+      CrearPartidaMockError.nombreJugador,
+    );
+    await userEvent.type(nombreSalaInput, CrearPartidaMockError.nombreSala);
+    await userEvent.type(
+      cantidadJugadoresInput,
+      CrearPartidaMockError.cantidadJugadores,
+    );
 
     await waitFor(() => {
-      expect(playerNameInput).toHaveValue(CrearPartidaMockError.playerName);
-      expect(lobbyNameInput).toHaveValue(CrearPartidaMockError.lobbyName);
-      expect(playerAmountInput).toHaveValue(CrearPartidaMockError.playerAmount);
+      expect(nombreJugadorInput).toHaveValue(
+        CrearPartidaMockError.nombreJugador,
+      );
+      expect(nombreSalaInput).toHaveValue(CrearPartidaMockError.nombreSala);
+      expect(cantidadJugadoresInput).toHaveValue(
+        CrearPartidaMockError.cantidadJugadores,
+      );
     });
 
     fireEvent.click(submitButton);
@@ -135,59 +159,57 @@ describe('CrearPartida', () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
-  test('fetch is executed without issues and returns expected value', async () => {
-    const mockFetch = {
-      playerName: CrearPartidaMock.playerName,
-      lobbyName: CrearPartidaMock.lobbyName,
-      playerAmount: CrearPartidaMock.playerAmount,
-    };
-
+  test("fetch is executed without issues and returns expected value", async () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
-    const openButton = screen.getByText('Create match lobby');
+    const openButton = screen.getByText("Crear sala");
     fireEvent.click(openButton);
 
-    const playerNameInput = screen.getByLabelText('playerName');
-    const lobbyNameInput = screen.getByLabelText('lobbyName');
-    const playerAmountInput = screen.getByLabelText('playerAmount');
-    const submitButton = screen.getByText('Create lobby');
+    const nombreJugadorInput = screen.getByLabelText("nombreJugador");
+    const nombreSalaInput = screen.getByLabelText("nombreSala");
+    const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
+    const submitButton = screen.getByText("Crear sala de partida");
 
-    expect(playerNameInput).toHaveValue('');
-    expect(lobbyNameInput).toHaveValue('');
-    expect(playerAmountInput).toHaveValue(''); 
+    expect(nombreJugadorInput).toHaveValue("");
+    expect(nombreSalaInput).toHaveValue("");
+    expect(cantidadJugadoresInput).toHaveValue("");
 
-    await userEvent.type(playerNameInput, CrearPartidaMock.playerName);
-    await userEvent.type(lobbyNameInput, CrearPartidaMock.lobbyName);
-    await userEvent.type(playerAmountInput, CrearPartidaMock.playerAmount);
+    await userEvent.type(nombreJugadorInput, CrearPartidaMock.nombreJugador);
+    await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
+    await userEvent.type(
+      cantidadJugadoresInput,
+      CrearPartidaMock.cantidadJugadores,
+    );
 
     await waitFor(() => {
-      expect(playerNameInput).toHaveValue(CrearPartidaMock.playerName);
-      expect(lobbyNameInput).toHaveValue(CrearPartidaMock.lobbyName);
-      expect(playerAmountInput).toHaveValue(CrearPartidaMock.playerAmount);
+      expect(nombreJugadorInput).toHaveValue(CrearPartidaMock.nombreJugador);
+      expect(nombreSalaInput).toHaveValue(CrearPartidaMock.nombreSala);
+      expect(cantidadJugadoresInput).toHaveValue(
+        CrearPartidaMock.cantidadJugadores,
+      );
     });
 
     fireEvent.click(submitButton);
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        '/matches',
+        "/matches",
         expect.objectContaining({
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            playerName: CrearPartidaMock.playerName,
-            lobbyName: CrearPartidaMock.lobbyName,
-            playerAmount: CrearPartidaMock.playerAmount,
+            nombreJugador: CrearPartidaMock.nombreJugador,
+            nombreSala: CrearPartidaMock.nombreSala,
+            cantidadJugadores: CrearPartidaMock.cantidadJugadores,
           }),
-        })
+        }),
       );
     });
   });
-
 });

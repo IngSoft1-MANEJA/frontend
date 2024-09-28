@@ -1,12 +1,12 @@
 /* CrearPartida CSS */
 
-.modal-action{
+.modal-action {
   width: 100%;
   text-align: center;
   justify-content: center;
 }
 
-.CrearPartida .boton-crear-partida{
+.CrearPartida .boton-crear-partida {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,15 +19,14 @@
   cursor: pointer;
 }
 
-dialog{
+dialog {
   z-index: 100;
 }
 
-
-.submit-crear-partida{
+.submit-crear-partida {
   display: flex;
   margin-top: 20px;
-  width: 160px;
+  width: 50%;
 }
 
 .error {

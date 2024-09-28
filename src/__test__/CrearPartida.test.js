@@ -44,7 +44,7 @@ describe("CrearPartida", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>,
+      </reactRouterDom.MemoryRouter>
     );
     expect(screen.getByText("Crear sala")).toBeInTheDocument();
   });
@@ -53,7 +53,7 @@ describe("CrearPartida", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>,
+      </reactRouterDom.MemoryRouter>
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -62,11 +62,11 @@ describe("CrearPartida", () => {
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
   });
 
-  test("closes the modal correctly after clicking the close button", () => {
+  test("closes the modal correctly after clicking the close button", async () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>,
+      </reactRouterDom.MemoryRouter>
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -75,14 +75,16 @@ describe("CrearPartida", () => {
     const closeButton = screen.getByText("✕");
     fireEvent.click(closeButton);
 
-    expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    });
   });
 
   test("inputs get cleared after closing the modal", async () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>,
+      </reactRouterDom.MemoryRouter>
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -96,34 +98,38 @@ describe("CrearPartida", () => {
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMock.cantidadJugadores,
+      CrearPartidaMock.cantidadJugadores
     );
 
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue(CrearPartidaMock.nombreJugador);
       expect(nombreSalaInput).toHaveValue(CrearPartidaMock.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMock.cantidadJugadores.toString(),
+        CrearPartidaMock.cantidadJugadores.toString()
       );
     });
 
     const closeButton = screen.getByText("✕");
     fireEvent.click(closeButton);
 
-    expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    });
 
     fireEvent.click(openButton);
 
-    expect(nombreJugadorInput).toHaveValue("");
-    expect(nombreSalaInput).toHaveValue("");
-    expect(cantidadJugadoresInput).toHaveValue("");
+    await waitFor(() => {
+      expect(nombreJugadorInput).toHaveValue("");
+      expect(nombreSalaInput).toHaveValue("");
+      expect(cantidadJugadoresInput).toHaveValue("");
+    });
   });
 
   test("fetch is not called when input values are incorrect", async () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>,
+      </reactRouterDom.MemoryRouter>
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -136,21 +142,21 @@ describe("CrearPartida", () => {
 
     await userEvent.type(
       nombreJugadorInput,
-      CrearPartidaMockError.nombreJugador,
+      CrearPartidaMockError.nombreJugador
     );
     await userEvent.type(nombreSalaInput, CrearPartidaMockError.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMockError.cantidadJugadores,
+      CrearPartidaMockError.cantidadJugadores
     );
 
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue(
-        CrearPartidaMockError.nombreJugador,
+        CrearPartidaMockError.nombreJugador
       );
       expect(nombreSalaInput).toHaveValue(CrearPartidaMockError.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMockError.cantidadJugadores,
+        CrearPartidaMockError.cantidadJugadores
       );
     });
 
@@ -163,7 +169,7 @@ describe("CrearPartida", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>,
+      </reactRouterDom.MemoryRouter>
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -182,14 +188,14 @@ describe("CrearPartida", () => {
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMock.cantidadJugadores,
+      CrearPartidaMock.cantidadJugadores
     );
 
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue(CrearPartidaMock.nombreJugador);
       expect(nombreSalaInput).toHaveValue(CrearPartidaMock.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMock.cantidadJugadores,
+        CrearPartidaMock.cantidadJugadores
       );
     });
 
@@ -208,7 +214,7 @@ describe("CrearPartida", () => {
             nombreSala: CrearPartidaMock.nombreSala,
             cantidadJugadores: CrearPartidaMock.cantidadJugadores,
           }),
-        }),
+        })
       );
     });
 

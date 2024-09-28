@@ -8,8 +8,16 @@ import {
   fireEvent,
 } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { ListaPartidas } from "../containers/App/components/ListaPartidas.jsx"; // Ajusta la ruta según sea necesario
-import { ListarPartidasMock } from "../__mocks__/ListarPartidas.mock.js"; // Ajusta la ruta según sea necesario
+import { ListaPartidas } from "../containers/App/components/ListaPartidas.jsx";
+import { ListarPartidasMock } from "../__mocks__/ListarPartidas.mock.js";
+import * as reactRouterDom from "react-router-dom";
+
+const mockedUsedNavigate = jest.fn();
+
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockedUsedNavigate,
+}));
 
 global.fetch = jest.fn(() =>
   Promise.resolve({

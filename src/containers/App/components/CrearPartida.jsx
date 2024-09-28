@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Alerts } from "../../../components/Alerts.jsx";
 import "./CrearPartida.css";
 
@@ -45,19 +45,12 @@ export const CrearPartida = () => {
       if (res.ok) {
         setMessage("Sala de partida creada con exito");
         setShowSuccess("success");
-        setTimeout(() => {
-          setShowSuccess(null);
-          console.log(resJson);
-        }, 1000);
-        setTimeout(() => {
-          document.getElementById("my_modal_1").close();
-        }, 1000);
+        console.log(resJson);
+        reset();
 
         setTimeout(() => {
-          setMessage("");
-          reset();
           navegar("/lobby");
-        }, 1000);
+        }, 300);
       }
     } catch (err) {
       setMessage("Error creando sala de partida");
@@ -74,7 +67,7 @@ export const CrearPartida = () => {
 
   return (
     <>
-      <div className="CrearPartida">
+      <div className="CrearPartida w-full">
         <button
           className="boton-crear-partida btn mb-1"
           onClick={() => document.getElementById("my_modal_1").showModal()}

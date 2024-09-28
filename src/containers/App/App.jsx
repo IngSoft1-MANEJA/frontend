@@ -1,10 +1,10 @@
-import UniserPartida from "./components/UnirsePartida.jsx";
+import UnirsePartida from "./components/UnirsePartida.jsx";
 
 function App() {
 
   return (
     <>
-      <JoinMatchModal idPartida={1} />
+      <UnirsePartida idPartida={1} />
     </>
   );
 }

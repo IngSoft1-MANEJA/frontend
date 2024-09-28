@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useForm } from 'react-hook-form'
-import { SuccessAlert } from './SuccessAlert';
-import './ModalCrearPartida.css'
+import { Alerts } from '../../../components/Alerts.jsx';
+import './CrearPartida.css'
 
-export const ModalCrearPartida = () => {
-    // const navigate = useNavigate();
-    const [showSuccess, setShowSuccess] = useState(false);
+export const CrearPartida = () => {
+    const navigate = useNavigate();
+    const [showSuccess, setShowSuccess] = useState(null);
     const [message, setMessage] = useState("");
 
     const {
@@ -30,7 +30,7 @@ export const ModalCrearPartida = () => {
 
     const onSubmit = async (e) => {
         try {
-          let res = await fetch("https://httpbin.org/post", {
+          let res = await fetch("/matches", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -40,9 +40,9 @@ export const ModalCrearPartida = () => {
           let resJson = await res.json();
           if (res.ok) {
             setMessage("Lobby created successfully");
-            setShowSuccess(true);
+            setShowSuccess('success');
             setTimeout(() => {
-                setShowSuccess(false);
+                setShowSuccess(null);
                 console.log(resJson);
             }, 1000);
             setTimeout(() => {
@@ -52,11 +52,13 @@ export const ModalCrearPartida = () => {
             setTimeout(() => {
                 setMessage('');
                 reset();
-                // navigate("/");
+                navigate("/lobby");
               }, 1000);
           }
         } catch (err) {
-          console.log(err);
+            setMessage("Error creating lobby");
+            setShowSuccess('error');
+            console.log(err);
         }
     };
 
@@ -67,25 +69,27 @@ export const ModalCrearPartida = () => {
     }
 
     return (
-        <div>
-            {showSuccess ? <SuccessAlert message={message}/> : null}
-            <button className="boton-crear-partida btn btn-lg" onClick={()=>document.getElementById('my_modal_1').showModal()}>Create match lobby</button>
+        <>
+            <div className="CrearPartida">
+                <button className="boton-crear-partida btn mb-1" onClick={()=>document.getElementById('my_modal_1').showModal()}>Create match lobby</button>
+            </div>    
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box">
+                    {showSuccess ? <Alerts type={showSuccess} message={message}/> : null}
                     <h3 className="font-bold text-lg">Create your own match lobby!</h3>
                     <div className="modal-action">
-                        <form id="crear_partida_form" className="crear-partida-form" method="dialog" onSubmit={handleSubmit(onSubmit)}>
+                        <form id="crear_partida_form" className="crear-partida-form w-full" method="dialog" onSubmit={handleSubmit(onSubmit)}>
                             {/* if there is a button in form, it will close the modal */}
                             <button 
                                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" 
                                 onClick={handleClose}>✕</button>
-                            <label className="label-modal-crear-partida form-control w-full" >
+                            <label className="label-modal-crear-partida form-control w-full items-center" >
                                 <input 
                                     type="text"
                                     aria-label="playerName"
                                     placeholder="Choose your player name"
                                     value={playerNameWatch}
-                                    className="input-modal-crear-partida input input-bordered w-full" 
+                                    className="input-modal-crear-partida input input-bordered w-full text-left" 
                                     {...register("playerName", 
                                         {required: {value: true, message: "This field is required"}, 
                                         maxLength: {value: 10, message: "Player name must be shorter than 10 characters"}})}
@@ -126,8 +130,8 @@ export const ModalCrearPartida = () => {
                     </div>
                 </div>
             </dialog>
-        </div>
+        </>
     )
 }
 
-export default ModalCrearPartida;
+export default CrearPartida;

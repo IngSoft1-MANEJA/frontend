@@ -1,10 +1,10 @@
-export const ModalCrearPartidaMock = {
+export const CrearPartidaMock = {
     playerName: "playerName",
     lobbyName:"lobbyName",
     playerAmount: '2'
 }
 
-export const ModalCrearPartidaMockError = {
+export const CrearPartidaMockError = {
     playerName: "playerNameIsTooLongForTheForm",
     lobbyName: "lobbyName",
     playerAmount: '34'

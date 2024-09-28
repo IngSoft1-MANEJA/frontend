@@ -2,18 +2,16 @@ import React from 'react';
 import { render, screen, fireEvent, cleanup, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { jest } from '@jest/globals';
-import { ModalCrearPartida } from '../containers/App/components/ModalCrearPartida.jsx';
-import { ModalCrearPartidaMock, ModalCrearPartidaMockError } from '../__mocks__/ModalCrearPartidaForm.mock.js';
+import { CrearPartida } from '../containers/App/components/CrearPartida.jsx';
+import { CrearPartidaMock, CrearPartidaMockError } from '../__mocks__/CrearPartidaForm.mock.js';
+import * as reactRouterDom from 'react-router-dom';
 
-// const mockedUsedNavigate = jest.fn();
+const mockedUsedNavigate = jest.fn();
 
-// jest.mock('react-router', async () => {
-//   const actualReactRouterDom = await import('react-router-dom');
-//   return {
-//     ...actualReactRouterDom,
-//     useNavigate: () => mockedUsedNavigate,
-//   };
-// });
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUsedNavigate,
+}));
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -21,7 +19,7 @@ global.fetch = jest.fn(() =>
   })
 );
 
-describe('ModalCrearPartida', () => {
+describe('CrearPartida', () => {
 
   beforeAll(() => {
     HTMLDialogElement.prototype.showModal = jest.fn();
@@ -33,13 +31,21 @@ describe('ModalCrearPartida', () => {
     jest.clearAllMocks();
   });
 
-  test('renders ModalCrearPartida component', () => {
-      render(<ModalCrearPartida />);
+  test('renders CrearPartida component', () => {
+    render(
+      <reactRouterDom.MemoryRouter>
+        <CrearPartida />
+      </reactRouterDom.MemoryRouter>
+    );
       expect(screen.getByText('Create match lobby')).toBeInTheDocument();
   });
 
   test('opens the modal correctly after clicking the button', () => {
-    render(<ModalCrearPartida />);
+    render(
+      <reactRouterDom.MemoryRouter>
+        <CrearPartida />
+      </reactRouterDom.MemoryRouter>
+    );
 
     const openButton = screen.getByText('Create match lobby');
     fireEvent.click(openButton);
@@ -48,7 +54,11 @@ describe('ModalCrearPartida', () => {
   });
 
   test('closes the modal correctly after clicking the close button', () => {
-    render(<ModalCrearPartida />);
+    render(
+      <reactRouterDom.MemoryRouter>
+        <CrearPartida />
+      </reactRouterDom.MemoryRouter>
+    );
 
     const openButton = screen.getByText('Create match lobby');
     fireEvent.click(openButton);
@@ -60,7 +70,11 @@ describe('ModalCrearPartida', () => {
   });
 
   test('inputs get cleared after closing the modal', async () => {
-    render(<ModalCrearPartida />);
+    render(
+      <reactRouterDom.MemoryRouter>
+        <CrearPartida />
+      </reactRouterDom.MemoryRouter>
+    );
 
     const openButton = screen.getByText('Create match lobby');
     fireEvent.click(openButton);
@@ -69,14 +83,14 @@ describe('ModalCrearPartida', () => {
     const lobbyNameInput = screen.getByLabelText('lobbyName');
     const playerAmountInput = screen.getByLabelText('playerAmount');
 
-    await userEvent.type(playerNameInput, ModalCrearPartidaMock.playerName);
-    await userEvent.type(lobbyNameInput, ModalCrearPartidaMock.lobbyName);
-    await userEvent.type(playerAmountInput, ModalCrearPartidaMock.playerAmount);
+    await userEvent.type(playerNameInput, CrearPartidaMock.playerName);
+    await userEvent.type(lobbyNameInput, CrearPartidaMock.lobbyName);
+    await userEvent.type(playerAmountInput, CrearPartidaMock.playerAmount);
 
     await waitFor(() => {
-      expect(playerNameInput).toHaveValue(ModalCrearPartidaMock.playerName);
-      expect(lobbyNameInput).toHaveValue(ModalCrearPartidaMock.lobbyName);
-      expect(playerAmountInput).toHaveValue(ModalCrearPartidaMock.playerAmount);
+      expect(playerNameInput).toHaveValue(CrearPartidaMock.playerName);
+      expect(lobbyNameInput).toHaveValue(CrearPartidaMock.lobbyName);
+      expect(playerAmountInput).toHaveValue(CrearPartidaMock.playerAmount);
     });
 
     const closeButton = screen.getByText('✕');
@@ -92,7 +106,11 @@ describe('ModalCrearPartida', () => {
   });
 
   test('fetch is not called when input values are incorrect', async () => {
-    render(<ModalCrearPartida />);
+    render(
+      <reactRouterDom.MemoryRouter>
+        <CrearPartida />
+      </reactRouterDom.MemoryRouter>
+    );
 
     const openButton = screen.getByText('Create match lobby');
     fireEvent.click(openButton);
@@ -102,14 +120,14 @@ describe('ModalCrearPartida', () => {
     const playerAmountInput = screen.getByLabelText('playerAmount');
     const submitButton = screen.getByText('Create lobby');
 
-    await userEvent.type(playerNameInput, ModalCrearPartidaMockError.playerName);
-    await userEvent.type(lobbyNameInput, ModalCrearPartidaMockError.lobbyName);
-    await userEvent.type(playerAmountInput, ModalCrearPartidaMockError.playerAmount);
+    await userEvent.type(playerNameInput, CrearPartidaMockError.playerName);
+    await userEvent.type(lobbyNameInput, CrearPartidaMockError.lobbyName);
+    await userEvent.type(playerAmountInput, CrearPartidaMockError.playerAmount);
 
     await waitFor(() => {
-      expect(playerNameInput).toHaveValue(ModalCrearPartidaMockError.playerName);
-      expect(lobbyNameInput).toHaveValue(ModalCrearPartidaMockError.lobbyName);
-      expect(playerAmountInput).toHaveValue(ModalCrearPartidaMockError.playerAmount);
+      expect(playerNameInput).toHaveValue(CrearPartidaMockError.playerName);
+      expect(lobbyNameInput).toHaveValue(CrearPartidaMockError.lobbyName);
+      expect(playerAmountInput).toHaveValue(CrearPartidaMockError.playerAmount);
     });
 
     fireEvent.click(submitButton);
@@ -119,12 +137,16 @@ describe('ModalCrearPartida', () => {
 
   test('fetch is executed without issues and returns expected value', async () => {
     const mockFetch = {
-      playerName: ModalCrearPartidaMock.playerName,
-      lobbyName: ModalCrearPartidaMock.lobbyName,
-      playerAmount: ModalCrearPartidaMock.playerAmount,
+      playerName: CrearPartidaMock.playerName,
+      lobbyName: CrearPartidaMock.lobbyName,
+      playerAmount: CrearPartidaMock.playerAmount,
     };
 
-    render(<ModalCrearPartida />);
+    render(
+      <reactRouterDom.MemoryRouter>
+        <CrearPartida />
+      </reactRouterDom.MemoryRouter>
+    );
 
     const openButton = screen.getByText('Create match lobby');
     fireEvent.click(openButton);
@@ -138,35 +160,34 @@ describe('ModalCrearPartida', () => {
     expect(lobbyNameInput).toHaveValue('');
     expect(playerAmountInput).toHaveValue(''); 
 
-    await userEvent.type(playerNameInput, ModalCrearPartidaMock.playerName);
-    await userEvent.type(lobbyNameInput, ModalCrearPartidaMock.lobbyName);
-    await userEvent.type(playerAmountInput, ModalCrearPartidaMock.playerAmount);
+    await userEvent.type(playerNameInput, CrearPartidaMock.playerName);
+    await userEvent.type(lobbyNameInput, CrearPartidaMock.lobbyName);
+    await userEvent.type(playerAmountInput, CrearPartidaMock.playerAmount);
 
     await waitFor(() => {
-      expect(playerNameInput).toHaveValue(ModalCrearPartidaMock.playerName);
-      expect(lobbyNameInput).toHaveValue(ModalCrearPartidaMock.lobbyName);
-      expect(playerAmountInput).toHaveValue(ModalCrearPartidaMock.playerAmount);
+      expect(playerNameInput).toHaveValue(CrearPartidaMock.playerName);
+      expect(lobbyNameInput).toHaveValue(CrearPartidaMock.lobbyName);
+      expect(playerAmountInput).toHaveValue(CrearPartidaMock.playerAmount);
     });
 
     fireEvent.click(submitButton);
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        'https://httpbin.org/post',
+        '/matches',
         expect.objectContaining({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            playerName: ModalCrearPartidaMock.playerName,
-            lobbyName: ModalCrearPartidaMock.lobbyName,
-            playerAmount: ModalCrearPartidaMock.playerAmount,
+            playerName: CrearPartidaMock.playerName,
+            lobbyName: CrearPartidaMock.lobbyName,
+            playerAmount: CrearPartidaMock.playerAmount,
           }),
         })
       );
     });
-
   });
 
 });

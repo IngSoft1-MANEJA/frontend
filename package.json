@@ -2,7 +2,6 @@
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -41,7 +40,8 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.12",
+    "postcss-preset-env": "^10.0.5",
+    "tailwindcss": "^3.4.13",
     "vite": "^5.4.1"
   }
 }

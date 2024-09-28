@@ -1,0 +1,38 @@
+/* CrearPartida CSS */
+
+.modal-action{
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+
+.CrearPartida .boton-crear-partida{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+dialog{
+  z-index: 100;
+}
+
+
+.submit-crear-partida{
+  display: flex;
+  margin-top: 20px;
+  width: 160px;
+}
+
+.error {
+  color: rgba(221, 27, 27, 0.781);
+  padding: 10px;
+}
+
+/* --- */

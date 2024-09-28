@@ -1,11 +1,11 @@
-import CrearPartida from "./components/CrearPartida.jsx";
 import "./App.css";
+import ListaPartidas from "./components/ListaPartidas.jsx";
 
 function App() {
   return (
-    <>
-      <CrearPartida />
-    </>
+    <div>
+      <ListaPartidas />
+    </div>
   );
 }
 

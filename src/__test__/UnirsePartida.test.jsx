@@ -9,25 +9,25 @@ import {
   waitFor,
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import JoinMatchModal from "../containers/App/components/JoinMatchModal";
-import { BACKEND_URL } from "../appConfigVars";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import UnirsePartida from "../containers/App/components/UnirsePartida";
+import { BACKEND_URL } from "../variablesConfiguracion";
+import { MemoryRouter } from "react-router-dom";
 
 const server = setupServer(
-  http.post(`${BACKEND_URL}/match/:id`, () => {
+  http.post(`${BACKEND_URL}/matches/:id`, () => {
     return new HttpResponse(null, { status: 201 });
   })
 );
 
-const mockUsedNavigate = jest.fn();
+const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useNavigate: () => mockUsedNavigate,
+  useNavigate: () => mockNavigate,
 }));
 
-describe("JoinMatchButton", () => {
+describe("UnirsePartida", () => {
   beforeAll(() => {
-    server.listen({onUnhandledRequest: 'error'});
+    server.listen({ onUnhandledRequest: "error" });
     HTMLDialogElement.prototype.showModal = jest.fn();
     HTMLDialogElement.prototype.close = jest.fn();
     HTMLFormElement.prototype.requestSubmit = jest.fn();
@@ -41,20 +41,20 @@ describe("JoinMatchButton", () => {
 
   afterAll(() => server.close());
 
-  it("should render correctly", () => {
-    render(<JoinMatchModal matchId={1} />);
+  it("deberia renderizar correctamente", () => {
+    render(<UnirsePartida idPartida={1} />);
   });
 
-  it("should call showModal when button is clicked", () => {
-    render(<JoinMatchModal matchId={1} />);
+  it("deberia llamar a showModal se clickea el boton", () => {
+    render(<UnirsePartida idPartida={1} />);
 
     fireEvent.click(screen.getByText("unirse a partida"));
 
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalledTimes(1);
   });
 
-  it("should call close when close button is clicked", () => {
-    render(<JoinMatchModal matchId={1} />);
+  it("deberia llamar a close cuando el boton de cerrar se clickea", () => {
+    render(<UnirsePartida idPartida={1} />);
 
     fireEvent.click(screen.getByText("unirse a partida"));
     fireEvent.click(screen.getByText("✕"));
@@ -62,8 +62,8 @@ describe("JoinMatchButton", () => {
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalledTimes(1);
   });
 
-  it("should clear modal input when closed", () => {
-    render(<JoinMatchModal matchId={1} />);
+  it("deberia limpiar el input del modal cuando se cierra", () => {
+    render(<UnirsePartida idPartida={1} />);
 
     fireEvent.click(screen.getByText("unirse a partida"));
 
@@ -77,22 +77,22 @@ describe("JoinMatchButton", () => {
     expect(input.value).toBe("");
   });
 
-  it("should show an error message when no username is entered and clicked join", () => {
-    render(<JoinMatchModal matchId={1} />);
+  it("debería mostrar un mensaje de error cuando no se ingresa un nombre de usuario y se hace click en unirse", () => {
+    render(<UnirsePartida idPartida={1} />);
 
     fireEvent.click(screen.getByText("unirse a partida"));
     fireEvent.click(screen.getByText("Unirse"));
 
-    const errorMessage = screen.getByText(
+    const mensajeError = screen.getByText(
       "Por favor, ingrese un nombre de usuario"
     );
-    expect(errorMessage).toBeInTheDocument();
+    expect(mensajeError).toBeInTheDocument();
   });
 
-  it("should make a successful join match request and navigate to lobby", async () => {
+  it("debería hacer una solicitud exitosa para unirse a la partida y navegar al lobby", async () => {
     console.error = jest.fn();
     server.use(
-      http.post(`${BACKEND_URL}/match/:id`, async ({ request, params }) => {
+      http.post(`${BACKEND_URL}/matches/:id`, async ({ request, params }) => {
         const { id } = params;
         const { player_name } = JSON.parse(request.body);
 
@@ -106,7 +106,7 @@ describe("JoinMatchButton", () => {
 
     render(
       <MemoryRouter>
-        <JoinMatchModal matchId={1} />
+        <UnirsePartida idPartida={1} />
       </MemoryRouter>
     );
 
@@ -120,8 +120,8 @@ describe("JoinMatchButton", () => {
 
     await waitFor(() => {
       expect(console.error).not.toHaveBeenCalled();
-      expect(mockUsedNavigate).toHaveBeenCalledTimes(1);
-      expect(mockUsedNavigate).toHaveBeenCalledWith("/lobby");
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+      expect(mockNavigate).toHaveBeenCalledWith("/lobby");
     });
   });
 });

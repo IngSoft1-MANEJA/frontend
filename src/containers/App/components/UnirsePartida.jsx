@@ -1,50 +1,50 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MatchService } from "../../../services/MatchService";
+import { ServicioPartida } from "../../../services/ServicioPartida";
 
-function JoinMatchModal({ matchId }) {
-  const [userName, setUserName] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+function UnirsePartida({ idPartida }) {
+  const [nombreUsuario, setNombreUsuario] = useState("");
+  const [mensajeError, setMensajeError] = useState("");
+  const [estaCargando, setEstaCargando] = useState(false);
   const navigate = useNavigate();
 
-  const handleJoin = async (e) => {
+  const manejarUnirse = async (e) => {
     e.preventDefault();
-    if (userName) {
+    if (nombreUsuario) {
       try {
-        setIsLoading(true);
-        await MatchService.joinMatch(matchId, userName);
-        setIsLoading(false);
+        setEstaCargando(true);
+        await ServicioPartida.unirsePartida(idPartida, nombreUsuario);
+        setEstaCargando(false);
         navigate("/lobby");
         console.log("lobby called");
       } catch (error) {
         console.error(error.message);
-        setIsLoading(false);
+        setEstaCargando(false);
       }
     } else {
-      setErrorMessage("Por favor, ingrese un nombre de usuario");
+      setMensajeError("Por favor, ingrese un nombre de usuario");
     }
   };
 
-  const closeModal = (e) => {
+  const cerrarModal = (e) => {
     e.stopPropagation();
-    document.getElementById("join_match_modal").close();
-    setErrorMessage("");
-    setUserName("");
+    document.getElementById("modal-unirse-partida").close();
+    setMensajeError("");
+    setNombreUsuario("");
   };
 
   return (
     <>
       <button
         className="btn"
-        onClick={() => document.getElementById("join_match_modal").showModal()}
+        onClick={() => document.getElementById("modal-unirse-partida").showModal()}
       >
         unirse a partida
       </button>
-      <dialog id="join_match_modal" className="modal">
+      <dialog id="modal-unirse-partida" className="modal">
         <div className="modal-box">
           <button
-            onClick={closeModal}
+            onClick={cerrarModal}
             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           >
             ✕
@@ -57,22 +57,22 @@ function JoinMatchModal({ matchId }) {
                 </div>
                 <input
                   className={`input input-bordered ${
-                    errorMessage ? "input-error" : ""
+                    mensajeError ? "input-error" : ""
                   }`}
                   type="text"
                   placeholder="Nombre"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
+                  value={nombreUsuario}
+                  onChange={(e) => setNombreUsuario(e.target.value)}
                 />
                 <div className="label">
                   <span className="label-text-alt text-error">
-                    {errorMessage}
+                    {mensajeError}
                   </span>
                 </div>
               </label>
-              <button className="btn" onClick={handleJoin}>
+              <button className="btn" onClick={manejarUnirse}>
                   Unirse
-                {isLoading && <span className="loading loading-spinner"/>}
+                {estaCargando && <span className="loading loading-spinner"/>}
               </button>
             </form>
           </div>
@@ -82,4 +82,4 @@ function JoinMatchModal({ matchId }) {
   );
 }
 
-export default JoinMatchModal;
+export default UnirsePartida;

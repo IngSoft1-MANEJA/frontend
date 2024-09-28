@@ -15,7 +15,7 @@ import { MemoryRouter } from "react-router-dom";
 
 const server = setupServer(
   http.post(`${BACKEND_URL}/matches/:id`, () => {
-    return new HttpResponse(null, { status: 201 });
+    return HttpResponse.json(null, { status: 200 });
   })
 );
 
@@ -94,13 +94,13 @@ describe("UnirsePartida", () => {
     server.use(
       http.post(`${BACKEND_URL}/matches/:id`, async ({ request, params }) => {
         const { id } = params;
-        const { player_name } = JSON.parse(request.body);
+        const body = await request.json();
 
-        if (id !== "1" || player_name !== "test") {
-          return new HttpResponse(null, { status: 400 });
+        if (id !== "1" || body.player_name !== "test") {
+          return HttpResponse.json(null, { status: 400 });
         }
 
-        return new HttpResponse(null, { status: 201 });
+        return HttpResponse.json(null, { status: 200 });
       })
     );
 
@@ -122,6 +122,36 @@ describe("UnirsePartida", () => {
       expect(console.error).not.toHaveBeenCalled();
       expect(mockNavigate).toHaveBeenCalledTimes(1);
       expect(mockNavigate).toHaveBeenCalledWith("/lobby");
+    });
+  });
+
+  it("deberia loggear un mensaje de error en consola si la solicitud falla", async () => {
+    console.error = jest.fn();
+    server.use(
+      http.post(`${BACKEND_URL}/matches/:id`, async ({ request, params }) => {
+        return HttpResponse.json(null, { status: 500 });
+      })
+    );
+
+    render(
+      <MemoryRouter>
+        <UnirsePartida idPartida={1} />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByText("unirse a partida"));
+
+    const el = screen.getByLabelText("Ingresa tu nombre");
+    const input = el.parentElement.parentElement.querySelector("input");
+
+    fireEvent.change(input, { target: { value: "test" } });
+    fireEvent.click(screen.getByText("Unirse"));
+
+    await waitFor(() => {
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        "Error al unirse a partida - estado: 500"
+      );
     });
   });
 });

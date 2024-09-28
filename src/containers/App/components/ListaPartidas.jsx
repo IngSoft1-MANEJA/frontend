@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Alerts } from "../../../components/Alerts.jsx";
 import "./ListaPartidas.css";
+import CrearPartida from "./CrearPartida.jsx";
 
 export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
+  const [selectedPartida, setSelectedPartida] = useState(null);
   const [alert, setAlert] = useState(null);
 
   const fetchPartidas = async () => {
@@ -33,6 +35,10 @@ export const ListaPartidas = () => {
     fetchPartidas();
   }
 
+  function handleSelectPartida(partida) {
+    setSelectedPartida(partida);
+  }
+
   return (
     <>
       {alert && alert.type && alert.message && (
@@ -52,7 +58,13 @@ export const ListaPartidas = () => {
             <tbody>
               {/* Defino las filas de la tabla */}
               {partidas.map((partida) => (
-                <tr key={partida.id}>
+                <tr key={partida.id}
+                onClick={() => handleSelectPartida(partida)}
+                            style={{
+                                cursor: 'pointer',
+                                backgroundColor: selectedPartida?.id === partida.id ? 'rgba(0, 123, 255,0.4)' : 'transparent',
+                            }}
+                >
                   <td>{partida.id}</td>
                   <td>{partida.nombre}</td>
                   <td className="cantidad-jugadores">
@@ -79,6 +91,7 @@ export const ListaPartidas = () => {
             </svg>
             Refrescar
           </button>
+          <CrearPartida />
         </div>
       </div>
     </>

@@ -3,7 +3,7 @@ module.exports = {
     "^.+\\.jsx?$": "babel-jest",
   },
   moduleNameMapper: {
-    "\\.(css|less)$": "<rootDir>/src/__mocks__/ListarPartidasStyleMock.jsx",
+    "\\.(css|less)$": "<rootDir>/src/__mocks__/AbandonarPartidaStyleMock.jsx",
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleFileExtensions: ["js", "jsx"],

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useContext } from "react";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion";
@@ -6,9 +7,9 @@ import Alerts from "../../components/Alerts";
 import { useParams } from "react-router-dom";
 import "./Lobby.css";
 
-function Lobby() {
-  const { idPartida, idJugador } = useParams();
-  const websocket_url = `${WEBSOCKET_URL}/${idPartida}/ws/${idJugador}`;
+export function Lobby() {
+  const { match_id, player_id } = useParams();
+  const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${player_id}`;
   const { lastJsonMessage } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Lobby: conexión cerrada."),
@@ -19,6 +20,8 @@ function Lobby() {
   const [tipoAlerta, setTipoAlerta] = useState("info");
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [estaShaking, setEstaShaking] = useState(false);
+
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
 
   useEffect(() => {
     if (lastJsonMessage !== null) {
@@ -47,9 +50,9 @@ function Lobby() {
       </div>
       <AbandonarPartida
         estadoPartida="WAITING"
-        esAnfitrion={false}
-        idJugador={idJugador}
-        idPartida={idPartida}
+        esAnfitrion={datosJugador.is_owner}
+        idJugador={player_id}
+        idPartida={match_id}
       />
     </div>
   );

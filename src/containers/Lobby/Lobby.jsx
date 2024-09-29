@@ -29,7 +29,7 @@ function Lobby() {
             `jugador ${lastJsonMessage.payload.name} se ha unido.`
           );
           setEstaShaking(true);
-          setTimeout(() => setEstaShaking(false), 1000); 
+          setTimeout(() => setEstaShaking(false), 1000);
           break;
 
         default:
@@ -37,12 +37,7 @@ function Lobby() {
           break;
       }
     }
-  }, [
-    lastJsonMessage,
-    setMostrarAlerta,
-    setTipoAlerta,
-    setMensajeAlerta,
-  ]);
+  }, [lastJsonMessage, setMostrarAlerta, setTipoAlerta, setMensajeAlerta]);
 
   return (
     <div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ServicioPartida } from "../../../services/ServicioPartida";
+import "./UnirsePartida.css";
 
 function UnirsePartida({ idPartida }) {
   const [nombreUsuario, setNombreUsuario] = useState("");
@@ -35,12 +36,14 @@ function UnirsePartida({ idPartida }) {
 
   return (
     <>
-      <button
-        className="btn"
-        onClick={() => document.getElementById("modal-unirse-partida").showModal()}
-      >
-        unirse a partida
-      </button>
+      <div className="unirse-partida">
+        <button
+          className="btn boton-unirse-partida"
+          onClick={() => document.getElementById("modal-unirse-partida").showModal()}
+        >
+          Unirse a partida
+        </button>
+      </div>
       <dialog id="modal-unirse-partida" className="modal">
         <div className="modal-box">
           <button

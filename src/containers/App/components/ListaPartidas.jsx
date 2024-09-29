@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Alerts } from "../../../components/Alerts.jsx";
 import "./ListaPartidas.css";
 import CrearPartida from "./CrearPartida.jsx";
+import UnirsePartida from "./UnirsePartida.jsx";
 
 export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
@@ -92,6 +93,7 @@ export const ListaPartidas = () => {
             Refrescar
           </button>
           <CrearPartida />
+          <UnirsePartida idPartida={selectedPartida?.id}/>
         </div>
       </div>
     </>

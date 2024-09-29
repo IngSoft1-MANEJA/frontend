@@ -26,7 +26,7 @@ function Lobby() {
           setMostrarAlerta(true);
           setTipoAlerta("info");
           setMensajeAlerta(
-            `jugador ${lastJsonMessage.payload.name} se ha unido.`
+            `jugador ${lastJsonMessage.payload.name} se ha unido.`,
           );
           setEstaShaking(true);
           setTimeout(() => setEstaShaking(false), 1000);

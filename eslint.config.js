@@ -35,7 +35,7 @@ export default [
       ],
     },
     env: {
-      "jest": true,
-    }
+      jest: true,
+    },
   },
 ];

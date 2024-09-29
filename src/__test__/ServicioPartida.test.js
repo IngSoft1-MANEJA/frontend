@@ -7,7 +7,7 @@ import { ServicioPartida } from "../services/ServicioPartida";
 const server = setupServer(
   http.post(`${BACKEND_URL}/matches/:id`, () => {
     return HttpResponse.json({ success: true }, { status: 200 });
-  })
+  }),
 );
 
 beforeAll(() => {
@@ -29,11 +29,11 @@ describe("ServicioPartida", () => {
     server.use(
       http.post(`${BACKEND_URL}/matches/:id`, (req, res, ctx) => {
         return HttpResponse.json(null, { status: 500 });
-      })
+      }),
     );
 
     await expect(ServicioPartida.unirsePartida(2, "Jugador 1")).rejects.toThrow(
-      "Error al unirse a partida - estado: 500"
+      "Error al unirse a partida - estado: 500",
     );
   });
 });

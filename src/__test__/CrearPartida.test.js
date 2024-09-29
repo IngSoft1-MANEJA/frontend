@@ -26,7 +26,8 @@ jest.mock("react-router-dom", () => ({
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve({player_name: "test", match_id: 1, player_id: 1}),
+    json: () =>
+      Promise.resolve({ player_name: "test", match_id: 1, player_id: 1 }),
   }),
 );
 
@@ -45,7 +46,7 @@ describe("CrearPartida", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
     expect(screen.getByText("Crear sala")).toBeInTheDocument();
   });
@@ -54,7 +55,7 @@ describe("CrearPartida", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -67,7 +68,7 @@ describe("CrearPartida", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -85,7 +86,7 @@ describe("CrearPartida", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -99,14 +100,14 @@ describe("CrearPartida", () => {
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMock.cantidadJugadores
+      CrearPartidaMock.cantidadJugadores,
     );
 
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue(CrearPartidaMock.nombreJugador);
       expect(nombreSalaInput).toHaveValue(CrearPartidaMock.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMock.cantidadJugadores.toString()
+        CrearPartidaMock.cantidadJugadores.toString(),
       );
     });
 
@@ -130,7 +131,7 @@ describe("CrearPartida", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -143,21 +144,21 @@ describe("CrearPartida", () => {
 
     await userEvent.type(
       nombreJugadorInput,
-      CrearPartidaMockError.nombreJugador
+      CrearPartidaMockError.nombreJugador,
     );
     await userEvent.type(nombreSalaInput, CrearPartidaMockError.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMockError.cantidadJugadores
+      CrearPartidaMockError.cantidadJugadores,
     );
 
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue(
-        CrearPartidaMockError.nombreJugador
+        CrearPartidaMockError.nombreJugador,
       );
       expect(nombreSalaInput).toHaveValue(CrearPartidaMockError.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMockError.cantidadJugadores
+        CrearPartidaMockError.cantidadJugadores,
       );
     });
 
@@ -170,7 +171,7 @@ describe("CrearPartida", () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -189,14 +190,14 @@ describe("CrearPartida", () => {
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMock.cantidadJugadores
+      CrearPartidaMock.cantidadJugadores,
     );
 
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue(CrearPartidaMock.nombreJugador);
       expect(nombreSalaInput).toHaveValue(CrearPartidaMock.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMock.cantidadJugadores
+        CrearPartidaMock.cantidadJugadores,
       );
     });
 
@@ -215,7 +216,7 @@ describe("CrearPartida", () => {
             player_name: CrearPartidaMock.nombreJugador,
             max_players: CrearPartidaMock.cantidadJugadores,
           }),
-        })
+        }),
       );
     });
 

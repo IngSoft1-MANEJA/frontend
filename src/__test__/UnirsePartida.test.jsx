@@ -16,7 +16,7 @@ import { MemoryRouter } from "react-router-dom";
 const server = setupServer(
   http.post(`${BACKEND_URL}/matches/:id`, () => {
     return HttpResponse.json(null, { status: 200 });
-  })
+  }),
 );
 
 const mockNavigate = jest.fn();
@@ -84,7 +84,7 @@ describe("UnirsePartida", () => {
     fireEvent.click(screen.getByText("Unirse"));
 
     const mensajeError = screen.getByText(
-      "Por favor, ingrese un nombre de usuario"
+      "Por favor, ingrese un nombre de usuario",
     );
     expect(mensajeError).toBeInTheDocument();
   });
@@ -102,15 +102,15 @@ describe("UnirsePartida", () => {
 
         return HttpResponse.json(
           { match_id: 1, player_id: 1 },
-          { status: 200 }
+          { status: 200 },
         );
-      })
+      }),
     );
 
     render(
       <MemoryRouter>
         <UnirsePartida idPartida={1} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -133,13 +133,13 @@ describe("UnirsePartida", () => {
     server.use(
       http.post(`${BACKEND_URL}/matches/:id`, async ({ request, params }) => {
         return HttpResponse.json(null, { status: 500 });
-      })
+      }),
     );
 
     render(
       <MemoryRouter>
         <UnirsePartida idPartida={1} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -153,7 +153,7 @@ describe("UnirsePartida", () => {
     await waitFor(() => {
       expect(console.error).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledWith(
-        "Error al unirse a partida - estado: 500"
+        "Error al unirse a partida - estado: 500",
       );
     });
   });

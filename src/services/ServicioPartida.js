@@ -12,12 +12,12 @@ export class ServicioPartida {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ player_name: nombreJugador }),
-      }
+      },
     );
 
     if (!respuesta.ok) {
       throw new Error(
-        `Error al unirse a partida - estado: ${respuesta.status}`
+        `Error al unirse a partida - estado: ${respuesta.status}`,
       );
     }
 

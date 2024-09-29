@@ -34,7 +34,7 @@ export const CrearPartida = () => {
       const resJson = await ServicioPartida.crearPartida(
         nombreSalaWatch,
         nombreJugadorWatch,
-        cantidadJugadoresWatch
+        cantidadJugadoresWatch,
       );
 
       setMessage("Sala de partida creada con exito");

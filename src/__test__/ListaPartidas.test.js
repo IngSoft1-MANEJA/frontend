@@ -39,7 +39,9 @@ describe("ListarPartidas", () => {
 
     await waitFor(() => {
       ListarPartidasMock.forEach((partida) => {
-        expect(screen.getByText(partida.match_id.toString())).toBeInTheDocument();
+        expect(
+          screen.getByText(partida.match_id.toString()),
+        ).toBeInTheDocument();
         expect(screen.getByText(partida.match_name)).toBeInTheDocument();
         expect(
           screen.getByText(partida.current_players.toString()),
@@ -75,7 +77,9 @@ describe("ListarPartidas", () => {
 
     await waitFor(() => {
       ListarPartidasMock.forEach((partida) => {
-        expect(screen.getByText(partida.match_id.toString())).toBeInTheDocument();
+        expect(
+          screen.getByText(partida.match_id.toString()),
+        ).toBeInTheDocument();
         expect(screen.getByText(partida.match_name)).toBeInTheDocument();
         expect(
           screen.getByText(partida.current_players.toString()),

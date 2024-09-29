@@ -16,7 +16,7 @@ function UnirsePartida({ idPartida }) {
         setEstaCargando(true);
         const dataPartida = await ServicioPartida.unirsePartida(
           idPartida,
-          nombreUsuario
+          nombreUsuario,
         );
         setEstaCargando(false);
         navigate(`/lobby/${idPartida}/jugador/${dataPartida.match_id}`);

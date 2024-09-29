@@ -1,16 +1,16 @@
 .unirse-partida {
-    width: 100%;
+  width: 100%;
 }
 
-.unirse-partida .boton-unirse-partida{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    width: 100%;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+.unirse-partida .boton-unirse-partida {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

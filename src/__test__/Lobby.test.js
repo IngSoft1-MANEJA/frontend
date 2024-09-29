@@ -26,7 +26,7 @@ describe("Lobby", () => {
     const websocket_url = `${WEBSOCKET_URL}/1/ws/1`;
     expect(useWebSocket).toHaveBeenCalledWith(
       websocket_url,
-      expect.objectContaining({ share: true })
+      expect.objectContaining({ share: true }),
     );
   });
 
@@ -46,7 +46,7 @@ describe("Lobby", () => {
     render(<Lobby />);
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(
-      "key incorrecto recibido del websocket"
+      "key incorrecto recibido del websocket",
     );
   });
 });

@@ -8,7 +8,12 @@ import "./Lobby.css";
 function Lobby() {
   const { idPartida, idJugador } = useParams();
   const websocket_url = `${WEBSOCKET_URL}/${idPartida}/ws/${idJugador}`;
-  const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
+  const { lastJsonMessage } = useWebSocket(websocket_url, {
+    share: true,
+    onClose: () => console.log("Websocket - Lobby: conexión cerrada."),
+    onError: (event) => console.error("Websocket - Lobby: error: ", event),
+    onOpen: () => console.log("Websocket - Lobby: conexión abierta."),
+  });
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [tipoAlerta, setTipoAlerta] = useState("info");
   const [mensajeAlerta, setMensajeAlerta] = useState("");
@@ -24,7 +29,7 @@ function Lobby() {
             `jugador ${lastJsonMessage.payload.name} se ha unido.`
           );
           setEstaShaking(true);
-          setTimeout(() => setEstaShaking(false), 1000); // Shake for 1 second
+          setTimeout(() => setEstaShaking(false), 1000); 
           break;
 
         default:

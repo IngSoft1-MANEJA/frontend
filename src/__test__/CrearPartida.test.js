@@ -27,7 +27,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () =>
-      Promise.resolve({ player_name: "test", match_id: 1, player_id: 1 }),
+      Promise.resolve({ player_name: "test", match_id: 1, player_id: 2 }),
   }),
 );
 
@@ -222,7 +222,7 @@ describe("CrearPartida", () => {
 
     await waitFor(() => {
       expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
-      expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/jugador/1");
+      expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
     });
   });
 });

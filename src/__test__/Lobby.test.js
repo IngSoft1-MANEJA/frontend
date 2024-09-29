@@ -8,7 +8,7 @@ jest.mock("react-use-websocket");
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useParams: () => ({ idPartida: 1, idJugador: 1 }),
+  useParams: () => ({ idPartida: 1, idJugador: 2 }),
 }));
 
 afterEach(() => {
@@ -23,7 +23,7 @@ describe("Lobby", () => {
     });
     render(<Lobby />);
     expect(useWebSocket).toHaveBeenCalledTimes(1);
-    const websocket_url = `${WEBSOCKET_URL}/1/ws/1`;
+    const websocket_url = `${WEBSOCKET_URL}/1/ws/2`;
     expect(useWebSocket).toHaveBeenCalledWith(
       websocket_url,
       expect.objectContaining({ share: true }),

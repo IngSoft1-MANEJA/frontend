@@ -101,7 +101,7 @@ describe("UnirsePartida", () => {
         }
 
         return HttpResponse.json(
-          { match_id: 1, player_id: 1 },
+          { match_id: 1, player_id: 2 },
           { status: 200 },
         );
       }),
@@ -124,7 +124,7 @@ describe("UnirsePartida", () => {
     await waitFor(() => {
       expect(console.error).not.toHaveBeenCalled();
       expect(mockNavigate).toHaveBeenCalledTimes(1);
-      expect(mockNavigate).toHaveBeenCalledWith("/lobby/1/jugador/1");
+      expect(mockNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
     });
   });
 

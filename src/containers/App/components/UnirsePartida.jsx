@@ -19,7 +19,7 @@ function UnirsePartida({ idPartida }) {
           nombreUsuario,
         );
         setEstaCargando(false);
-        navigate(`/lobby/${idPartida}/jugador/${dataPartida.match_id}`);
+        navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
         console.log("lobby called");
       } catch (error) {
         console.error(error.message);

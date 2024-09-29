@@ -4,7 +4,7 @@ import { InformacionTurno } from "./InformacionTurno";
 export const Game = () => {
   return (
     <div className="game-div">
-      <InformacionTurno matchId={matchId} />
+      <InformacionTurno />
     </div>
   );
 };

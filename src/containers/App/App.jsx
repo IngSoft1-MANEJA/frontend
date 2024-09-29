@@ -1,10 +1,16 @@
 import "./App.css";
-import ListaPartidas from "./components/ListaPartidas.jsx";
+import { Routes, Route } from "react-router-dom";
+import { ListaPartidas } from "./components/ListaPartidas.jsx";
+import { Game } from "./components/Game.jsx";
 
 function App() {
   return (
     <div>
-      <ListaPartidas />
+      <Routes>
+        <Route path="/" element={<ListaPartidas />} />
+        <Route path="/home" element={<ListaPartidas />} />
+        <Route path="/matches/:matchId" element={<Game />} />
+      </Routes>
     </div>
   );
 }

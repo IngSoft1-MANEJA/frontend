@@ -14,6 +14,7 @@ import {
   CrearPartidaMockError,
 } from "../__mocks__/CrearPartidaForm.mock.js";
 import * as reactRouterDom from "react-router-dom";
+import { BACKEND_URL } from "../variablesConfiguracion.js";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -25,7 +26,8 @@ jest.mock("react-router-dom", () => ({
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve({}),
+    json: () =>
+      Promise.resolve({ player_name: "test", match_id: 1, player_id: 2 }),
   }),
 );
 
@@ -62,7 +64,7 @@ describe("CrearPartida", () => {
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
   });
 
-  test("closes the modal correctly after clicking the close button", () => {
+  test("closes the modal correctly after clicking the close button", async () => {
     render(
       <reactRouterDom.MemoryRouter>
         <CrearPartida />
@@ -75,7 +77,9 @@ describe("CrearPartida", () => {
     const closeButton = screen.getByText("✕");
     fireEvent.click(closeButton);
 
-    expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    });
   });
 
   test("inputs get cleared after closing the modal", async () => {
@@ -110,13 +114,17 @@ describe("CrearPartida", () => {
     const closeButton = screen.getByText("✕");
     fireEvent.click(closeButton);
 
-    expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    });
 
     fireEvent.click(openButton);
 
-    expect(nombreJugadorInput).toHaveValue("");
-    expect(nombreSalaInput).toHaveValue("");
-    expect(cantidadJugadoresInput).toHaveValue("");
+    await waitFor(() => {
+      expect(nombreJugadorInput).toHaveValue("");
+      expect(nombreSalaInput).toHaveValue("");
+      expect(cantidadJugadoresInput).toHaveValue("");
+    });
   });
 
   test("fetch is not called when input values are incorrect", async () => {
@@ -197,16 +205,16 @@ describe("CrearPartida", () => {
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        "/matches",
+        `${BACKEND_URL}/matches`,
         expect.objectContaining({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            nombreJugador: CrearPartidaMock.nombreJugador,
-            nombreSala: CrearPartidaMock.nombreSala,
-            cantidadJugadores: CrearPartidaMock.cantidadJugadores,
+            match_name: CrearPartidaMock.nombreSala,
+            player_name: CrearPartidaMock.nombreJugador,
+            max_players: CrearPartidaMock.cantidadJugadores,
           }),
         }),
       );
@@ -214,7 +222,7 @@ describe("CrearPartida", () => {
 
     await waitFor(() => {
       expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
-      expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby");
+      expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
     });
   });
 });

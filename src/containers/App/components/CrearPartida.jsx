@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { set, useForm } from "react-hook-form";
 import { Alerts } from "../../../components/Alerts.jsx";
 import "./CrearPartida.css";
+import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
 export const CrearPartida = () => {
   const navegar = useNavigate();
@@ -30,28 +31,20 @@ export const CrearPartida = () => {
 
   const onSubmit = async (e) => {
     try {
-      let res = await fetch("/matches", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nombreJugador: nombreJugadorWatch,
-          nombreSala: nombreSalaWatch,
-          cantidadJugadores: cantidadJugadoresWatch,
-        }),
-      });
-      let resJson = await res.json();
-      if (res.ok) {
-        setMessage("Sala de partida creada con exito");
-        setShowSuccess("success");
-        console.log(resJson);
-        reset();
+      const resJson = await ServicioPartida.crearPartida(
+        nombreSalaWatch,
+        nombreJugadorWatch,
+        cantidadJugadoresWatch,
+      );
 
-        setTimeout(() => {
-          navegar("/lobby");
-        }, 300);
-      }
+      setMessage("Sala de partida creada con exito");
+      setShowSuccess("success");
+      console.log(resJson);
+      reset();
+
+      setTimeout(() => {
+        navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
+      }, 300);
     } catch (err) {
       setMessage("Error creando sala de partida");
       setShowSuccess("error");

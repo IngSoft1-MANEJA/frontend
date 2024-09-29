@@ -14,9 +14,12 @@ function UnirsePartida({ idPartida }) {
     if (nombreUsuario) {
       try {
         setEstaCargando(true);
-        await ServicioPartida.unirsePartida(idPartida, nombreUsuario);
+        const dataPartida = await ServicioPartida.unirsePartida(
+          idPartida,
+          nombreUsuario
+        );
         setEstaCargando(false);
-        navigate("/lobby");
+        navigate(`/lobby/${idPartida}/jugador/${dataPartida.match_id}`);
         console.log("lobby called");
       } catch (error) {
         console.error(error.message);
@@ -39,7 +42,9 @@ function UnirsePartida({ idPartida }) {
       <div className="unirse-partida">
         <button
           className="btn boton-unirse-partida"
-          disabled={idPartida !== undefined && idPartida !== null ? "" : "disabled"}
+          disabled={
+            idPartida !== undefined && idPartida !== null ? "" : "disabled"
+          }
           onClick={() => {
             if (idPartida !== undefined && idPartida !== null) {
               document.getElementById("modal-unirse-partida").showModal();

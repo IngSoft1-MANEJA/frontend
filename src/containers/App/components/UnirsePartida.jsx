@@ -39,7 +39,12 @@ function UnirsePartida({ idPartida }) {
       <div className="unirse-partida">
         <button
           className="btn boton-unirse-partida"
-          onClick={() => document.getElementById("modal-unirse-partida").showModal()}
+          disabled={idPartida !== undefined && idPartida !== null ? "" : "disabled"}
+          onClick={() => {
+            if (idPartida !== undefined && idPartida !== null) {
+              document.getElementById("modal-unirse-partida").showModal();
+            }
+          }}
         >
           Unirse a partida
         </button>
@@ -74,8 +79,8 @@ function UnirsePartida({ idPartida }) {
                 </div>
               </label>
               <button className="btn" onClick={manejarUnirse}>
-                  Unirse
-                {estaCargando && <span className="loading loading-spinner"/>}
+                Unirse
+                {estaCargando && <span className="loading loading-spinner" />}
               </button>
             </form>
           </div>

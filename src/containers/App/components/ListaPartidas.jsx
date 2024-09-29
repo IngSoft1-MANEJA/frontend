@@ -59,12 +59,16 @@ export const ListaPartidas = () => {
             <tbody>
               {/* Defino las filas de la tabla */}
               {partidas.map((partida) => (
-                <tr key={partida.id}
-                onClick={() => handleSelectPartida(partida)}
-                            style={{
-                                cursor: 'pointer',
-                                backgroundColor: selectedPartida?.id === partida.id ? 'rgba(0, 123, 255,0.4)' : 'transparent',
-                            }}
+                <tr
+                  key={partida.id}
+                  onClick={() => handleSelectPartida(partida)}
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor:
+                      selectedPartida?.id === partida.id
+                        ? "rgba(0, 123, 255,0.4)"
+                        : "transparent",
+                  }}
                 >
                   <td>{partida.id}</td>
                   <td>{partida.nombre}</td>
@@ -93,7 +97,7 @@ export const ListaPartidas = () => {
             Refrescar
           </button>
           <CrearPartida />
-          <UnirsePartida idPartida={selectedPartida?.id}/>
+          <UnirsePartida idPartida={selectedPartida?.id} />
         </div>
       </div>
     </>

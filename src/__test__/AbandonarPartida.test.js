@@ -6,7 +6,7 @@ import {
   cleanup,
   waitFor,
 } from "@testing-library/react";
-import { AbandonarPartida } from "../containers/App/components/AbandonarPartida";
+import { AbandonarPartida } from "../components/AbandonarPartida";
 import {
   Started,
   WaitingAnfitrion,

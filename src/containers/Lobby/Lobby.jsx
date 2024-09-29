@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { AbandonarPartida } from "../../components/AbandonarPartida";
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion";
 import Alerts from "../../components/Alerts";
@@ -44,6 +45,12 @@ function Lobby() {
       <div className={`${estaShaking ? "animate-shake" : ""}`}>
         {mostrarAlerta && <Alerts type={tipoAlerta} message={mensajeAlerta} />}
       </div>
+      <AbandonarPartida
+        estadoPartida="WAITING"
+        esAnfitrion={false}
+        idJugador={idJugador}
+        idPartida={idPartida}
+      />
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import "./App.css";
-import AbandonarPartida from "./components/AbandonarPartida.jsx";
+import ListaPartidas from "./components/ListaPartidas.jsx";
 
 function App() {
   return (
     <div>
-      <AbandonarPartida />
+      <ListaPartidas />
     </div>
   );
 }

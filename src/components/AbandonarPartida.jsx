@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ServicioPartida } from "../../../services/ServicioPartida";
+import { ServicioPartida } from "../services/ServicioPartida";
 import "./AbandonarPartida.css";
 
 export const AbandonarPartida = ({
@@ -39,7 +39,7 @@ export const AbandonarPartida = ({
 
       await ServicioPartida.abandonarPartida(idJugador, idPartida);
       console.log("Abandonar partida");
-      navegar("/AlgunLado");
+      navegar("/");
     } catch (error) {
       console.error("Error al abandonar partida", error);
     }
@@ -48,7 +48,7 @@ export const AbandonarPartida = ({
   return (
     <div>
       <button
-        className="abandonar-partida-boton"
+        className="abandonar-partida-boton btn"
         onClick={manejarAbandonar}
         disabled={!habilitarAbandonar}
       >

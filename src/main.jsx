@@ -4,11 +4,16 @@ import App from "./containers/App/App.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import Lobby from "./containers/Lobby/Lobby.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+  },
+  {
+    path: "/lobby/:idPartida/player/:idJugador",
+    element: <Lobby />,
   },
 ]);
 

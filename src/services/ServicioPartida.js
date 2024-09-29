@@ -4,7 +4,6 @@ export class ServicioPartida {
   static GRUPO_ENDPOINT = "matches";
 
   static async abandonarPartida(idJugador, idPartida) {
-
     const respuesta = await fetch(
       `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/left/${idJugador}`,
       {
@@ -12,11 +11,13 @@ export class ServicioPartida {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (!respuesta.ok) {
-      throw new Error(`Error al salir de la partida - estado: ${respuesta.status}`);
+      throw new Error(
+        `Error al salir de la partida - estado: ${respuesta.status}`,
+      );
     }
 
     const json = await respuesta.json();

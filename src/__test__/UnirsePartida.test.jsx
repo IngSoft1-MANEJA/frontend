@@ -48,7 +48,7 @@ describe("UnirsePartida", () => {
   it("deberia llamar a showModal se clickea el boton", () => {
     render(<UnirsePartida idPartida={1} />);
 
-    fireEvent.click(screen.getByText("unirse a partida"));
+    fireEvent.click(screen.getByText("Unirse a partida"));
 
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalledTimes(1);
   });
@@ -56,7 +56,7 @@ describe("UnirsePartida", () => {
   it("deberia llamar a close cuando el boton de cerrar se clickea", () => {
     render(<UnirsePartida idPartida={1} />);
 
-    fireEvent.click(screen.getByText("unirse a partida"));
+    fireEvent.click(screen.getByText("Unirse a partida"));
     fireEvent.click(screen.getByText("✕"));
 
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalledTimes(1);
@@ -65,7 +65,7 @@ describe("UnirsePartida", () => {
   it("deberia limpiar el input del modal cuando se cierra", () => {
     render(<UnirsePartida idPartida={1} />);
 
-    fireEvent.click(screen.getByText("unirse a partida"));
+    fireEvent.click(screen.getByText("Unirse a partida"));
 
     const el = screen.getByLabelText("Ingresa tu nombre");
     const input = el.parentElement.parentElement.querySelector("input");
@@ -80,7 +80,7 @@ describe("UnirsePartida", () => {
   it("debería mostrar un mensaje de error cuando no se ingresa un nombre de usuario y se hace click en unirse", () => {
     render(<UnirsePartida idPartida={1} />);
 
-    fireEvent.click(screen.getByText("unirse a partida"));
+    fireEvent.click(screen.getByText("Unirse a partida"));
     fireEvent.click(screen.getByText("Unirse"));
 
     const mensajeError = screen.getByText(
@@ -100,7 +100,10 @@ describe("UnirsePartida", () => {
           return HttpResponse.json(null, { status: 400 });
         }
 
-        return HttpResponse.json(null, { status: 200 });
+        return HttpResponse.json(
+          { match_id: 1, player_id: 1 },
+          { status: 200 }
+        );
       })
     );
 
@@ -110,7 +113,7 @@ describe("UnirsePartida", () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getByText("unirse a partida"));
+    fireEvent.click(screen.getByText("Unirse a partida"));
 
     const el = screen.getByLabelText("Ingresa tu nombre");
     const input = el.parentElement.parentElement.querySelector("input");
@@ -121,7 +124,7 @@ describe("UnirsePartida", () => {
     await waitFor(() => {
       expect(console.error).not.toHaveBeenCalled();
       expect(mockNavigate).toHaveBeenCalledTimes(1);
-      expect(mockNavigate).toHaveBeenCalledWith("/lobby");
+      expect(mockNavigate).toHaveBeenCalledWith("/lobby/1/jugador/1");
     });
   });
 
@@ -139,7 +142,7 @@ describe("UnirsePartida", () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getByText("unirse a partida"));
+    fireEvent.click(screen.getByText("Unirse a partida"));
 
     const el = screen.getByLabelText("Ingresa tu nombre");
     const input = el.parentElement.parentElement.querySelector("input");

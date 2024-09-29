@@ -39,13 +39,13 @@ describe("ListarPartidas", () => {
 
     await waitFor(() => {
       ListarPartidasMock.forEach((partida) => {
-        expect(screen.getByText(partida.id.toString())).toBeInTheDocument();
-        expect(screen.getByText(partida.nombre)).toBeInTheDocument();
+        expect(screen.getByText(partida.match_id.toString())).toBeInTheDocument();
+        expect(screen.getByText(partida.match_name)).toBeInTheDocument();
         expect(
-          screen.getByText(partida.jugadoresActuales.toString()),
+          screen.getByText(partida.current_players.toString()),
         ).toBeInTheDocument();
         expect(
-          screen.getByText(partida.jugadoresMaximos.toString()),
+          screen.getByText(partida.max_players.toString()),
         ).toBeInTheDocument();
       });
     });
@@ -75,13 +75,13 @@ describe("ListarPartidas", () => {
 
     await waitFor(() => {
       ListarPartidasMock.forEach((partida) => {
-        expect(screen.getByText(partida.id.toString())).toBeInTheDocument();
-        expect(screen.getByText(partida.nombre)).toBeInTheDocument();
+        expect(screen.getByText(partida.match_id.toString())).toBeInTheDocument();
+        expect(screen.getByText(partida.match_name)).toBeInTheDocument();
         expect(
-          screen.getByText(partida.jugadoresActuales.toString()),
+          screen.getByText(partida.current_players.toString()),
         ).toBeInTheDocument();
         expect(
-          screen.getByText(partida.jugadoresMaximos.toString()),
+          screen.getByText(partida.max_players.toString()),
         ).toBeInTheDocument();
       });
     });

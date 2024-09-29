@@ -14,6 +14,7 @@ import {
   CrearPartidaMockError,
 } from "../__mocks__/CrearPartidaForm.mock.js";
 import * as reactRouterDom from "react-router-dom";
+import { BACKEND_URL } from "../variablesConfiguracion.js";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -25,7 +26,7 @@ jest.mock("react-router-dom", () => ({
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve({}),
+    json: () => Promise.resolve({player_name: "test", match_id: 1, player_id: 1}),
   }),
 );
 
@@ -203,16 +204,16 @@ describe("CrearPartida", () => {
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        "/matches",
+        `${BACKEND_URL}/matches`,
         expect.objectContaining({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            nombreJugador: CrearPartidaMock.nombreJugador,
-            nombreSala: CrearPartidaMock.nombreSala,
-            cantidadJugadores: CrearPartidaMock.cantidadJugadores,
+            match_name: CrearPartidaMock.nombreSala,
+            player_name: CrearPartidaMock.nombreJugador,
+            max_players: CrearPartidaMock.cantidadJugadores,
           }),
         })
       );
@@ -220,7 +221,7 @@ describe("CrearPartida", () => {
 
     await waitFor(() => {
       expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
-      expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby");
+      expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/jugador/1");
     });
   });
 });

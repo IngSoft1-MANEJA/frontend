@@ -1,18 +1,22 @@
 import React from "react";
+
+/*import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
+import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";*/
 
 export function Game() {
-  const { match_id } = useParams();
+  /*const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { match_id } = useParams();*/
 
   return (
     <div>
-      <AbandonarPartida
+      {/*<AbandonarPartida
         estadoPartida="STARTED"
-        esAnfitrion={false}
-        idJugador={1}
+        esAnfitrion={datosJugador.is_owner}
+        idJugador={datosJugador.player_id}
         idPartida={match_id}
-      />
+      />*/}
     </div>
   );
 }

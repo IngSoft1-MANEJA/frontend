@@ -33,7 +33,7 @@ export function Lobby() {
   useEffect(() => {
     if (lastJsonMessage !== null) {
       switch (lastJsonMessage.key) {
-        
+
         case "PLAYER_JOIN":
           setCantPlayersLobby(cantPlayersLobby + 1);
           setMostrarAlerta(true);
@@ -58,6 +58,7 @@ export function Lobby() {
         
         case "START_MATCH":
           navigate(`/matches/${match_id}`);
+          break;
 
         default:
           console.error("key incorrecto recibido del websocket");

@@ -50,7 +50,7 @@ export const CrearPartida = () => {
       reset();
       setDatosJugador({ ...datosJugador, is_owner: true });
       if (cantidadJugadoresWatch !== null && cantidadJugadoresWatch !== undefined){
-        setDatosPartida({ max_players: cantidadJugadoresWatch, ...datosPartida });
+        setDatosPartida({...datosPartida, max_players: cantidadJugadoresWatch});
       }
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);

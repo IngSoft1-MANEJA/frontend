@@ -41,7 +41,7 @@ describe("Lobby", () => {
       </reactRouterDom.MemoryRouter>,
     );
     expect(useWebSocket).toHaveBeenCalledTimes(1);
-    const websocket_url = `${WEBSOCKET_URL}/1/ws/2`;
+    const websocket_url = `${WEBSOCKET_URL}/matches/1/ws/2`;
     expect(useWebSocket).toHaveBeenCalledWith(
       websocket_url,
       expect.objectContaining({ share: true }),

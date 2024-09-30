@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 export function Lobby() {
   const { match_id, player_id } = useParams();
   const navigate = useNavigate();
-  const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${player_id}`;
+  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${player_id}`;
   const { lastJsonMessage } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Lobby: conexión cerrada."),

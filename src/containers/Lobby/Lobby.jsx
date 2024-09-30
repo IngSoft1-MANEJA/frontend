@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useContext } from "react";
+import { AbandonarPartida } from "../../components/AbandonarPartida";
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion";
 import Alerts from "../../components/Alerts";
 import { useParams } from "react-router-dom";
+import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
+import { DatosPartidaContext } from "../../contexts/DatosPartidaContext";
 import "./Lobby.css";
+import IniciarPartida from "./components/IniciarPartida";
+import { useNavigate } from "react-router-dom";
 
 export function Lobby() {
-  const { idPartida, idJugador } = useParams();
-  const websocket_url = `${WEBSOCKET_URL}/${idPartida}/ws/${idJugador}`;
+  const { match_id, player_id } = useParams();
+  const navigate = useNavigate();
+  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${player_id}`;
   const { lastJsonMessage } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Lobby: conexión cerrada."),
@@ -18,6 +25,9 @@ export function Lobby() {
   const [tipoAlerta, setTipoAlerta] = useState("info");
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [estaShaking, setEstaShaking] = useState(false);
+
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
 
   useEffect(() => {
     if (lastJsonMessage !== null) {
@@ -32,6 +42,9 @@ export function Lobby() {
           setTimeout(() => setEstaShaking(false), 1000);
           break;
 
+        case "START_MATCH":
+          navigate(`/matches/${match_id}`);
+
         default:
           console.error("key incorrecto recibido del websocket");
           break;
@@ -44,6 +57,19 @@ export function Lobby() {
       <div className={`${estaShaking ? "animate-shake" : ""}`}>
         {mostrarAlerta && <Alerts type={tipoAlerta} message={mensajeAlerta} />}
       </div>
+      <AbandonarPartida
+        estadoPartida="WAITING"
+        esAnfitrion={datosJugador.is_owner}
+        idJugador={player_id}
+        idPartida={match_id}
+      />
+      <IniciarPartida
+        idPartida={match_id}
+        idJugador={player_id}
+        esAnfitrion={datosJugador.is_owner}
+        nJugadoresEnLobby={2}
+        maxJugadores={datosPartida.max_players}
+      />
     </div>
   );
 }

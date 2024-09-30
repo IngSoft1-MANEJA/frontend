@@ -5,6 +5,7 @@ import Game from "./containers/Game/Game.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Lobby from "./containers/Lobby/Lobby.jsx";
+import Game from "./containers/Game/Game.jsx";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,8 @@ const router = createBrowserRouter([
       {
         path: "matches/:match_id",
         element: <Game />,
-      }],
+      },
+    ],
   },
 ]);
 

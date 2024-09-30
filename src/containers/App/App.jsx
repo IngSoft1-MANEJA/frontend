@@ -1,26 +1,45 @@
 import "./App.css";
-import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { ListaPartidas } from "./components/ListaPartidas.jsx";
-import { Game } from "../Game/Game.jsx";
+import ListaPartidas from "./components/ListaPartidas.jsx";
 import { Lobby } from "../Lobby/Lobby.jsx";
+import { Game } from "../Game/Game.jsx";
+import { DatosJugadorProvider } from "../../contexts/DatosJugadorContext.jsx";
+import { DatosPartidaProvider } from "../../contexts/DatosPartidaContext.jsx";
 
 function App() {
 
   return (
     <div>
       <Routes>
-        <Route 
-          path="/" 
-          element={<ListaPartidas />} 
+        <Route
+          path="/"
+          element={
+            <DatosPartidaProvider>
+              <DatosJugadorProvider>
+                <ListaPartidas />
+              </DatosJugadorProvider>
+            </DatosPartidaProvider>
+          }
         />
-        <Route 
+        <Route
           path="/lobby/:match_id/player/:player_id"
-          element={<Lobby />}
+          element={
+            <DatosPartidaProvider>
+              <DatosJugadorProvider>
+                <Lobby />
+              </DatosJugadorProvider>
+            </DatosPartidaProvider>
+          }
         />
-        <Route 
+        <Route
           path="/matches/:match_id"
-          element={<Game />}
+          element={
+            <DatosPartidaProvider>
+              <DatosJugadorProvider>
+                <Game />
+              </DatosJugadorProvider>
+            </DatosPartidaProvider>
+          }
         />
       </Routes>
     </div>

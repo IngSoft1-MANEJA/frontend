@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { set, useForm } from "react-hook-form";
 import { Alerts } from "../../../components/Alerts.jsx";
 import "./CrearPartida.css";
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
+import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
+import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
 
 export const CrearPartida = () => {
   const navegar = useNavigate();
+
   const [showSuccess, setShowSuccess] = useState(null);
   const [message, setMessage] = useState("");
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
 
   const {
     register,
@@ -17,11 +23,12 @@ export const CrearPartida = () => {
     watch,
     formState: { errors },
     reset,
+    clearErrors,
   } = useForm({
     defaultValues: {
-      player_name: "",
-      lobby_name: "",
-      max_players: "",
+      nombreJugador: "",
+      nombreSala: "",
+      cantidadJugadores: 2,
     },
   });
 
@@ -41,7 +48,10 @@ export const CrearPartida = () => {
       setShowSuccess("success");
       console.log(resJson);
       reset();
-
+      setDatosJugador({ ...datosJugador, is_owner: true });
+      if (cantidadJugadoresWatch !== null && cantidadJugadoresWatch !== undefined){
+        setDatosPartida({ max_players: cantidadJugadoresWatch, ...datosPartida });
+      }
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
       }, 300);
@@ -54,8 +64,12 @@ export const CrearPartida = () => {
 
   // handle closure of modal
   const handleClose = (e) => {
-    reset();
+    e.preventDefault();
+    e.stopPropagation();
     document.getElementById("my_modal_1").close();
+    reset({}, {keepDirtyFields: true});
+    clearErrors();
+    
   };
 
   return (
@@ -91,9 +105,11 @@ export const CrearPartida = () => {
                   type="text"
                   aria-label="player_name"
                   placeholder="Elige tu nombre de jugador"
-                  value={player_nameWatch}
-                  className="input-modal-crear-partida input input-bordered w-full text-left"
-                  {...register("player_name", {
+                  value={nombreJugadorWatch}
+                  className={`input-modal-crear-partida input input-bordered w-full text-left${
+                    errors.nombreJugador?.message ? "input-modal-crear-partida input-error input-bordered w-full text-left" : ""
+                  }`}
+                  {...register("nombreJugador", {
                     required: {
                       value: true,
                       message: "Este campo es requerido",
@@ -110,9 +126,11 @@ export const CrearPartida = () => {
                   type="text"
                   aria-label="lobby_name"
                   placeholder="Elige el nombre de tu sala de partida"
-                  value={lobby_nameWatch}
-                  className="input-modal-crear-partida input input-bordered w-full"
-                  {...register("lobby_name", {
+                  value={nombreSalaWatch}
+                  className={`input-modal-crear-partida input input-bordered w-full text-left${
+                    errors.nombreSala?.message ? "input-modal-crear-partida input-error input-bordered w-full text-left" : ""
+                  }`}
+                  {...register("nombreSala", {
                     required: {
                       value: true,
                       message: "Este campo es requerido",
@@ -126,16 +144,19 @@ export const CrearPartida = () => {
                 />
                 <span className="error">{errors.lobby_name?.message}</span>
                 <input
-                  type="text"
-                  aria-label="max_players"
+                  type="number"
+                  aria-label="cantidadJugadores"
                   placeholder="Elige la cantidad maxima de jugadores (2-4)"
-                  value={max_playersWatch}
-                  className="input-modal-crear-partida input input-bordered w-full"
-                  {...register("max_players", {
+                  value={cantidadJugadoresWatch}
+                  className={`input-modal-crear-partida input input-bordered w-full text-left${
+                    errors.cantidadJugadores?.message ? "input-modal-crear-partida input-error input-bordered w-full text-left" : ""
+                  }`}
+                  {...register("cantidadJugadores", {
                     required: {
                       value: true,
                       message: "Este campo es requerido",
                     },
+                    valueAsNumber: true,
                     min: {
                       value: 2,
                       message: "La sala debe tener un minimo de 2 jugadores",
@@ -146,9 +167,7 @@ export const CrearPartida = () => {
                     },
                   })}
                 />
-                <span className="error">
-                  {errors.max_players?.message}
-                </span>
+                <span className="error">{errors.cantidadJugadores?.message}</span>
               </label>
               <div className="formButtons">
                 <input

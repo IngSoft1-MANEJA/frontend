@@ -32,7 +32,8 @@ export class ServicioPartida {
       throw new Error(`Error al listar partidas - estado: ${respuesta.status}`);
     }
 
-    const json = await respuesta.json();
+    let json = await respuesta.json();
+    json.match_id = json.id;
     return json;
   }
 

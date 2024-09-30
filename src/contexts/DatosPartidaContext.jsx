@@ -1,8 +1,9 @@
 import React, { createContext, useState } from 'react';
 
-const DatosPartidaContext = createContext();
+export const DatosPartidaContext = createContext();
 
 export const DatosPartidaProvider = ({ children }) => {
+  
   const [datosPartida, setDatosPartida] = useState({});
 
   return (
@@ -11,5 +12,3 @@ export const DatosPartidaProvider = ({ children }) => {
     </DatosPartidaContext.Provider>
   );
 };
-
-export default { DatosPartidaContext, DatosPartidaProvider };

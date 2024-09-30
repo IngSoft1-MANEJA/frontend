@@ -1,9 +1,10 @@
 import React, { createContext, useState } from 'react';
 
-const DatosJugadorContext = createContext();
+export const DatosJugadorContext = createContext();
 
 export const DatosJugadorProvider = ({ children }) => {
-  const [datosJugador, setDatosJugador] = useState({});
+
+  const [datosJugador, setDatosJugador] = useState({is_owner: false});
 
   return (
     <DatosJugadorContext.Provider value={{ datosJugador, setDatosJugador }}>
@@ -11,5 +12,3 @@ export const DatosJugadorProvider = ({ children }) => {
     </DatosJugadorContext.Provider>
   );
 };
-
-export default { DatosJugadorContext, DatosJugadorProvider };

@@ -5,6 +5,7 @@ import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion";
 import Alerts from "../../components/Alerts";
 import { useParams } from "react-router-dom";
+import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 import "./Lobby.css";
 
 export function Lobby() {

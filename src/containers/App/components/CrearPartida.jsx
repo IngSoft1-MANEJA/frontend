@@ -32,16 +32,16 @@ export const CrearPartida = () => {
     },
   });
 
-  const player_nameWatch = watch("player_name");
-  const lobby_nameWatch = watch("lobby_name");
-  const max_playersWatch = watch("max_players");
+  const nombreJugadorWatch = watch("nombreJugador");
+  const nombreSalaWatch = watch("nombreSala");
+  const cantidadJugadoresWatch = watch("cantidadJugadores");
 
   const onSubmit = async (e) => {
     try {
       const resJson = await ServicioPartida.crearPartida(
-        lobby_nameWatch,
-        player_nameWatch,
-        max_playersWatch,
+        nombreSalaWatch,
+        nombreJugadorWatch,
+        cantidadJugadoresWatch,
       );
 
       setMessage("Sala de partida creada con exito");
@@ -103,7 +103,7 @@ export const CrearPartida = () => {
               <label className="label-modal-crear-partida form-control w-full items-center">
                 <input
                   type="text"
-                  aria-label="player_name"
+                  aria-label="nombreJugador"
                   placeholder="Elige tu nombre de jugador"
                   value={nombreJugadorWatch}
                   className={`input-modal-crear-partida input input-bordered w-full text-left${
@@ -121,10 +121,10 @@ export const CrearPartida = () => {
                     },
                   })}
                 />
-                <span className="error">{errors.player_name?.message}</span>
+                <span className="error">{errors.nombreJugador?.message}</span>
                 <input
                   type="text"
-                  aria-label="lobby_name"
+                  aria-label="nombreSala"
                   placeholder="Elige el nombre de tu sala de partida"
                   value={nombreSalaWatch}
                   className={`input-modal-crear-partida input input-bordered w-full text-left${
@@ -142,7 +142,7 @@ export const CrearPartida = () => {
                     },
                   })}
                 />
-                <span className="error">{errors.lobby_name?.message}</span>
+                <span className="error">{errors.nombreSala?.message}</span>
                 <input
                   type="number"
                   aria-label="cantidadJugadores"

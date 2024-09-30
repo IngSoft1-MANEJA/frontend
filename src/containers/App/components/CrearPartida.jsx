@@ -1,15 +1,19 @@
 import React from "react";
 import { useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { set, useForm } from "react-hook-form";
 import { Alerts } from "../../../components/Alerts.jsx";
 import "./CrearPartida.css";
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
+import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 
 export const CrearPartida = () => {
   const navegar = useNavigate();
   const [showSuccess, setShowSuccess] = useState(null);
   const [message, setMessage] = useState("");
+
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
 
   const {
     register,
@@ -41,7 +45,7 @@ export const CrearPartida = () => {
       setShowSuccess("success");
       console.log(resJson);
       reset();
-
+      setDatosJugador({ is_owner: true, ...datosJugador });
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
       }, 300);

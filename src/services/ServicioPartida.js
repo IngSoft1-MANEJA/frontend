@@ -32,7 +32,8 @@ export class ServicioPartida {
       throw new Error(`Error al listar partidas - estado: ${respuesta.status}`);
     }
 
-    const json = await respuesta.json();
+    let json = await respuesta.json();
+    json.match_id = json.id;
     return json;
   }
 
@@ -51,6 +52,27 @@ export class ServicioPartida {
 
     if (!respuesta.ok) {
       throw new Error(`Error al crear partida - estado: ${respuesta.status}`);
+    }
+
+    const json = await respuesta.json();
+    return json;
+  }
+
+  static async abandonarPartida(idJugador, idPartida) {
+    const respuesta = await fetch(
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/left/${idJugador}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!respuesta.ok) {
+      throw new Error(
+        `Error al salir de la partida - estado: ${respuesta.status}`,
+      );
     }
 
     const json = await respuesta.json();

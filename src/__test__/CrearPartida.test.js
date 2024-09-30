@@ -15,6 +15,10 @@ import {
 } from "../__mocks__/CrearPartidaForm.mock.js";
 import * as reactRouterDom from "react-router-dom";
 import { BACKEND_URL } from "../variablesConfiguracion.js";
+import {
+  DatosJugadorContext,
+  DatosJugadorProvider,
+} from "../contexts/DatosJugadorContext.jsx";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -45,7 +49,9 @@ describe("CrearPartida", () => {
   test("renders CrearPartida component", () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <CrearPartida />
+        <DatosJugadorProvider>
+          <CrearPartida />
+        </DatosJugadorProvider>
       </reactRouterDom.MemoryRouter>,
     );
     expect(screen.getByText("Crear sala")).toBeInTheDocument();
@@ -54,7 +60,9 @@ describe("CrearPartida", () => {
   test("opens the modal correctly after clicking the button", () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <CrearPartida />
+        <DatosJugadorProvider>
+          <CrearPartida />
+        </DatosJugadorProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -67,7 +75,9 @@ describe("CrearPartida", () => {
   test("closes the modal correctly after clicking the close button", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <CrearPartida />
+        <DatosJugadorProvider>
+          <CrearPartida />
+        </DatosJugadorProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -85,7 +95,9 @@ describe("CrearPartida", () => {
   test("inputs get cleared after closing the modal", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <CrearPartida />
+        <DatosJugadorProvider>
+          <CrearPartida />
+        </DatosJugadorProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -130,7 +142,9 @@ describe("CrearPartida", () => {
   test("fetch is not called when input values are incorrect", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <CrearPartida />
+        <DatosJugadorProvider>
+          <CrearPartida />
+        </DatosJugadorProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -170,7 +184,9 @@ describe("CrearPartida", () => {
   test("fetch is executed without issues and returns expected value", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <CrearPartida />
+        <DatosJugadorProvider>
+          <CrearPartida />
+        </DatosJugadorProvider>
       </reactRouterDom.MemoryRouter>,
     );
 

@@ -25,6 +25,7 @@ export function Lobby() {
   const [tipoAlerta, setTipoAlerta] = useState("info");
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [estaShaking, setEstaShaking] = useState(false);
+  const [cantPlayersLobby, setCantPlayersLobby] = useState(1);
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
@@ -32,24 +33,27 @@ export function Lobby() {
   useEffect(() => {
     if (lastJsonMessage !== null) {
       switch (lastJsonMessage.key) {
+        
         case "PLAYER_JOIN":
+          setCantPlayersLobby(cantPlayersLobby + 1);
           setMostrarAlerta(true);
           setTipoAlerta("info");
           setMensajeAlerta(
             `jugador ${lastJsonMessage.payload.name} se ha unido.`,
           );
           setEstaShaking(true);
-          setTimeout(() => setEstaShaking(false), 1000);
+          setTimeout(() => {setEstaShaking(false), setMostrarAlerta(false)}, 3000);
           break;
         
         case "PLAYER_LEFT":
+          setCantPlayersLobby(cantPlayersLobby - 1);
           setMostrarAlerta(true);
           setTipoAlerta("info");
           setMensajeAlerta(
             `jugador ${lastJsonMessage.payload.name} ha abandonado.`,
           );
           setEstaShaking(true);
-          setTimeout(() => setEstaShaking(false), 1000);
+          setTimeout(() => {setEstaShaking(false), setMostrarAlerta(false)}, 3000);
           break;
         
         case "START_MATCH":
@@ -60,7 +64,7 @@ export function Lobby() {
           break;
       }
     }
-  }, [lastJsonMessage, setMostrarAlerta, setTipoAlerta, setMensajeAlerta]);
+  }, [lastJsonMessage, setMostrarAlerta, setTipoAlerta, setMensajeAlerta, setCantPlayersLobby]);
 
   return (
     <div>
@@ -77,7 +81,7 @@ export function Lobby() {
         idPartida={match_id}
         idJugador={player_id}
         esAnfitrion={datosJugador.is_owner}
-        nJugadoresEnLobby={2}
+        nJugadoresEnLobby={cantPlayersLobby}
         maxJugadores={datosPartida.max_players}
       />
     </div>

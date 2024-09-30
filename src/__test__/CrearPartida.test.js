@@ -251,9 +251,11 @@ describe("CrearPartida", () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            match_name: CrearPartidaMock.nombreSala,
+            lobby_name: CrearPartidaMock.nombreSala,
             player_name: CrearPartidaMock.nombreJugador,
             max_players: CrearPartidaMock.cantidadJugadores,
+            is_public: true,
+            token: "asdfasdf"
           }),
         }),
       );

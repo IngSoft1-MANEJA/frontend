@@ -1,0 +1,9 @@
+.tablero-grid{
+    width: 390px;
+    height: 390px;
+}
+
+.celda{
+    height: 65px;
+    width: 65px;
+}

@@ -5,7 +5,7 @@ import Alerts from "../../components/Alerts";
 import { useParams } from "react-router-dom";
 import "./Lobby.css";
 
-function Lobby() {
+export function Lobby() {
   const { idPartida, idJugador } = useParams();
   const websocket_url = `${WEBSOCKET_URL}/${idPartida}/ws/${idJugador}`;
   const { lastJsonMessage } = useWebSocket(websocket_url, {

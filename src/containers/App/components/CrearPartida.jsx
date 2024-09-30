@@ -19,22 +19,22 @@ export const CrearPartida = () => {
     reset,
   } = useForm({
     defaultValues: {
-      nombreJugador: "",
-      nombreSala: "",
-      cantidadJugadores: "",
+      player_name: "",
+      lobby_name: "",
+      max_players: "",
     },
   });
 
-  const nombreJugadorWatch = watch("nombreJugador");
-  const nombreSalaWatch = watch("nombreSala");
-  const cantidadJugadoresWatch = watch("cantidadJugadores");
+  const player_nameWatch = watch("player_name");
+  const lobby_nameWatch = watch("lobby_name");
+  const max_playersWatch = watch("max_players");
 
   const onSubmit = async (e) => {
     try {
       const resJson = await ServicioPartida.crearPartida(
-        nombreSalaWatch,
-        nombreJugadorWatch,
-        cantidadJugadoresWatch,
+        lobby_nameWatch,
+        player_nameWatch,
+        max_playersWatch,
       );
 
       setMessage("Sala de partida creada con exito");
@@ -89,11 +89,11 @@ export const CrearPartida = () => {
               <label className="label-modal-crear-partida form-control w-full items-center">
                 <input
                   type="text"
-                  aria-label="nombreJugador"
+                  aria-label="player_name"
                   placeholder="Elige tu nombre de jugador"
-                  value={nombreJugadorWatch}
+                  value={player_nameWatch}
                   className="input-modal-crear-partida input input-bordered w-full text-left"
-                  {...register("nombreJugador", {
+                  {...register("player_name", {
                     required: {
                       value: true,
                       message: "Este campo es requerido",
@@ -105,14 +105,14 @@ export const CrearPartida = () => {
                     },
                   })}
                 />
-                <span className="error">{errors.nombreJugador?.message}</span>
+                <span className="error">{errors.player_name?.message}</span>
                 <input
                   type="text"
-                  aria-label="nombreSala"
+                  aria-label="lobby_name"
                   placeholder="Elige el nombre de tu sala de partida"
-                  value={nombreSalaWatch}
+                  value={lobby_nameWatch}
                   className="input-modal-crear-partida input input-bordered w-full"
-                  {...register("nombreSala", {
+                  {...register("lobby_name", {
                     required: {
                       value: true,
                       message: "Este campo es requerido",
@@ -124,14 +124,14 @@ export const CrearPartida = () => {
                     },
                   })}
                 />
-                <span className="error">{errors.nombreSala?.message}</span>
+                <span className="error">{errors.lobby_name?.message}</span>
                 <input
                   type="text"
-                  aria-label="cantidadJugadores"
+                  aria-label="max_players"
                   placeholder="Elige la cantidad maxima de jugadores (2-4)"
-                  value={cantidadJugadoresWatch}
+                  value={max_playersWatch}
                   className="input-modal-crear-partida input input-bordered w-full"
-                  {...register("cantidadJugadores", {
+                  {...register("max_players", {
                     required: {
                       value: true,
                       message: "Este campo es requerido",
@@ -147,7 +147,7 @@ export const CrearPartida = () => {
                   })}
                 />
                 <span className="error">
-                  {errors.cantidadJugadores?.message}
+                  {errors.max_players?.message}
                 </span>
               </label>
               <div className="formButtons">

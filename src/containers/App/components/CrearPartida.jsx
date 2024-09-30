@@ -25,7 +25,7 @@ export const CrearPartida = () => {
     defaultValues: {
       nombreJugador: "",
       nombreSala: "",
-      cantidadJugadores: "",
+      cantidadJugadores: 0,
     },
   });
 
@@ -45,7 +45,7 @@ export const CrearPartida = () => {
       setShowSuccess("success");
       console.log(resJson);
       reset();
-      setDatosJugador({ is_owner: true, ...datosJugador });
+      setDatosJugador({ ...datosJugador, is_owner: true });
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
       }, 300);
@@ -130,7 +130,7 @@ export const CrearPartida = () => {
                 />
                 <span className="error">{errors.nombreSala?.message}</span>
                 <input
-                  type="text"
+                  type="number"
                   aria-label="cantidadJugadores"
                   placeholder="Elige la cantidad maxima de jugadores (2-4)"
                   value={cantidadJugadoresWatch}
@@ -140,6 +140,7 @@ export const CrearPartida = () => {
                       value: true,
                       message: "Este campo es requerido",
                     },
+                    valueAsNumber: true,
                     min: {
                       value: 2,
                       message: "La sala debe tener un minimo de 2 jugadores",

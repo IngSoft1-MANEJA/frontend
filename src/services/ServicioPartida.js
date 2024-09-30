@@ -51,7 +51,7 @@ export class ServicioPartida {
         player_name: nombreJugador,
         max_players: cantidadJugadores,
         is_public: true,
-        token: "asdfasdf"
+        token: "asdfasdf",
       }),
     });
 

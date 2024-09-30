@@ -38,13 +38,13 @@ describe("Lobby", () => {
             <Lobby />
           </DatosJugadorProvider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
     expect(useWebSocket).toHaveBeenCalledTimes(1);
     const websocket_url = `${WEBSOCKET_URL}/1/ws/2`;
     expect(useWebSocket).toHaveBeenCalledWith(
       websocket_url,
-      expect.objectContaining({ share: true })
+      expect.objectContaining({ share: true }),
     );
   });
 
@@ -59,7 +59,7 @@ describe("Lobby", () => {
             <Lobby />
           </DatosJugadorProvider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
     const alerta = screen.getByText("jugador test se ha unido.");
     expect(alerta).toBeInTheDocument();
@@ -76,11 +76,11 @@ describe("Lobby", () => {
             <Lobby />
           </DatosJugadorProvider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(
-      "key incorrecto recibido del websocket"
+      "key incorrecto recibido del websocket",
     );
   });
   it("deberia mostrar el boton abandonar si el contexto is_owner es true", () => {
@@ -99,7 +99,7 @@ describe("Lobby", () => {
             <Lobby />
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
     const boton = screen.getByText("Abandonar");
     expect(boton).toBeDisabled();
@@ -125,7 +125,7 @@ describe("Lobby", () => {
             <Lobby />
           </DatosJugadorContext.Provider>
         </DatosPartidaContext.Provider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
     const boton = screen.getByText("Iniciar Partida");
     expect(boton).not.toBeDisabled();

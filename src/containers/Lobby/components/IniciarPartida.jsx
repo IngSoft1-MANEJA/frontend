@@ -1,6 +1,6 @@
-import React from 'react';
-import { ServicioPartida } from '../../../services/ServicioPartida';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { ServicioPartida } from "../../../services/ServicioPartida";
+import { useNavigate } from "react-router-dom";
 
 const IniciarPartida = ({
   idPartida,
@@ -9,7 +9,7 @@ const IniciarPartida = ({
   nJugadoresEnLobby,
   maxJugadores,
 }) => {
-  const habilitar = esAnfitrion && (nJugadoresEnLobby === maxJugadores);
+  const habilitar = esAnfitrion && nJugadoresEnLobby === maxJugadores;
   const navigate = useNavigate();
 
   const manejarClick = async () => {
@@ -19,7 +19,7 @@ const IniciarPartida = ({
     try {
       const respuesta = await ServicioPartida.iniciarPartida(
         idPartida,
-        idJugador
+        idJugador,
       );
       console.log(respuesta);
       navigate(`/matches/${idPartida}`);

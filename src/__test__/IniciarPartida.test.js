@@ -1,10 +1,16 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import IniciarPartida from '../containers/Lobby/components/IniciarPartida';
-import { BACKEND_URL } from '../variablesConfiguracion';
-import { setupServer } from 'msw/node';
-import { http, HttpResponse } from 'msw';
+import React from "react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  cleanup,
+} from "@testing-library/react";
+import "@testing-library/jest-dom";
+import IniciarPartida from "../containers/Lobby/components/IniciarPartida";
+import { BACKEND_URL } from "../variablesConfiguracion";
+import { setupServer } from "msw/node";
+import { http, HttpResponse } from "msw";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -17,7 +23,6 @@ const server = setupServer(
     return HttpResponse.json(null, { status: 200 });
   }),
 );
-
 
 describe("IniciarPartida", () => {
   beforeEach(() => {
@@ -38,19 +43,19 @@ describe("IniciarPartida", () => {
         idJugador={456}
         nJugadoresEnLobby={3}
         maxJugadores={4}
-      />
+      />,
     );
   });
 
   it("deberia deshabilitar el boton cuando nJugadoresEnLobby no es igual a maxJugadores o esAnfitrion es falso", () => {
-    const {rerender} = render(
+    const { rerender } = render(
       <IniciarPartida
         idPartida={123}
         idJugador={456}
         esAnfitrion={true}
         nJugadoresEnLobby={3}
         maxJugadores={4}
-      />
+      />,
     );
     expect(screen.getByRole("button")).toBeDisabled();
 
@@ -61,7 +66,7 @@ describe("IniciarPartida", () => {
         esAnfitrion={false}
         nJugadoresEnLobby={3}
         maxJugadores={4}
-      />
+      />,
     );
     expect(screen.getByRole("button")).toBeDisabled();
 
@@ -72,7 +77,7 @@ describe("IniciarPartida", () => {
         esAnfitrion={false}
         nJugadoresEnLobby={4}
         maxJugadores={4}
-      />
+      />,
     );
     expect(screen.getByRole("button")).toBeDisabled();
   });
@@ -85,7 +90,7 @@ describe("IniciarPartida", () => {
         idJugador={456}
         nJugadoresEnLobby={4}
         maxJugadores={4}
-      />
+      />,
     );
     expect(screen.getByRole("button")).not.toBeDisabled();
   });
@@ -94,7 +99,7 @@ describe("IniciarPartida", () => {
     server.use(
       http.patch(`${BACKEND_URL}/matches/123/start/456`, () => {
         return HttpResponse.json(null, { status: 200 });
-      })
+      }),
     );
 
     render(
@@ -104,7 +109,7 @@ describe("IniciarPartida", () => {
         esAnfitrion={true}
         nJugadoresEnLobby={4}
         maxJugadores={4}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Iniciar Partida"));
@@ -122,7 +127,7 @@ describe("IniciarPartida", () => {
         esAnfitrion={false}
         nJugadoresEnLobby={3}
         maxJugadores={4}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Iniciar Partida"));
@@ -137,7 +142,7 @@ describe("IniciarPartida", () => {
     server.use(
       http.patch(`${BACKEND_URL}/matches/123/start/456`, () => {
         return HttpResponse.json(null, { status: 500 });
-      })
+      }),
     );
 
     render(
@@ -147,14 +152,14 @@ describe("IniciarPartida", () => {
         esAnfitrion={true}
         nJugadoresEnLobby={4}
         maxJugadores={4}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByText("Iniciar Partida"));
 
     await waitFor(() => {
       expect(console.error).toHaveBeenCalledWith(
-        "Error al iniciar partida - estado: 500"
+        "Error al iniciar partida - estado: 500",
       );
     });
   });

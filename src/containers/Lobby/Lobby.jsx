@@ -41,7 +41,7 @@ export function Lobby() {
           setEstaShaking(true);
           setTimeout(() => setEstaShaking(false), 1000);
           break;
-        
+
         case "START_MATCH":
           navigate(`/matches/${match_id}`);
 
@@ -63,9 +63,9 @@ export function Lobby() {
         idJugador={player_id}
         idPartida={match_id}
       />
-      <IniciarPartida 
-        idPartida={match_id} 
-        idJugador={player_id} 
+      <IniciarPartida
+        idPartida={match_id}
+        idJugador={player_id}
         esAnfitrion={datosJugador.is_owner}
         nJugadoresEnLobby={2}
         maxJugadores={datosPartida.max_players}

@@ -25,7 +25,7 @@ export const CrearPartida = () => {
     defaultValues: {
       nombreJugador: "",
       nombreSala: "",
-      cantidadJugadores: 0,
+      cantidadJugadores: "",
     },
   });
 
@@ -130,7 +130,7 @@ export const CrearPartida = () => {
                 />
                 <span className="error">{errors.nombreSala?.message}</span>
                 <input
-                  type="number"
+                  type="text"
                   aria-label="cantidadJugadores"
                   placeholder="Elige la cantidad maxima de jugadores (2-4)"
                   value={cantidadJugadoresWatch}
@@ -140,7 +140,6 @@ export const CrearPartida = () => {
                       value: true,
                       message: "Este campo es requerido",
                     },
-                    valueAsNumber: true,
                     min: {
                       value: 2,
                       message: "La sala debe tener un minimo de 2 jugadores",

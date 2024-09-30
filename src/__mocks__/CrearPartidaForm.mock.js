@@ -1,7 +1,7 @@
 export const CrearPartidaMock = {
   nombreJugador: "nombreJugador",
   nombreSala: "nombreSala",
-  cantidadJugadores: 2,
+  cantidadJugadores: 3,
 };
 
 export const CrearPartidaMockError = {

@@ -28,7 +28,7 @@ export const CrearPartida = () => {
     defaultValues: {
       nombreJugador: "",
       nombreSala: "",
-      cantidadJugadores: 0,
+      cantidadJugadores: 2,
     },
   });
 
@@ -49,7 +49,9 @@ export const CrearPartida = () => {
       console.log(resJson);
       reset();
       setDatosJugador({ ...datosJugador, is_owner: true });
-      setDatosPartida({ max_players: cantidadJugadoresWatch, ...datosPartida });
+      if (cantidadJugadoresWatch !== null && cantidadJugadoresWatch !== undefined){
+        setDatosPartida({ max_players: cantidadJugadoresWatch, ...datosPartida });
+      }
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
       }, 300);
@@ -62,9 +64,12 @@ export const CrearPartida = () => {
 
   // handle closure of modal
   const handleClose = (e) => {
-    reset();
-    clearErrors();
+    e.preventDefault();
+    e.stopPropagation();
     document.getElementById("my_modal_1").close();
+    reset({}, {keepDirtyFields: true});
+    clearErrors();
+    
   };
 
   return (
@@ -101,7 +106,9 @@ export const CrearPartida = () => {
                   aria-label="nombreJugador"
                   placeholder="Elige tu nombre de jugador"
                   value={nombreJugadorWatch}
-                  className="input-modal-crear-partida input input-bordered w-full text-left"
+                  className={`input-modal-crear-partida input input-bordered w-full text-left${
+                    errors.nombreJugador?.message ? "input-modal-crear-partida input-error input-bordered w-full text-left" : ""
+                  }`}
                   {...register("nombreJugador", {
                     required: {
                       value: true,
@@ -120,7 +127,9 @@ export const CrearPartida = () => {
                   aria-label="nombreSala"
                   placeholder="Elige el nombre de tu sala de partida"
                   value={nombreSalaWatch}
-                  className="input-modal-crear-partida input input-bordered w-full"
+                  className={`input-modal-crear-partida input input-bordered w-full text-left${
+                    errors.nombreSala?.message ? "input-modal-crear-partida input-error input-bordered w-full text-left" : ""
+                  }`}
                   {...register("nombreSala", {
                     required: {
                       value: true,
@@ -139,7 +148,9 @@ export const CrearPartida = () => {
                   aria-label="cantidadJugadores"
                   placeholder="Elige la cantidad maxima de jugadores (2-4)"
                   value={cantidadJugadoresWatch}
-                  className="input-modal-crear-partida input input-bordered w-full"
+                  className={`input-modal-crear-partida input input-bordered w-full text-left${
+                    errors.cantidadJugadores?.message ? "input-modal-crear-partida input-error input-bordered w-full text-left" : ""
+                  }`}
                   {...register("cantidadJugadores", {
                     required: {
                       value: true,

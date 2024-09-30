@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +7,15 @@ import { Alerts } from "../../../components/Alerts.jsx";
 import "./CrearPartida.css";
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
+import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
 
 export const CrearPartida = () => {
   const navegar = useNavigate();
+
   const [showSuccess, setShowSuccess] = useState(null);
   const [message, setMessage] = useState("");
-
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
 
   const {
     register,
@@ -21,11 +23,12 @@ export const CrearPartida = () => {
     watch,
     formState: { errors },
     reset,
+    clearErrors,
   } = useForm({
     defaultValues: {
       nombreJugador: "",
       nombreSala: "",
-      cantidadJugadores: "",
+      cantidadJugadores: 0,
     },
   });
 
@@ -45,7 +48,8 @@ export const CrearPartida = () => {
       setShowSuccess("success");
       console.log(resJson);
       reset();
-      setDatosJugador({ is_owner: true, ...datosJugador });
+      setDatosJugador({ ...datosJugador, is_owner: true });
+      setDatosPartida({ max_players: cantidadJugadoresWatch, ...datosPartida });
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
       }, 300);
@@ -59,6 +63,7 @@ export const CrearPartida = () => {
   // handle closure of modal
   const handleClose = (e) => {
     reset();
+    clearErrors();
     document.getElementById("my_modal_1").close();
   };
 
@@ -130,7 +135,7 @@ export const CrearPartida = () => {
                 />
                 <span className="error">{errors.nombreSala?.message}</span>
                 <input
-                  type="text"
+                  type="number"
                   aria-label="cantidadJugadores"
                   placeholder="Elige la cantidad maxima de jugadores (2-4)"
                   value={cantidadJugadoresWatch}
@@ -140,6 +145,7 @@ export const CrearPartida = () => {
                       value: true,
                       message: "Este campo es requerido",
                     },
+                    valueAsNumber: true,
                     min: {
                       value: 2,
                       message: "La sala debe tener un minimo de 2 jugadores",
@@ -150,9 +156,7 @@ export const CrearPartida = () => {
                     },
                   })}
                 />
-                <span className="error">
-                  {errors.cantidadJugadores?.message}
-                </span>
+                <span className="error">{errors.cantidadJugadores?.message}</span>
               </label>
               <div className="formButtons">
                 <input

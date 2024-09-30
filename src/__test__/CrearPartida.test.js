@@ -19,6 +19,11 @@ import {
   DatosJugadorContext,
   DatosJugadorProvider,
 } from "../contexts/DatosJugadorContext.jsx";
+import { 
+  DatosPartidaContext,
+  DatosPartidaProvider,  
+} from "../contexts/DatosPartidaContext.jsx";
+
 
 const mockedUsedNavigate = jest.fn();
 
@@ -49,9 +54,11 @@ describe("CrearPartida", () => {
   test("renders CrearPartida component", () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
     expect(screen.getByText("Crear sala")).toBeInTheDocument();
@@ -60,9 +67,11 @@ describe("CrearPartida", () => {
   test("opens the modal correctly after clicking the button", () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -75,9 +84,11 @@ describe("CrearPartida", () => {
   test("closes the modal correctly after clicking the close button", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -95,9 +106,11 @@ describe("CrearPartida", () => {
   test("inputs get cleared after closing the modal", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -112,14 +125,14 @@ describe("CrearPartida", () => {
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMock.cantidadJugadores,
+      CrearPartidaMock.cantidadJugadores.toString(),
     );
 
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue(CrearPartidaMock.nombreJugador);
       expect(nombreSalaInput).toHaveValue(CrearPartidaMock.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMock.cantidadJugadores.toString(),
+        CrearPartidaMock.cantidadJugadores,
       );
     });
 
@@ -135,16 +148,18 @@ describe("CrearPartida", () => {
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue("");
       expect(nombreSalaInput).toHaveValue("");
-      expect(cantidadJugadoresInput).toHaveValue("");
+      expect(cantidadJugadoresInput).toHaveValue(0);
     });
   });
 
   test("fetch is not called when input values are incorrect", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -163,7 +178,7 @@ describe("CrearPartida", () => {
     await userEvent.type(nombreSalaInput, CrearPartidaMockError.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMockError.cantidadJugadores,
+      CrearPartidaMockError.cantidadJugadores.toString(),
     );
 
     await waitFor(() => {
@@ -184,9 +199,11 @@ describe("CrearPartida", () => {
   test("fetch is executed without issues and returns expected value", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -200,13 +217,13 @@ describe("CrearPartida", () => {
 
     expect(nombreJugadorInput).toHaveValue("");
     expect(nombreSalaInput).toHaveValue("");
-    expect(cantidadJugadoresInput).toHaveValue("");
+    expect(cantidadJugadoresInput).toHaveValue(0);
 
     await userEvent.type(nombreJugadorInput, CrearPartidaMock.nombreJugador);
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMock.cantidadJugadores,
+      CrearPartidaMock.cantidadJugadores.toString(),
     );
 
     await waitFor(() => {

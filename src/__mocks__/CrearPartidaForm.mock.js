@@ -1,12 +1,12 @@
 export const CrearPartidaMock = {
   nombreJugador: "nombreJugador",
   nombreSala: "nombreSala",
-  cantidadJugadores: "2",
+  cantidadJugadores: 2,
 };
 
 export const CrearPartidaMockError = {
   nombreJugador:
     "nombreJugadorEsDemasiadoLargoParaSerUsadoEnElCampoDeNombreJugador",
   nombreSala: "nombreSala",
-  cantidadJugadores: "74",
+  cantidadJugadores: 74,
 };

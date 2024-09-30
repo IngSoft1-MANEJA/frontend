@@ -64,6 +64,7 @@ export function Lobby() {
       <IniciarPartida 
         idPartida={match_id} 
         idJugador={player_id} 
+        esAnfitrion={datosJugador.is_owner}
         nJugadoresEnLobby={2}
         maxJugadores={3}
       />

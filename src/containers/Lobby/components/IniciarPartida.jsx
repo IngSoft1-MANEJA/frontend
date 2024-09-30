@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 const IniciarPartida = ({
   idPartida,
   idJugador,
+  esAnfitrion,
   nJugadoresEnLobby,
   maxJugadores,
 }) => {
-  const habilitar = nJugadoresEnLobby === maxJugadores;
+  const habilitar = esAnfitrion && (nJugadoresEnLobby === maxJugadores);
   const navigate = useNavigate();
 
   const manejarClick = async () => {

@@ -42,22 +42,46 @@ describe("IniciarPartida", () => {
     );
   });
 
-  it("deberia deshabilitar el boton cuando nJugadoresEnLobby no es igual a maxJugadores", () => {
-    render(
+  it("deberia deshabilitar el boton cuando nJugadoresEnLobby no es igual a maxJugadores o esAnfitrion es falso", () => {
+    const {rerender} = render(
       <IniciarPartida
         idPartida={123}
         idJugador={456}
+        esAnfitrion={true}
         nJugadoresEnLobby={3}
+        maxJugadores={4}
+      />
+    );
+    expect(screen.getByRole("button")).toBeDisabled();
+
+    rerender(
+      <IniciarPartida
+        idPartida={123}
+        idJugador={456}
+        esAnfitrion={false}
+        nJugadoresEnLobby={3}
+        maxJugadores={4}
+      />
+    );
+    expect(screen.getByRole("button")).toBeDisabled();
+
+    rerender(
+      <IniciarPartida
+        idPartida={123}
+        idJugador={456}
+        esAnfitrion={false}
+        nJugadoresEnLobby={4}
         maxJugadores={4}
       />
     );
     expect(screen.getByRole("button")).toBeDisabled();
   });
 
-  it("deberia habilitar el boton cuando nJugadoresEnLobby es igual a maxJugadores", () => {
+  it("deberia habilitar el boton cuando nJugadoresEnLobby es igual a maxJugadores y esAnfitrion es true", () => {
     render(
       <IniciarPartida
         idPartida={123}
+        esAnfitrion={true}
         idJugador={456}
         nJugadoresEnLobby={4}
         maxJugadores={4}
@@ -77,6 +101,7 @@ describe("IniciarPartida", () => {
       <IniciarPartida
         idPartida={123}
         idJugador={456}
+        esAnfitrion={true}
         nJugadoresEnLobby={4}
         maxJugadores={4}
       />
@@ -94,6 +119,7 @@ describe("IniciarPartida", () => {
       <IniciarPartida
         idPartida={123}
         idJugador={456}
+        esAnfitrion={false}
         nJugadoresEnLobby={3}
         maxJugadores={4}
       />
@@ -118,6 +144,7 @@ describe("IniciarPartida", () => {
       <IniciarPartida
         idPartida={123}
         idJugador={456}
+        esAnfitrion={true}
         nJugadoresEnLobby={4}
         maxJugadores={4}
       />

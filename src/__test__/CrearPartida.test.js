@@ -121,7 +121,7 @@ describe("CrearPartida", () => {
     const nombreSalaInput = screen.getByLabelText("nombreSala");
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
 
-    await userEvent.clear(cantidadJugadoresInput);
+    fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
 
     await userEvent.type(nombreJugadorInput, CrearPartidaMock.nombreJugador);
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
@@ -173,7 +173,7 @@ describe("CrearPartida", () => {
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
     const submitButton = screen.getByText("Crear sala");
 
-    await userEvent.clear(cantidadJugadoresInput);
+    fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
 
     await userEvent.type(
       nombreJugadorInput,
@@ -222,8 +222,7 @@ describe("CrearPartida", () => {
     expect(nombreJugadorInput).toHaveValue("");
     expect(nombreSalaInput).toHaveValue("");
     expect(cantidadJugadoresInput).toHaveValue(2);
-
-    await userEvent.clear(cantidadJugadoresInput);
+    fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
 
     await userEvent.type(nombreJugadorInput, CrearPartidaMock.nombreJugador);
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);

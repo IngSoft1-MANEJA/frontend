@@ -1,15 +1,20 @@
+import { useContext } from "react";
 import { render, screen, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Lobby from "../containers/Lobby/Lobby";
 import useWebSocket from "react-use-websocket";
 import * as reactRouterDom from "react-router-dom";
 import { WEBSOCKET_URL } from "../variablesConfiguracion";
+import {
+  DatosJugadorProvider,
+  DatosJugadorContext,
+} from "../contexts/DatosJugadorContext";
 
 jest.mock("react-use-websocket");
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useParams: () => ({ idPartida: 1, idJugador: 2 }),
+  useParams: () => ({ match_id: 1, player_id: 2 }),
 }));
 
 afterEach(() => {
@@ -24,7 +29,9 @@ describe("Lobby", () => {
     });
     render(
       <reactRouterDom.MemoryRouter>
-        <Lobby />
+        <DatosJugadorProvider>
+          <Lobby />
+        </DatosJugadorProvider>
       </reactRouterDom.MemoryRouter>,
     );
     expect(useWebSocket).toHaveBeenCalledTimes(1);
@@ -41,7 +48,9 @@ describe("Lobby", () => {
     });
     const { container } = render(
       <reactRouterDom.MemoryRouter>
-        <Lobby />
+        <DatosJugadorProvider>
+          <Lobby />
+        </DatosJugadorProvider>
       </reactRouterDom.MemoryRouter>,
     );
     const alerta = screen.getByText("jugador test se ha unido.");
@@ -54,12 +63,33 @@ describe("Lobby", () => {
     console.error = jest.fn();
     render(
       <reactRouterDom.MemoryRouter>
-        <Lobby />
+        <DatosJugadorProvider>
+          <Lobby />
+        </DatosJugadorProvider>
       </reactRouterDom.MemoryRouter>,
     );
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(
       "key incorrecto recibido del websocket",
     );
+  });
+  it("deberia mostrar el boton si el contexto is_owner es true", () => {
+    useWebSocket.mockReturnValue({ lastJsonMessage: null });
+
+    // Mock de useContext para DatosJugadorContext con is_owner = true
+    render(
+      <reactRouterDom.MemoryRouter>
+        <DatosJugadorContext.Provider
+          value={{
+            datosJugador: { is_owner: true },
+            setDatosJugador: jest.fn(),
+          }}
+        >
+          <Lobby />
+        </DatosJugadorContext.Provider>
+      </reactRouterDom.MemoryRouter>,
+    );
+    const boton = screen.getByText("Abandonar");
+    expect(boton).toBeDisabled();
   });
 });

@@ -1,10 +1,9 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState } from "react";
 
 export const DatosJugadorContext = createContext();
 
 export const DatosJugadorProvider = ({ children }) => {
-
-  const [datosJugador, setDatosJugador] = useState({is_owner: false});
+  const [datosJugador, setDatosJugador] = useState({ is_owner: false });
 
   return (
     <DatosJugadorContext.Provider value={{ datosJugador, setDatosJugador }}>

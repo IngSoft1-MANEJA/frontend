@@ -9,6 +9,10 @@ import {
   DatosJugadorProvider,
   DatosJugadorContext,
 } from "../contexts/DatosJugadorContext";
+import {
+  DatosPartidaContext,
+  DatosPartidaProvider,
+} from "../contexts/DatosPartidaContext";
 
 jest.mock("react-use-websocket");
 
@@ -29,9 +33,11 @@ describe("Lobby", () => {
     });
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <Lobby />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <Lobby />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
     expect(useWebSocket).toHaveBeenCalledTimes(1);
@@ -48,9 +54,11 @@ describe("Lobby", () => {
     });
     const { container } = render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <Lobby />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <Lobby />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
     const alerta = screen.getByText("jugador test se ha unido.");
@@ -63,9 +71,11 @@ describe("Lobby", () => {
     console.error = jest.fn();
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <Lobby />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <Lobby />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
     expect(console.error).toHaveBeenCalledTimes(1);
@@ -73,23 +83,51 @@ describe("Lobby", () => {
       "key incorrecto recibido del websocket",
     );
   });
-  it("deberia mostrar el boton si el contexto is_owner es true", () => {
+  it("deberia mostrar el boton abandonar si el contexto is_owner es true", () => {
     useWebSocket.mockReturnValue({ lastJsonMessage: null });
 
     // Mock de useContext para DatosJugadorContext con is_owner = true
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorContext.Provider
-          value={{
-            datosJugador: { is_owner: true },
-            setDatosJugador: jest.fn(),
-          }}
-        >
-          <Lobby />
-        </DatosJugadorContext.Provider>
+        <DatosPartidaProvider>
+          <DatosJugadorContext.Provider
+            value={{
+              datosJugador: { is_owner: true },
+              setDatosJugador: jest.fn(),
+            }}
+          >
+            <Lobby />
+          </DatosJugadorContext.Provider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
     const boton = screen.getByText("Abandonar");
     expect(boton).toBeDisabled();
+  });
+
+  it("deberia mostrar el boton iniciar partida si el contexto is_owner es true", () => {
+    useWebSocket.mockReturnValue({ lastJsonMessage: null });
+
+    render(
+      <reactRouterDom.MemoryRouter>
+        <DatosPartidaContext.Provider
+          value={{
+            datosPartida: { max_players: 2 },
+            setDatosPartida: jest.fn(),
+          }}
+        >
+          <DatosJugadorContext.Provider
+            value={{
+              datosJugador: { is_owner: true },
+              setDatosJugador: jest.fn(),
+            }}
+          >
+            <Lobby />
+          </DatosJugadorContext.Provider>
+        </DatosPartidaContext.Provider>
+      </reactRouterDom.MemoryRouter>,
+    );
+    const boton = screen.getByText("Iniciar Partida");
+    expect(boton).not.toBeDisabled();
   });
 });

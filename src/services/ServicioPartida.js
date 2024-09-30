@@ -56,4 +56,23 @@ export class ServicioPartida {
     const json = await respuesta.json();
     return json;
   }
+
+  static async iniciarPartida(idPartida, idJugador) {
+    const respuesta = await fetch(
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/start/${idJugador}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!respuesta.ok) {
+      throw new Error(`Error al iniciar partida - estado: ${respuesta.status}`);
+    }
+
+    const json = await respuesta.json();
+    return json;
+  }
 }

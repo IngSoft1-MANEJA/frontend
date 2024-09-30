@@ -19,6 +19,11 @@ import {
   DatosJugadorContext,
   DatosJugadorProvider,
 } from "../contexts/DatosJugadorContext.jsx";
+import { 
+  DatosPartidaContext,
+  DatosPartidaProvider,  
+} from "../contexts/DatosPartidaContext.jsx";
+
 
 const mockedUsedNavigate = jest.fn();
 
@@ -49,9 +54,11 @@ describe("CrearPartida", () => {
   test("renders CrearPartida component", () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
     expect(screen.getByText("Crear sala")).toBeInTheDocument();
@@ -60,9 +67,11 @@ describe("CrearPartida", () => {
   test("opens the modal correctly after clicking the button", () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -75,9 +84,11 @@ describe("CrearPartida", () => {
   test("closes the modal correctly after clicking the close button", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -95,9 +106,11 @@ describe("CrearPartida", () => {
   test("inputs get cleared after closing the modal", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -108,18 +121,20 @@ describe("CrearPartida", () => {
     const nombreSalaInput = screen.getByLabelText("nombreSala");
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
 
+    await userEvent.clear(cantidadJugadoresInput);
+
     await userEvent.type(nombreJugadorInput, CrearPartidaMock.nombreJugador);
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMock.cantidadJugadores,
+      CrearPartidaMock.cantidadJugadores.toString(),
     );
 
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue(CrearPartidaMock.nombreJugador);
       expect(nombreSalaInput).toHaveValue(CrearPartidaMock.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMock.cantidadJugadores.toString(),
+        CrearPartidaMock.cantidadJugadores,
       );
     });
 
@@ -135,16 +150,18 @@ describe("CrearPartida", () => {
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue("");
       expect(nombreSalaInput).toHaveValue("");
-      expect(cantidadJugadoresInput).toHaveValue("");
+      expect(cantidadJugadoresInput).toHaveValue(2);
     });
   });
 
   test("fetch is not called when input values are incorrect", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -156,6 +173,8 @@ describe("CrearPartida", () => {
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
     const submitButton = screen.getByText("Crear sala");
 
+    await userEvent.clear(cantidadJugadoresInput);
+
     await userEvent.type(
       nombreJugadorInput,
       CrearPartidaMockError.nombreJugador,
@@ -163,7 +182,7 @@ describe("CrearPartida", () => {
     await userEvent.type(nombreSalaInput, CrearPartidaMockError.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMockError.cantidadJugadores,
+      CrearPartidaMockError.cantidadJugadores.toString(),
     );
 
     await waitFor(() => {
@@ -184,9 +203,11 @@ describe("CrearPartida", () => {
   test("fetch is executed without issues and returns expected value", async () => {
     render(
       <reactRouterDom.MemoryRouter>
-        <DatosJugadorProvider>
-          <CrearPartida />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
 
@@ -200,13 +221,15 @@ describe("CrearPartida", () => {
 
     expect(nombreJugadorInput).toHaveValue("");
     expect(nombreSalaInput).toHaveValue("");
-    expect(cantidadJugadoresInput).toHaveValue("");
+    expect(cantidadJugadoresInput).toHaveValue(2);
+
+    await userEvent.clear(cantidadJugadoresInput);
 
     await userEvent.type(nombreJugadorInput, CrearPartidaMock.nombreJugador);
     await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMock.cantidadJugadores,
+      CrearPartidaMock.cantidadJugadores.toString(),
     );
 
     await waitFor(() => {
@@ -228,9 +251,11 @@ describe("CrearPartida", () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            match_name: CrearPartidaMock.nombreSala,
+            lobby_name: CrearPartidaMock.nombreSala,
             player_name: CrearPartidaMock.nombreJugador,
             max_players: CrearPartidaMock.cantidadJugadores,
+            is_public: true,
+            token: "asdfasdf"
           }),
         }),
       );

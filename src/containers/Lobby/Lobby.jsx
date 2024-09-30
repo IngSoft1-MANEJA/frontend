@@ -41,7 +41,17 @@ export function Lobby() {
           setEstaShaking(true);
           setTimeout(() => setEstaShaking(false), 1000);
           break;
-
+        
+        case "PLAYER_LEFT":
+          setMostrarAlerta(true);
+          setTipoAlerta("info");
+          setMensajeAlerta(
+            `jugador ${lastJsonMessage.payload.name} ha abandonado.`,
+          );
+          setEstaShaking(true);
+          setTimeout(() => setEstaShaking(false), 1000);
+          break;
+        
         case "START_MATCH":
           navigate(`/matches/${match_id}`);
 

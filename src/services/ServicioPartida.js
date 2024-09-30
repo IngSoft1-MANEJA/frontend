@@ -32,9 +32,12 @@ export class ServicioPartida {
       throw new Error(`Error al listar partidas - estado: ${respuesta.status}`);
     }
 
-    let json = await respuesta.json();
-    json.match_id = json.id;
-    return json;
+    const json = await respuesta.json();
+    const jsonMap = json.map((partida) => {
+      partida.match_id = partida.id;
+      return partida;
+    });
+    return jsonMap;
   }
 
   static async crearPartida(nombreSala, nombreJugador, cantidadJugadores) {
@@ -44,9 +47,11 @@ export class ServicioPartida {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        match_name: nombreSala,
+        lobby_name: nombreSala,
         player_name: nombreJugador,
         max_players: cantidadJugadores,
+        is_public: true,
+        token: "asdfasdf",
       }),
     });
 
@@ -73,6 +78,25 @@ export class ServicioPartida {
       throw new Error(
         `Error al salir de la partida - estado: ${respuesta.status}`,
       );
+    }
+
+    const json = await respuesta.json();
+    return json;
+  }
+
+  static async iniciarPartida(idPartida, idJugador) {
+    const respuesta = await fetch(
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/start/${idJugador}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!respuesta.ok) {
+      throw new Error(`Error al iniciar partida - estado: ${respuesta.status}`);
     }
 
     const json = await respuesta.json();

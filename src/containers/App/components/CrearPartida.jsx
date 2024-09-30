@@ -45,7 +45,7 @@ export const CrearPartida = () => {
       setShowSuccess("success");
       console.log(resJson);
       reset();
-      setDatosJugador({ is_owner: true, ...datosJugador });
+      setDatosJugador({ ...datosJugador, is_owner: true });
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
       }, 300);

@@ -6,10 +6,14 @@ import { WEBSOCKET_URL } from "../../variablesConfiguracion";
 import Alerts from "../../components/Alerts";
 import { useParams } from "react-router-dom";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
+import { DatosPartidaContext } from "../../contexts/DatosPartidaContext";
 import "./Lobby.css";
+import IniciarPartida from "./components/IniciarPartida";
+import { useNavigate } from "react-router-dom";
 
 export function Lobby() {
   const { match_id, player_id } = useParams();
+  const navigate = useNavigate();
   const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${player_id}`;
   const { lastJsonMessage } = useWebSocket(websocket_url, {
     share: true,
@@ -23,6 +27,7 @@ export function Lobby() {
   const [estaShaking, setEstaShaking] = useState(false);
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
 
   useEffect(() => {
     if (lastJsonMessage !== null) {
@@ -36,6 +41,9 @@ export function Lobby() {
           setEstaShaking(true);
           setTimeout(() => setEstaShaking(false), 1000);
           break;
+
+        case "START_MATCH":
+          navigate(`/matches/${match_id}`);
 
         default:
           console.error("key incorrecto recibido del websocket");
@@ -54,6 +62,13 @@ export function Lobby() {
         esAnfitrion={datosJugador.is_owner}
         idJugador={player_id}
         idPartida={match_id}
+      />
+      <IniciarPartida
+        idPartida={match_id}
+        idJugador={player_id}
+        esAnfitrion={datosJugador.is_owner}
+        nJugadoresEnLobby={2}
+        maxJugadores={datosPartida.max_players}
       />
     </div>
   );

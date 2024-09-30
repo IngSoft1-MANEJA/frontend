@@ -41,7 +41,7 @@ export function Lobby() {
           break;
         
         case "START_MATCH":
-          navigate(`/matches/${idPartida}`);
+          navigate(`/matches/${match_id}`);
 
         default:
           console.error("key incorrecto recibido del websocket");
@@ -62,8 +62,8 @@ export function Lobby() {
         idPartida={match_id}
       />
       <IniciarPartida 
-        idPartida={idPartida} 
-        idJugador={idJugador} 
+        idPartida={match_id} 
+        idJugador={player_id} 
         nJugadoresEnLobby={2}
         maxJugadores={3}
       />

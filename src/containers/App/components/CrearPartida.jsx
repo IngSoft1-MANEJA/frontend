@@ -88,6 +88,7 @@ export const CrearPartida = () => {
           <h3 className="font-bold text-lg">Crea tu propia sala de partida!</h3>
           <div className="modal-action">
             <form
+              noValidate
               id="crear_partida_form"
               className="crear-partida-form w-full"
               method="dialog"
@@ -145,6 +146,8 @@ export const CrearPartida = () => {
                 <span className="error">{errors.nombreSala?.message}</span>
                 <input
                   type="number"
+                  min={2}
+                  max={4}
                   aria-label="cantidadJugadores"
                   placeholder="Elige la cantidad maxima de jugadores (2-4)"
                   value={cantidadJugadoresWatch}

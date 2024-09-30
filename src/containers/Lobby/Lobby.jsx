@@ -6,6 +6,7 @@ import { WEBSOCKET_URL } from "../../variablesConfiguracion";
 import Alerts from "../../components/Alerts";
 import { useParams } from "react-router-dom";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
+import { DatosPartidaContext } from "../../contexts/DatosPartidaContext";
 import "./Lobby.css";
 import IniciarPartida from "./components/IniciarPartida";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +27,7 @@ export function Lobby() {
   const [estaShaking, setEstaShaking] = useState(false);
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
 
   useEffect(() => {
     if (lastJsonMessage !== null) {
@@ -66,7 +68,7 @@ export function Lobby() {
         idJugador={player_id} 
         esAnfitrion={datosJugador.is_owner}
         nJugadoresEnLobby={2}
-        maxJugadores={3}
+        maxJugadores={datosPartida.max_players}
       />
     </div>
   );

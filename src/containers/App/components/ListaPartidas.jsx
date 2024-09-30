@@ -60,12 +60,12 @@ export const ListaPartidas = () => {
                   style={{
                     cursor: "pointer",
                     backgroundColor:
-                      selectedPartida?.match_id === partida.match_id
+                      selectedPartida?.id === partida.id
                         ? "rgba(0, 123, 255,0.4)"
                         : "transparent",
                   }}
                 >
-                  <td>{partida.match_id}</td>
+                  <td>{partida.id}</td>
                   <td>{partida.match_name}</td>
                   <td className="cantidad-jugadores">
                     {partida.current_players}/{partida.max_players}
@@ -92,7 +92,7 @@ export const ListaPartidas = () => {
             Refrescar
           </button>
           <CrearPartida />
-          <UnirsePartida idPartida={selectedPartida?.match_id} />
+          <UnirsePartida idPartida={selectedPartida?.id} />
         </div>
       </div>
     </>

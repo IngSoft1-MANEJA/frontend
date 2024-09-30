@@ -1,59 +1,34 @@
 import React from 'react'
+import RedTile from '../../../assets/Colores/A.svg';
+import YellowTile from '../../../assets/Colores/B.svg';
+import GreenTile from '../../../assets/Colores/C.svg';
+import BlueTile from '../../../assets/Colores/D.svg';
 import "./Tablero.css";
 
 export const Tablero = () => {
-    // const filas = 6;
-    // const columnas = 6;
+    const rows = 6;
+    const columns = 6;
+    const size = rows * columns;
+
+    const images = [RedTile, YellowTile, GreenTile, BlueTile];
+    
+    const crearGrilla = () => {
+      const gridItems = [];
+      for (let i = 0; i < size; i++) {
+        gridItems.push(
+          <div key={i} className="cell">
+            <img className="h-auto max-w-full" src={images[i % images.length]} alt={`Image ${i + 1}`} />
+          </div>
+        );
+      }
+      return gridItems;
+    };
   
-    // const crearGrilla = () => {
-    //     let fila = [];
-    //     for (let i = 0; i < filas*columnas; i++) {
-    //         fila.push(<div key={`${i}`} className="celda border border-solid"></div>);
-    //     }
-    //     return fila;
-    // };
-
     return (
-        
-
-<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-    <div>
-        <svg className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-6.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-7.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-8.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-10.jpg" alt=""/>
-    </div>
-    <div>
-        <img className="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-11.jpg" alt=""/>
-    </div>
-</div>
-
-    )
-}
+      <div className="tablero flex w-100 h-screen justify-center items-center">
+        <div className="tablero-grid grid grid-cols-6 gap-1">
+          {crearGrilla()}
+        </div>
+      </div>
+    );
+  };

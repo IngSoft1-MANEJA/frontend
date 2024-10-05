@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Alerts } from "../../../components/Alerts.jsx";
 import "./ListaPartidas.css";
 import CrearPartida from "./CrearPartida.jsx";
+import UnirsePartida from "./UnirsePartida.jsx";
+import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
 export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
@@ -10,13 +12,7 @@ export const ListaPartidas = () => {
 
   const fetchPartidas = async () => {
     try {
-      const response = await fetch("/matches");
-
-      if (!response.ok) {
-        throw new Error("Error en fetch");
-      }
-
-      const data = await response.json();
+      const data = await ServicioPartida.listarPartidas();
       setPartidas(data);
       setAlert(null);
     } catch (error) {
@@ -58,17 +54,21 @@ export const ListaPartidas = () => {
             <tbody>
               {/* Defino las filas de la tabla */}
               {partidas.map((partida) => (
-                <tr key={partida.id}
-                onClick={() => handleSelectPartida(partida)}
-                            style={{
-                                cursor: 'pointer',
-                                backgroundColor: selectedPartida?.id === partida.id ? 'rgba(0, 123, 255,0.4)' : 'transparent',
-                            }}
+                <tr
+                  key={partida.match_id}
+                  onClick={() => handleSelectPartida(partida)}
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor:
+                      selectedPartida?.match_id === partida.match_id
+                        ? "rgba(0, 123, 255,0.4)"
+                        : "transparent",
+                  }}
                 >
-                  <td>{partida.id}</td>
-                  <td>{partida.nombre}</td>
+                  <td>{partida.match_id}</td>
+                  <td>{partida.match_name}</td>
                   <td className="cantidad-jugadores">
-                    {partida.jugadoresActuales}/{partida.jugadoresMaximos}
+                    {partida.current_players}/{partida.max_players}
                   </td>
                 </tr>
               ))}
@@ -92,6 +92,7 @@ export const ListaPartidas = () => {
             Refrescar
           </button>
           <CrearPartida />
+          <UnirsePartida idPartida={selectedPartida?.match_id} />
         </div>
       </div>
     </>

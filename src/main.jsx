@@ -5,6 +5,8 @@ import Game from "./containers/App/components/Game/Game.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import Lobby from "./containers/Lobby/Lobby.jsx";
+import Game from "./containers/Game/Game.jsx";
 
 const router = createBrowserRouter([
   {
@@ -12,9 +14,14 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        path: "lobby/:match_id/player/:player_id",
+        element: <Lobby />,
+      },
+      {
         path: "matches/:match_id",
         element: <Game />,
-      }],
+      },
+    ],
   },
 ]);
 

@@ -10,7 +10,15 @@ import {
 import "@testing-library/jest-dom/extend-expect";
 import { ListaPartidas } from "../containers/App/components/ListaPartidas.jsx";
 import { ListarPartidasMock } from "../__mocks__/ListarPartidas.mock.js";
+import {
+  DatosJugadorContext,
+  DatosJugadorProvider,
+} from "../contexts/DatosJugadorContext.jsx";
 import * as reactRouterDom from "react-router-dom";
+import { 
+  DatosPartidaContext,
+  DatosPartidaProvider,  
+} from "../contexts/DatosPartidaContext.jsx";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -33,19 +41,27 @@ describe("ListarPartidas", () => {
   });
 
   test("debe renderizar las partidas correctamente", async () => {
-    render(<ListaPartidas />);
+    render(
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <ListaPartidas />
+        </DatosJugadorProvider>,
+      </DatosPartidaProvider>
+    );
 
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
 
     await waitFor(() => {
       ListarPartidasMock.forEach((partida) => {
-        expect(screen.getByText(partida.id.toString())).toBeInTheDocument();
-        expect(screen.getByText(partida.nombre)).toBeInTheDocument();
         expect(
-          screen.getByText(partida.jugadoresActuales.toString()),
+          screen.getByText(partida.match_id.toString()),
+        ).toBeInTheDocument();
+        expect(screen.getByText(partida.match_name)).toBeInTheDocument();
+        expect(
+          screen.getByText(partida.current_players.toString()),
         ).toBeInTheDocument();
         expect(
-          screen.getByText(partida.jugadoresMaximos.toString()),
+          screen.getByText(partida.max_players.toString()),
         ).toBeInTheDocument();
       });
     });
@@ -53,7 +69,13 @@ describe("ListarPartidas", () => {
 
   test("debe manejar errores de fetch", async () => {
     fetch.mockImplementationOnce(() => Promise.reject("API is down"));
-    render(<ListaPartidas />);
+    render(
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <ListaPartidas />
+        </DatosJugadorProvider>,
+      </DatosPartidaProvider>
+    );
 
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
 
@@ -65,7 +87,13 @@ describe("ListarPartidas", () => {
   });
 
   test("debe refrescar las partidas al hacer clic en el botón de refresco", async () => {
-    render(<ListaPartidas />);
+    render(
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <ListaPartidas />
+        </DatosJugadorProvider>,
+      </DatosPartidaProvider>
+    );
 
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
 
@@ -75,13 +103,15 @@ describe("ListarPartidas", () => {
 
     await waitFor(() => {
       ListarPartidasMock.forEach((partida) => {
-        expect(screen.getByText(partida.id.toString())).toBeInTheDocument();
-        expect(screen.getByText(partida.nombre)).toBeInTheDocument();
         expect(
-          screen.getByText(partida.jugadoresActuales.toString()),
+          screen.getByText(partida.match_id.toString()),
+        ).toBeInTheDocument();
+        expect(screen.getByText(partida.match_name)).toBeInTheDocument();
+        expect(
+          screen.getByText(partida.current_players.toString()),
         ).toBeInTheDocument();
         expect(
-          screen.getByText(partida.jugadoresMaximos.toString()),
+          screen.getByText(partida.max_players.toString()),
         ).toBeInTheDocument();
       });
     });

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useWebSocket from "react-use-websocket";
-import { WEBSOCKET_URL } from "../../../../variablesConfiguracion.js";
+import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import './InformacionTurno.css';
 
 export const InformacionTurno = () => {
@@ -28,25 +28,25 @@ export const InformacionTurno = () => {
         ]);
 
     return (
-        <div className='informacion-div w-fit'>
-        <table className="table-xs m-3">
-            <thead>
-            <tr>
-                <th>Turn Order</th>
-                <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr className="bg-base-200">
-                <th>Current</th>
-                <td>{turnos.current_turn}</td>
-            </tr>
-            <tr>
-                <th>Next</th>
-                <td>{turnos.next_turn}</td>
-            </tr>
-            </tbody>
-        </table>
+        <div className='informacion-div w-fit flex h-32'>
+            <table className="table-xs m-3">
+                <thead>
+                <tr>
+                    <th>Turn Order</th>
+                    <th>Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr className="bg-base-200">
+                    <th>Current</th>
+                    <td>{turnos.current_turn}</td>
+                </tr>
+                <tr>
+                    <th>Next</th>
+                    <td>{turnos.next_turn}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
     );

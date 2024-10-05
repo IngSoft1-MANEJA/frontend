@@ -1,7 +1,7 @@
 import React from "react";
 import { screen, render, waitFor, cleanup } from "@testing-library/react";
 import { jest } from "@jest/globals";
-import { InformacionTurno } from "../containers/App/components/Game/InformacionTurno.jsx";
+import { InformacionTurno } from "../containers/Game/InformacionTurno.jsx";
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../variablesConfiguracion";
 

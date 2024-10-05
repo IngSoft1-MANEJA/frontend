@@ -21,4 +21,4 @@ export const Ficha = ({color}) => {
     )
 }
 
-export default Tile;
+export default Ficha;

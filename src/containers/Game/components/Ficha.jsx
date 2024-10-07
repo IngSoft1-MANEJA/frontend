@@ -13,6 +13,14 @@ const images = {
 
 export const Ficha = ({color}) => {
     const tileImage = images[color];
+    if (color in images === false) {
+        return(
+            <div className="celda">
+                <img className="h-auto max-w-full " alt={`WRONG COLOR`} />
+            </div>
+        ) ;
+            
+    }
 
     return (
         <div className="celda">

@@ -1,15 +1,17 @@
 import React from "react";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
+import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 
 export function Game() {
-  const { match_id, player_id } = useParams();
+  const { match_id } = useParams();
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const [tiles, setTiles] = useState([]);
-  const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${player_id}`;
+  const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${datosJugador.player_id}`;
   const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
 
   useEffect(() => {
@@ -26,11 +28,11 @@ export function Game() {
   ]);
 
   // const tiles = [
-  //   ['GREY', 'red', 'green', 'yellow', 'red', 'yellow'], 
+  //   ['red', 'red', 'green', 'yellow', 'red', 'yellow'], 
   //   ['green', 'blue', 'red', 'yellow', 'green', 'blue'], 
-  //   ['red', 'yellow', 'PURPLE', 'blue', 'blue', 'yellow'], 
+  //   ['red', 'yellow', 'blue', 'blue', 'blue', 'yellow'], 
   //   ['green', 'blue', 'red', 'yellow', 'green', 'blue'], 
-  //   ['red', 'yellow', 'green', 'yellow', 'CYAN', 'green'], 
+  //   ['red', 'yellow', 'green', 'yellow', 'green', 'green'], 
   //   ['green', 'blue', 'blue', 'yellow', 'green', 'blue']
   // ];
 

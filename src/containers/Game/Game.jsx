@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
-import { InformacionTurno } from "./InformacionTurno";
+import { InformacionTurno } from "./components/InformacionTurno";
 
 export function Game() {
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
@@ -12,7 +12,7 @@ export function Game() {
 
   return (
     <div className="game-div flex w-full h-screen">
-      <InformacionTurno />
+      <InformacionTurno player_id={datosJugador.player_id}/>
       <AbandonarPartida
         estadoPartida="STARTED"
         esAnfitrion={datosJugador.is_owner}

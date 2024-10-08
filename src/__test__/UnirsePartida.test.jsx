@@ -10,7 +10,7 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import UnirsePartida from "../containers/App/components/UnirsePartida";
-import { DatosJugadorContext } from "../contexts/DatosJugadorContext";
+import { DatosJugadorContext, DatosJugadorProvider } from "../contexts/DatosJugadorContext";
 import { BACKEND_URL } from "../variablesConfiguracion";
 import { MemoryRouter } from "react-router-dom";
 
@@ -43,11 +43,19 @@ describe("UnirsePartida", () => {
   afterAll(() => server.close());
 
   it("deberia renderizar correctamente", () => {
-    render(<UnirsePartida idPartida={1} />);
+    render(
+      <DatosJugadorProvider>
+        <UnirsePartida idPartida={1} />
+      </DatosJugadorProvider>
+    );
   });
 
   it("deberia llamar a showModal se clickea el boton", () => {
-    render(<UnirsePartida idPartida={1} />);
+    render(
+      <DatosJugadorProvider>
+        <UnirsePartida idPartida={1} />
+      </DatosJugadorProvider>
+  );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
 
@@ -55,7 +63,11 @@ describe("UnirsePartida", () => {
   });
 
   it("deberia llamar a close cuando el boton de cerrar se clickea", () => {
-    render(<UnirsePartida idPartida={1} />);
+    render(
+      <DatosJugadorProvider>
+        <UnirsePartida idPartida={1} />
+      </DatosJugadorProvider>
+    );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
     fireEvent.click(screen.getByText("✕"));
@@ -64,7 +76,11 @@ describe("UnirsePartida", () => {
   });
 
   it("deberia limpiar el input del modal cuando se cierra", () => {
-    render(<UnirsePartida idPartida={1} />);
+    render(
+      <DatosJugadorProvider>
+        <UnirsePartida idPartida={1} />
+      </DatosJugadorProvider>
+    );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
 
@@ -79,7 +95,11 @@ describe("UnirsePartida", () => {
   });
 
   it("debería mostrar un mensaje de error cuando no se ingresa un nombre de usuario y se hace click en unirse", () => {
-    render(<UnirsePartida idPartida={1} />);
+    render(
+      <DatosJugadorProvider>
+        <UnirsePartida idPartida={1} />
+      </DatosJugadorProvider>
+    );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
     fireEvent.click(screen.getByText("Unirse"));
@@ -110,7 +130,9 @@ describe("UnirsePartida", () => {
 
     render(
       <MemoryRouter>
-        <UnirsePartida idPartida={1} />
+        <DatosJugadorProvider>
+          <UnirsePartida idPartida={1} />
+        </DatosJugadorProvider>
       </MemoryRouter>,
     );
 
@@ -139,7 +161,9 @@ describe("UnirsePartida", () => {
 
     render(
       <MemoryRouter>
-        <UnirsePartida idPartida={1} />
+        <DatosJugadorProvider>
+          <UnirsePartida idPartida={1} />
+        </DatosJugadorProvider>
       </MemoryRouter>,
     );
 

@@ -1,6 +1,5 @@
 module.exports = {
-  // testEnvironment: 'jest-environment-jsdom',
-  // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testEnvironment: 'jest-environment-jsdom',
   testEnvironmentOptions: {
     customExportConditions: [""],
   },
@@ -9,8 +8,8 @@ module.exports = {
   },
   moduleNameMapper: {
     "\\.(css|less)$": "<rootDir>/src/__mocks__/StyleMock.jsx",
+    "\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/src/__mocks__/Assets.mock.js"
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleFileExtensions: ["js", "jsx"],
-  testEnvironment: "jest-fixed-jsdom",
 };

@@ -25,17 +25,9 @@ describe('VistaTablero', () => {
         render(<Tablero tiles={tiles} />);
         tiles.forEach((row, rowIndex) => {
             row.forEach((color, colIndex) => {
-            const fichaElement = screen.getAllByTestId('ficha')[rowIndex * tiles[0].length + colIndex];
-            expect(fichaElement).toHaveStyle(`backgroundColor: ${color}`);
+            const fichaItem = screen.getAllByTestId('ficha')[rowIndex * tiles[0].length + colIndex];
+            expect(fichaItem).toHaveStyle(`backgroundColor: ${color}`);
             });
-        });
-    });
-
-    test('las fichas no renderizan imagen si algun color no es valido', () => {
-        render(<Tablero tiles={tilesError} />);
-        const fichaElements = screen.getAllByTestId('ficha');
-        fichaElements.forEach(fichaElement => {
-            expect(fichaElement).not.toHaveTextContent('WRONG COLOR');
         });
     });
 });

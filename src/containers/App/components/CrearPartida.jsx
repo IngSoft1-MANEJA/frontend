@@ -48,9 +48,19 @@ export const CrearPartida = () => {
       setShowSuccess("success");
       console.log(resJson);
       reset();
-      setDatosJugador({ ...datosJugador, is_owner: true });
-      if (cantidadJugadoresWatch !== null && cantidadJugadoresWatch !== undefined){
-        setDatosPartida({...datosPartida, max_players: cantidadJugadoresWatch});
+      setDatosJugador({
+        ...datosJugador,
+        is_owner: true,
+        player_id: resJson.player_id,
+      });
+      if (
+        cantidadJugadoresWatch !== null &&
+        cantidadJugadoresWatch !== undefined
+      ) {
+        setDatosPartida({
+          ...datosPartida,
+          max_players: cantidadJugadoresWatch,
+        });
       }
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
@@ -67,9 +77,8 @@ export const CrearPartida = () => {
     e.preventDefault();
     e.stopPropagation();
     document.getElementById("my_modal_1").close();
-    reset({}, {keepDirtyFields: true});
+    reset({}, { keepDirtyFields: true });
     clearErrors();
-    
   };
 
   return (
@@ -108,7 +117,9 @@ export const CrearPartida = () => {
                   placeholder="Elige tu nombre de jugador"
                   value={nombreJugadorWatch}
                   className={`input-modal-crear-partida input input-bordered w-full text-left${
-                    errors.nombreJugador?.message ? "input-modal-crear-partida input-error input-bordered w-full text-left" : ""
+                    errors.nombreJugador?.message
+                      ? "input-modal-crear-partida input-error input-bordered w-full text-left"
+                      : ""
                   }`}
                   {...register("nombreJugador", {
                     required: {
@@ -129,7 +140,9 @@ export const CrearPartida = () => {
                   placeholder="Elige el nombre de tu sala de partida"
                   value={nombreSalaWatch}
                   className={`input-modal-crear-partida input input-bordered w-full text-left${
-                    errors.nombreSala?.message ? "input-modal-crear-partida input-error input-bordered w-full text-left" : ""
+                    errors.nombreSala?.message
+                      ? "input-modal-crear-partida input-error input-bordered w-full text-left"
+                      : ""
                   }`}
                   {...register("nombreSala", {
                     required: {
@@ -152,7 +165,9 @@ export const CrearPartida = () => {
                   placeholder="Elige la cantidad maxima de jugadores (2-4)"
                   value={cantidadJugadoresWatch}
                   className={`input-modal-crear-partida input input-bordered w-full text-left${
-                    errors.cantidadJugadores?.message ? "input-modal-crear-partida input-error input-bordered w-full text-left" : ""
+                    errors.cantidadJugadores?.message
+                      ? "input-modal-crear-partida input-error input-bordered w-full text-left"
+                      : ""
                   }`}
                   {...register("cantidadJugadores", {
                     required: {
@@ -170,7 +185,9 @@ export const CrearPartida = () => {
                     },
                   })}
                 />
-                <span className="error">{errors.cantidadJugadores?.message}</span>
+                <span className="error">
+                  {errors.cantidadJugadores?.message}
+                </span>
               </label>
               <div className="formButtons">
                 <input

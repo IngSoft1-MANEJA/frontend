@@ -48,7 +48,11 @@ export const CrearPartida = () => {
       setShowSuccess("success");
       console.log(resJson);
       reset();
-      setDatosJugador({ ...datosJugador, is_owner: true });
+      setDatosJugador({
+        ...datosJugador,
+        is_owner: true,
+        player_id: resJson.player_id,
+      });
       if (cantidadJugadoresWatch !== null && cantidadJugadoresWatch !== undefined){
         setDatosPartida({...datosPartida, max_players: cantidadJugadoresWatch});
       }

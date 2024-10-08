@@ -102,4 +102,22 @@ export class ServicioPartida {
     const json = await respuesta.json();
     return json;
   }
+
+  static async deshacerMovimientoParcial() {
+    const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}/partial-move`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!respuesta.ok) {
+      throw new Error(
+        `Error al deshacer movimiento parcial - estado: ${respuesta.status}`,
+      );
+    }
+
+    const json = await respuesta.json();
+    return json;
+  }
 }

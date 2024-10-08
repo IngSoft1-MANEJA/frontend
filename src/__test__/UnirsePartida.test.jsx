@@ -10,7 +10,10 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import UnirsePartida from "../containers/App/components/UnirsePartida";
-import { DatosJugadorContext, DatosJugadorProvider } from "../contexts/DatosJugadorContext";
+import {
+  DatosJugadorContext,
+  DatosJugadorProvider,
+} from "../contexts/DatosJugadorContext";
 import { BACKEND_URL } from "../variablesConfiguracion";
 import { MemoryRouter } from "react-router-dom";
 
@@ -46,7 +49,7 @@ describe("UnirsePartida", () => {
     render(
       <DatosJugadorProvider>
         <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>
+      </DatosJugadorProvider>,
     );
   });
 
@@ -54,8 +57,8 @@ describe("UnirsePartida", () => {
     render(
       <DatosJugadorProvider>
         <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>
-  );
+      </DatosJugadorProvider>,
+    );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
 
@@ -66,7 +69,7 @@ describe("UnirsePartida", () => {
     render(
       <DatosJugadorProvider>
         <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>
+      </DatosJugadorProvider>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -79,7 +82,7 @@ describe("UnirsePartida", () => {
     render(
       <DatosJugadorProvider>
         <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>
+      </DatosJugadorProvider>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -98,7 +101,7 @@ describe("UnirsePartida", () => {
     render(
       <DatosJugadorProvider>
         <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>
+      </DatosJugadorProvider>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -184,7 +187,6 @@ describe("UnirsePartida", () => {
   });
 
   it("deberia actualizar el estado de datosJugador con los datos recibidos", async () => {
-
     server.use(
       http.post(`${BACKEND_URL}/matches/:id`, async ({ request, params }) => {
         const { id } = params;
@@ -207,9 +209,9 @@ describe("UnirsePartida", () => {
         <DatosJugadorContext.Provider
           value={{ datosJugador: {}, setDatosJugador: mockSetDatosJugador }}
         >
-          <UnirsePartida idPartida={1}/>
+          <UnirsePartida idPartida={1} />
         </DatosJugadorContext.Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -226,7 +228,5 @@ describe("UnirsePartida", () => {
         player_id: 2,
       });
     });
-
-
   });
 });

@@ -19,11 +19,10 @@ import {
   DatosJugadorContext,
   DatosJugadorProvider,
 } from "../contexts/DatosJugadorContext.jsx";
-import { 
+import {
   DatosPartidaContext,
-  DatosPartidaProvider,  
+  DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext.jsx";
-
 
 const mockedUsedNavigate = jest.fn();
 
@@ -254,7 +253,7 @@ describe("CrearPartida", () => {
             player_name: CrearPartidaMock.nombreJugador,
             max_players: CrearPartidaMock.cantidadJugadores,
             is_public: true,
-            token: "asdfasdf"
+            token: "asdfasdf",
           }),
         }),
       );
@@ -277,7 +276,7 @@ describe("CrearPartida", () => {
             <CrearPartida />
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     const openButton = screen.getByText("Crear sala");
@@ -300,9 +299,10 @@ describe("CrearPartida", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(mockSetDatosJugador).toHaveBeenCalledWith({is_owner: true, player_id: 2});
+      expect(mockSetDatosJugador).toHaveBeenCalledWith({
+        is_owner: true,
+        player_id: 2,
+      });
     });
   });
-
-
 });

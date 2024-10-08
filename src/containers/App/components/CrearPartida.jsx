@@ -44,7 +44,7 @@ export const CrearPartida = () => {
         cantidadJugadoresWatch,
       );
 
-      setMessage("Sala de partida creada con exito");
+      setMessage("Sala de partida creada, redirigiendo al lobby...");
       setShowSuccess("success");
       console.log(resJson);
       reset();
@@ -64,7 +64,7 @@ export const CrearPartida = () => {
       }
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
-      }, 300);
+      }, 2000);
     } catch (err) {
       setMessage("Error creando sala de partida");
       setShowSuccess("error");
@@ -79,6 +79,8 @@ export const CrearPartida = () => {
     document.getElementById("my_modal_1").close();
     reset({}, { keepDirtyFields: true });
     clearErrors();
+    setShowSuccess(null);
+    setMessage("");
   };
 
   return (
@@ -93,7 +95,6 @@ export const CrearPartida = () => {
       </div>
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
-          {showSuccess ? <Alerts type={showSuccess} message={message} /> : null}
           <h3 className="font-bold text-lg">Crea tu propia sala de partida!</h3>
           <div className="modal-action">
             <form
@@ -189,6 +190,7 @@ export const CrearPartida = () => {
                   {errors.cantidadJugadores?.message}
                 </span>
               </label>
+              {showSuccess ? <Alerts type={showSuccess} message={message} /> : null}
               <div className="formButtons">
                 <input
                   className="submit-crear-partida input btn btn-active "

@@ -10,6 +10,7 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import UnirsePartida from "../containers/App/components/UnirsePartida";
+import { DatosJugadorContext } from "../contexts/DatosJugadorContext";
 import { BACKEND_URL } from "../variablesConfiguracion";
 import { MemoryRouter } from "react-router-dom";
 
@@ -156,5 +157,52 @@ describe("UnirsePartida", () => {
         "Error al unirse a partida - estado: 500",
       );
     });
+  });
+
+  it("deberia actualizar el estado de datosJugador con los datos recibidos", async () => {
+
+    server.use(
+      http.post(`${BACKEND_URL}/matches/:id`, async ({ request, params }) => {
+        const { id } = params;
+        const body = await request.json();
+
+        if (id !== "1" || body.player_name !== "test") {
+          return HttpResponse.json(null, { status: 400 });
+        }
+
+        return HttpResponse.json(
+          { match_id: 1, player_id: 2 },
+          { status: 200 },
+        );
+      }),
+    );
+
+    const mockSetDatosJugador = jest.fn();
+    render(
+      <MemoryRouter>
+        <DatosJugadorContext.Provider
+          value={{ datosJugador: {}, setDatosJugador: mockSetDatosJugador }}
+        >
+          <UnirsePartida idPartida={1}/>
+        </DatosJugadorContext.Provider>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByText("Unirse a partida"));
+
+    const el = screen.getByLabelText("Ingresa tu nombre");
+    const input = el.parentElement.parentElement.querySelector("input");
+
+    fireEvent.change(input, { target: { value: "test" } });
+    fireEvent.click(screen.getByText("Unirse"));
+
+    await waitFor(() => {
+      expect(mockSetDatosJugador).toHaveBeenCalledWith({
+        is_owner: false,
+        player_id: 2,
+      });
+    });
+
+
   });
 });

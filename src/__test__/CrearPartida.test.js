@@ -265,4 +265,44 @@ describe("CrearPartida", () => {
       expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
     });
   });
+
+  test("datosJugador gets updated correctly after fetch", async () => {
+    const mockSetDatosJugador = jest.fn();
+    render(
+      <reactRouterDom.MemoryRouter>
+        <DatosPartidaProvider>
+          <DatosJugadorContext.Provider
+            value={{ datosJugador: {}, setDatosJugador: mockSetDatosJugador }}
+          >
+            <CrearPartida />
+          </DatosJugadorContext.Provider>
+        </DatosPartidaProvider>
+      </reactRouterDom.MemoryRouter>
+    );
+
+    const openButton = screen.getByText("Crear sala");
+    fireEvent.click(openButton);
+
+    const nombreJugadorInput = screen.getByLabelText("nombreJugador");
+    const nombreSalaInput = screen.getByLabelText("nombreSala");
+    const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
+    const submitButton = screen.getByText("Crear sala de partida");
+
+    fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
+
+    await userEvent.type(nombreJugadorInput, CrearPartidaMock.nombreJugador);
+    await userEvent.type(nombreSalaInput, CrearPartidaMock.nombreSala);
+    await userEvent.type(
+      cantidadJugadoresInput,
+      CrearPartidaMock.cantidadJugadores.toString(),
+    );
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockSetDatosJugador).toHaveBeenCalledWith({is_owner: true, player_id: 2});
+    });
+  });
+
+
 });

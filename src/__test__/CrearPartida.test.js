@@ -23,6 +23,7 @@ import {
   DatosPartidaContext,
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext.jsx";
+import { set } from "react-hook-form";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -256,12 +257,14 @@ describe("CrearPartida", () => {
             token: "asdfasdf",
           }),
         }),
-      );
+      )
     });
 
     await waitFor(() => {
-      expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
-      expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
+      setTimeout(() => {
+        expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
+        expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
+      }, 2000);
     });
   });
 

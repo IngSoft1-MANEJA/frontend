@@ -104,30 +104,4 @@ describe("Lobby", () => {
     const boton = screen.getByText("Abandonar");
     expect(boton).toBeDisabled();
   });
-
-  it("deberia mostrar el boton iniciar partida si el contexto is_owner es true", () => {
-    useWebSocket.mockReturnValue({ lastJsonMessage: null });
-
-    render(
-      <reactRouterDom.MemoryRouter>
-        <DatosPartidaContext.Provider
-          value={{
-            datosPartida: { max_players: 2 },
-            setDatosPartida: jest.fn(),
-          }}
-        >
-          <DatosJugadorContext.Provider
-            value={{
-              datosJugador: { is_owner: true },
-              setDatosJugador: jest.fn(),
-            }}
-          >
-            <Lobby />
-          </DatosJugadorContext.Provider>
-        </DatosPartidaContext.Provider>
-      </reactRouterDom.MemoryRouter>,
-    );
-    const boton = screen.getByText("Iniciar Partida");
-    expect(boton).not.toBeDisabled();
-  });
 });

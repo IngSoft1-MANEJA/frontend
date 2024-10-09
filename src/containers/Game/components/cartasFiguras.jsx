@@ -1,7 +1,9 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useContext, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useWebSocket } from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../../variablesConfiguracion";
-import useWebSocket from "react-use-websocket";
+import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 
 import fig1 from '../../../assets/Figuras/Blancas/fig01.svg';
 import fig2 from '../../../assets/Figuras/Blancas/fig02.svg';
@@ -29,6 +31,10 @@ import fige4 from '../../../assets/Figuras/Celestes/fige04.svg';
 import fige5 from '../../../assets/Figuras/Celestes/fige05.svg';
 import fige6 from '../../../assets/Figuras/Celestes/fige06.svg';
 import fige7 from '../../../assets/Figuras/Celestes/fige07.svg';
+import backfig from '../../../assets/Figuras/Celestes/back.svg';
+
+import './CartasFiguras.css';
+import { set } from "react-hook-form";
 
 const urlMap = {
     1: fig1,
@@ -48,43 +54,62 @@ const urlMap = {
     15: fig15,
     16: fig16,
     17: fig17,
-    18: fig18
+    18: fig18,
+    19: fige1,
+    20: fige2,
+    21: fige3,
+    22: fige4,
+    23: fige5,
+    24: fige6,
+    25: fige7,
 }
 
 export const CartasFiguras = () => {
 
-    /*const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${player_id}`;
+    const { match_id } = useParams();
+    const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+
+    const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${datosJugador.player_id}`;
     const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
-    const [cartasMovimiento, setCartasMovimiento] = useState([]);
+    const [cartasFiguras, setCartasFiguras] = useState([]);
+    const [miTurno, setMiTurno] = useState(0);
+    const [turnoCartas, setTurnoCartas] = useState(0);
 
     
     useEffect(() => {
         if (lastJsonMessage !== null) {
-            if (lastJsonMessage.key == "GET_MOVEMENT_CARD") {
-                setCartasMovimiento(lastJsonMessage.payload);
+            if (lastJsonMessage.key == "PLAYER_RECEIVE_SHAPE_CARDS") {
+                setTurnoCartas(lastJsonMessage.payload.turn_order);
+
+                if (turnoCartas == miTurno) {
+                    setCartasFiguras(lastJsonMessage.payload.shape_cards);
+                }
+
+            } else if (lastJsonMessage.key == "START_MATCH") {
+                setMiTurno(lastJsonMessage.payload.turn_order);
             } else {
                 console.error("key incorrecto recibido del websocket");
             }
             }
         }, [
             lastJsonMessage,
-            setCartasMovimiento,
-        ]);*/
+            miTurno,
+        ])
 
-    const cartasFiguras = [
-        { name: "1" },
-        { name: "2" },
-        { name: "3" }];
-    
-    return (
-        <div className="cartas-movimientos">
-        {cartasFiguras.map((carta, index) => (
-            <div key={index} className="carta-movimiento">
-                <img src={urlMap[carta.name]} alt={carta.name} />
+        return (
+            <div className="cartas-figuras">
+                <div className="cartas-figuras-propias">
+                    {cartasFiguras.map((carta, index) => (
+                        <div key={index} className="carta-movimiento">
+                            <img src={urlMap[carta.name]} alt={carta.name}/>
+                        </div>
+                    ))}
+                    <div className="mazo-propio">
+                        <img src={backfig} alt="back"/>
+                    </div>
+                </div>
             </div>
-        ))}
-        </div>
-    );
+        );  
 }
 
 export default CartasFiguras;

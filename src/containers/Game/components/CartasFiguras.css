@@ -1,0 +1,24 @@
+.cartas-figuras {
+  position: absolute;
+  bottom: 60px; /* Ajusta este valor para posicionar las cartas más cerca o más lejos del borde inferior */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row; /* Cambiado a row para alinear las cartas horizontalmente */
+  align-items: center;
+  overflow: hidden;
+}
+
+.cartas-figuras-propias {
+  display: flex;
+  flex-direction: row; /* Cambiado a row para alinear las cartas horizontalmente */
+  gap: 10px; /* Espacio entre las cartas */
+}
+
+.cartas-figuras-propias img {
+  width: 80px; /* Ajusta el tamaño según sea necesario */
+  height: auto;
+  background-color: rgb(206, 191, 172); /* Fondo blanco para cada imagen */
+  padding: 1px; /* Espacio alrededor de la imagen */
+  border-radius: 5px; /* Bordes redondeados */
+}

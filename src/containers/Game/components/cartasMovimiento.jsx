@@ -15,12 +15,12 @@ import "./cartasMovimiento.css";
 
 const urlMap = {
     "DIAGONAL": mov1,
-    "INVERSE_DIAGONAL": mov2,
+    "LINE_BETWEEN": mov2,
     "LINE": mov3,
-    "LINE_BETWEEN": mov4,
-    "LINE_BORDER": mov5,
+    "INVERSE_DIAGONAL": mov4,
+    "INVERSE_L": mov5,
     "L": mov6,
-    "INVERSE_L": mov7
+    "LINE_BORDER": mov7
 }
 
 export const CartasMovimiento = () => {
@@ -36,8 +36,6 @@ export const CartasMovimiento = () => {
         if (lastJsonMessage !== null) {
             if (lastJsonMessage.key == "GET_MOVEMENT_CARD") {
                 setCartasMovimiento(lastJsonMessage.payload.movement_card);
-            } else if (lastJsonMessage.key == "START_MATCH") {
-                setCartasMovimiento(lastJsonMessage.payload.movement_cards);
             } else {
                 console.error("key incorrecto recibido del websocket");
             }
@@ -46,6 +44,7 @@ export const CartasMovimiento = () => {
             lastJsonMessage,
             setCartasMovimiento,
         ])
+
 
         return (
             <div className="cartas-movimientos">
@@ -57,7 +56,7 @@ export const CartasMovimiento = () => {
                     ))}
                 </div>
             </div>
-        );
+        );  
 }
 
 export default CartasMovimiento;

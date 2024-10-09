@@ -1,22 +1,24 @@
-.cartas-movimientos-propias,
-.cartas-movimientos-oponente-arriba,
-.cartas-movimientos-oponente-derecha,
-.cartas-movimientos-oponente-izquierda {
+.cartas-movimientos {
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
-  flex-direction: row;
-  gap: 10px; /* Espacio entre las cartas */
-  justify-content: center; /* Centrar horizontalmente */
-  align-items: center; /* Centrar verticalmente */
-  height: 100vh; /* Ajusta según sea necesario */
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
 }
 
-.cartas-movimientos-propias img,
-.cartas-movimientos-oponente-arriba img,
-.cartas-movimientos-oponente-derecha img,
-.cartas-movimientos-oponente-izquierda img {
-  width: 100px; /* Ajusta el tamaño según sea necesario */
+.cartas-movimientos-propias {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espacio entre las cartas */
+}
+
+.cartas-movimientos-propias img {
+  width: 95px; /* Ajusta el tamaño según sea necesario */
   height: auto;
-  background-color: white; /* Fondo blanco para cada imagen */
+  background-color: rgb(206, 191, 172); /* Fondo blanco para cada imagen */
   padding: 1px; /* Espacio alrededor de la imagen */
   border-radius: 5px; /* Bordes redondeados */
 }

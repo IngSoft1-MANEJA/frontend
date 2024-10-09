@@ -70,7 +70,7 @@ export const TerminarTurno = () => {
                 onClick={handleTerminarTurno}
                 disabled={habilitarBoton ? "" : "disabled"}
                 >
-                Pasar turno
+                Terminar turno
                 </button>
             </div>
         </div>

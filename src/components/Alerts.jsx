@@ -12,7 +12,7 @@ export const Alerts = ({ type, message }) => {
   return (
     <>
       {type === "success" && (
-        <div role="alert" className="alert alert-success m-2">
+        <div role="alert" className="alert alert-success mb-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 shrink-0 stroke-current"
@@ -30,7 +30,7 @@ export const Alerts = ({ type, message }) => {
         </div>
       )}
       {type === "error" && (
-        <div role="alert" className="alert alert-error m-2">
+        <div role="alert" className="alert alert-error mb-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 shrink-0 stroke-current"
@@ -48,7 +48,7 @@ export const Alerts = ({ type, message }) => {
         </div>
       )}
       {type === "info" && (
-        <div role="alert" className="alert alert-info m-2">
+        <div role="alert" className="alert alert-info mb-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

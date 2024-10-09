@@ -46,7 +46,7 @@ export const AbandonarPartida = ({
   };
 
   return (
-    <div>
+    <div className="absolute pl-3 z-10 bottom-3">
       <button
         className="abandonar-partida-boton btn"
         onClick={manejarAbandonar}

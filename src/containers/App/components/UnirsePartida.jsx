@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ServicioPartida } from "../../../services/ServicioPartida";
+import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 import "./UnirsePartida.css";
 
 function UnirsePartida({ idPartida }) {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [mensajeError, setMensajeError] = useState("");
   const [estaCargando, setEstaCargando] = useState(false);
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const navigate = useNavigate();
 
   const manejarUnirse = async (e) => {
@@ -18,6 +20,13 @@ function UnirsePartida({ idPartida }) {
           idPartida,
           nombreUsuario,
         );
+
+        setDatosJugador({
+          ...datosJugador,
+          is_owner: false,
+          player_id: dataPartida.player_id,
+        });
+
         setEstaCargando(false);
         navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
         console.log("lobby called");

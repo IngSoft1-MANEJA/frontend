@@ -9,12 +9,18 @@ import Game from "./containers/Game/Game.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "*",
     element: <App />,
-  },
-  {
-    path: "/lobby/:idPartida/player/:idJugador",
-    element: <Lobby />,
+    children: [
+      {
+        path: "lobby/:match_id/player/:player_id",
+        element: <Lobby />,
+      },
+      {
+        path: "matches/:match_id",
+        element: <Game />,
+      },
+    ],
   },
   {
     path: "/matches/:match_id",

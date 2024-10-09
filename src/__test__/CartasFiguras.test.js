@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { useParams } from 'react-router-dom';
 import { useWebSocket } from 'react-use-websocket';
 import { DatosJugadorContext } from '../contexts/DatosJugadorContext.jsx';
-import CartasMovimiento from '../containers/Game/components/CartasMovimiento.jsx';
+import { CartasFiguras } from '../containers/Game/components/CartasFiguras.jsx';
 
 // Mockeando los hooks que utiliza el componente
 jest.mock('react-router-dom', () => ({
@@ -14,42 +14,44 @@ jest.mock('react-use-websocket', () => ({
   useWebSocket: jest.fn(),
 }));
 
-describe('CartasMovimiento', () => {
-  
+describe('CartasFiguras', () => {
+
   beforeEach(() => {
     useParams.mockReturnValue({ match_id: '1' });
-    
+
     useWebSocket.mockReturnValue({
       lastJsonMessage: {
-        key: 'GET_MOVEMENT_CARD',
+        key: 'PLAYER_RECEIVE_SHAPE_CARDS',
         payload: {
-            movement_card :[
-                { id: 1, name: 'DIAGONAL', type: 'someType' },
-                { id: 2, name: 'INVERSE_DIAGONAL', type: 'someType' },
-                { id: 3, name: 'LINE', type: 'someType' }
-            ]
+          shape_cards: [
+            { id: 1, name: 1},
+            { id: 2, name: 2},
+            { id: 3, name: 3}
+          ]
         }
-        },
+      },
     });
-    });
+  });
 
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-  test('Debe renderizar correctamente las cartas del jugador cuando recibe el mensaje GET_MOVEMENT_CARD', () => {
+  test('Debe renderizar correctamente las cartas del jugador cuando recibe el mensaje PLAYER_RECEIVE_SHAPE_CARDS', () => {
     const mockDatosJugador = {
-        datosJugador: { player_id: '123' },
-        setDatosJugador: jest.fn(),
+      datosJugador: { player_id: '123' },
+      setDatosJugador: jest.fn(),
     };
 
-    render(<DatosJugadorContext.Provider value={mockDatosJugador}>
-            <CartasMovimiento />
-            </DatosJugadorContext.Provider>);    
+    render(
+      <DatosJugadorContext.Provider value={mockDatosJugador}>
+        <CartasFiguras />
+      </DatosJugadorContext.Provider>
+    );
 
-    expect(screen.getByAltText('DIAGONAL')).toBeInTheDocument();
-    expect(screen.getByAltText('INVERSE_DIAGONAL')).toBeInTheDocument();
-    expect(screen.getByAltText('LINE')).toBeInTheDocument();
+    expect(screen.getByAltText('1')).toBeInTheDocument();
+    expect(screen.getByAltText('2')).toBeInTheDocument();
+    expect(screen.getByAltText('3')).toBeInTheDocument();
   });
 
   test('Debe mostrar un mensaje de error cuando el WebSocket recibe un key incorrecto', () => {
@@ -69,7 +71,7 @@ describe('CartasMovimiento', () => {
 
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
-        <CartasMovimiento />
+        <CartasFiguras />
       </DatosJugadorContext.Provider>
     );
 
@@ -82,21 +84,20 @@ describe('CartasMovimiento', () => {
     useWebSocket.mockReturnValue({
       lastJsonMessage: null,
     });
-  
+
     const mockDatosJugador = {
       datosJugador: { player_id: '123' },
       setDatosJugador: jest.fn(),
     };
-  
+
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
-        <CartasMovimiento />
+        <CartasFiguras />
       </DatosJugadorContext.Provider>
     );
-  
-    expect(screen.queryByAltText('DIAGONAL')).not.toBeInTheDocument();
-    expect(screen.queryByAltText('INVERSE_DIAGONAL')).not.toBeInTheDocument();
-    expect(screen.queryByAltText('LINE')).not.toBeInTheDocument();
-  });
 
+    expect(screen.queryByAltText('1')).not.toBeInTheDocument();
+    expect(screen.queryByAltText('2')).not.toBeInTheDocument();
+    expect(screen.queryByAltText('3')).not.toBeInTheDocument();
+  });
 });

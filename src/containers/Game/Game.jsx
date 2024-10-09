@@ -1,22 +1,41 @@
 import React from "react";
-
-/*import { useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
+import useWebSocket from "react-use-websocket";
+import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
-import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";*/
+import { TerminarTurno } from "./components/TerminarTurno";
+import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 
 export function Game() {
-  /*const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-  const { match_id } = useParams();*/
+  const { match_id } = useParams();
+  const [tiles, setTiles] = useState([]);
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${datosJugador.player_id}`;
+  const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
+
+  useEffect(() => {
+    if (lastJsonMessage !== null) {
+        if (lastJsonMessage.key == "START_MATCH") {
+            setTiles(lastJsonMessage.payload.board);
+        } else {
+            console.error("key incorrecto recibido del websocket");
+        }
+        }
+    }, [
+        lastJsonMessage,
+        setTiles,
+  ]);
 
   return (
-    <div>
-      {/*<AbandonarPartida
+    <div className="game-div relative w-full h-screen m-0">
+      <TerminarTurno/>
+      <AbandonarPartida
         estadoPartida="STARTED"
-        esAnfitrion={datosJugador.is_owner}
-        idJugador={datosJugador.player_id}
+        esAnfitrion={false}
+        idJugador={1}
         idPartida={match_id}
-      />*/}
+      />
     </div>
   );
 }

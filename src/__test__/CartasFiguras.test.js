@@ -5,7 +5,6 @@ import { useWebSocket } from 'react-use-websocket';
 import { DatosJugadorContext } from '../contexts/DatosJugadorContext.jsx';
 import { CartasFiguras } from '../containers/Game/components/CartasFiguras.jsx';
 
-// Mockeando los hooks que utiliza el componente
 jest.mock('react-router-dom', () => ({
   useParams: jest.fn(),
 }));

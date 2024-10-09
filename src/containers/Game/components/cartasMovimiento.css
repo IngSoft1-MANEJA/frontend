@@ -12,13 +12,13 @@
 .cartas-movimientos-propias {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Espacio entre las cartas */
+  gap: 10px; 
 }
 
 .cartas-movimientos-propias img {
-  width: 95px; /* Ajusta el tamaño según sea necesario */
+  width: 95px;
   height: auto;
-  background-color: rgb(206, 191, 172); /* Fondo blanco para cada imagen */
-  padding: 1px; /* Espacio alrededor de la imagen */
-  border-radius: 5px; /* Bordes redondeados */
+  background-color: rgb(206, 191, 172); 
+  padding: 1px; 
+  border-radius: 5px; 
 }

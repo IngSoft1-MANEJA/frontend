@@ -257,7 +257,7 @@ describe("CrearPartida", () => {
             token: "asdfasdf",
           }),
         }),
-      )
+      );
     });
 
     await waitFor(() => {

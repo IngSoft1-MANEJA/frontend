@@ -190,7 +190,9 @@ export const CrearPartida = () => {
                   {errors.cantidadJugadores?.message}
                 </span>
               </label>
-              {showSuccess ? <Alerts type={showSuccess} message={message} /> : null}
+              {showSuccess ? (
+                <Alerts type={showSuccess} message={message} />
+              ) : null}
               <div className="formButtons">
                 <input
                   className="submit-crear-partida input btn btn-active "

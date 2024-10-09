@@ -1,5 +1,10 @@
 import { BACKEND_URL } from "../variablesConfiguracion";
 
+export const JugadorGanoMotivo = Object.freeze({
+  NORMAL: "NORMAL",
+  FORFEIT: "FORFEIT",
+});
+
 export class ServicioPartida {
   static GRUPO_ENDPOINT = "matches";
 

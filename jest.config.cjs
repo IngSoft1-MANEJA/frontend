@@ -1,5 +1,5 @@
 module.exports = {
-  testEnvironment: "jest-environment-jsdom",
+  testEnvironment: "jest-fixed-jsdom",
   testEnvironmentOptions: {
     customExportConditions: [""],
   },

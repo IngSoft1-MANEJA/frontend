@@ -21,10 +21,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "/matches/:match_id",
-    element: <Game />,
-  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

@@ -33,9 +33,8 @@ export function Game() {
       <TerminarTurno/>
       <Tablero tiles={tiles}/>
       <AbandonarPartida
-        estadoPartida="STARTED"
-        esAnfitrion={false}
-        idJugador={1}
+        esAnfitrion={datosJugador.is_owner}
+        idJugador={datosJugador.player_id}
         idPartida={match_id}
       />
     </div>

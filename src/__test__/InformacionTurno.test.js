@@ -32,10 +32,22 @@ describe("InformacionTurno", () => {
     );
   });
 
-  test("se muestran los turnos por pantalla", () => {
+  test("se muestran los turnos por pantalla en START_MATCH", () => {
     useWebSocket.mockReturnValue({
-      lastJsonMessage: { key: "GET_TURN_ORDER", payload: {
-        current_turn: "Player 1"
+      lastJsonMessage: { key: "START_MATCH", payload: {
+        player_name: "Player 1"
+      }},
+    });
+    render(<InformacionTurno {...Player}/>);
+    const turnoActual = screen.getByText("Player 1");
+
+    expect(turnoActual).toBeInTheDocument();
+  });
+
+  test("se muestra el nuevo turno por pantalla en END_PLAYER_TURN", () => {
+    useWebSocket.mockReturnValue({
+      lastJsonMessage: { key: "END_PLAYER_TURN", payload: {
+        next_player_name: "Player 1"
       }},
     });
     render(<InformacionTurno {...Player}/>);

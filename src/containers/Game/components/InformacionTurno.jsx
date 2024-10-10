@@ -13,32 +13,42 @@ export const InformacionTurno = ({player_id}) => {
 
     useEffect(() => {
         if (lastJsonMessage !== null) {
-            if (lastJsonMessage.key == "GET_TURN_ORDER") {
-                setTurnos({
-                    current_turn: lastJsonMessage.payload.current_turn,
-                });
-            } else {
-                console.error("key incorrecto recibido del websocket");
+            switch (lastJsonMessage.key) {
+                case "START_MATCH":
+                    setTurnos({
+                        current_turn: lastJsonMessage.payload.player_name,
+                    });
+                break;
+
+                case "END_PLAYER_TURN":
+                    setTurnos({
+                        current_turn: lastJsonMessage.payload.next_player_name,
+                    });
+                break;
+        
+                default:
+                    console.error("key incorrecto recibido del websocket");
+                break;
             }
-            }
-        }, [
-            lastJsonMessage,
-            setTurnos,
-        ]);
+        }
+    }, [
+        lastJsonMessage,
+        setTurnos,
+    ]);
 
     return (
-        <div className='informacion-div w-fit max-w-md flex h-fit box-border overflow-hidden'>
-            <table className="table-xs m-3">
+        <div className='informacion-div absolute left-6 top-6 w-fit max-w-md h-fit p-1'>
+            <table className="table table-xs overflow-hidden break-words text-balance rounded-none">
                 <thead>
-                    <tr>
-                        <th className='w-1/4 min-w-28'>Turn Order</th>
-                        <th className='w-3/4'>Name</th>
+                    <tr className='bg-base-100'>
+                        <th className='w-16'>Turno</th>
+                        <th className='min-w-20'>Nombre</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr className="bg-base-200 h-8">
-                        <th className='w-1/4'>Current</th>
-                        <td className='w-3/4'>{turnos.current_turn}</td>
+                        <th className='w-16'>Jugando:</th>
+                        <td className='min-w-20 max-w-44'>{turnos.current_turn}</td>
                     </tr>
                 </tbody>
             </table>

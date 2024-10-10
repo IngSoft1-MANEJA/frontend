@@ -46,7 +46,7 @@ export const CartasMovimiento = () => {
       <div className="cartas-movimientos-propias">
         {cartasMovimiento.map((carta, index) => (
           <div key={index} className="carta-movimiento">
-            <img src={urlMap[carta.name]} alt={carta.name} />
+            <img src={urlMap[carta.type]} alt={carta.type} />
           </div>
         ))}
       </div>

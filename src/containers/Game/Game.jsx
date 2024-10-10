@@ -5,6 +5,7 @@ import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
+import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 
 export function Game() {
@@ -29,6 +30,7 @@ export function Game() {
 
   return (
     <div className="game-div relative w-full h-screen m-0">
+      <TerminarTurno/>
       <Tablero tiles={tiles}/>
       <AbandonarPartida
         estadoPartida="STARTED"

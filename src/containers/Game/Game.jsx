@@ -7,6 +7,7 @@ import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
+import { InformacionTurno } from "./components/InformacionTurno.jsx";
 
 export function Game() {
   const { match_id } = useParams();
@@ -30,6 +31,7 @@ export function Game() {
 
   return (
     <div className="game-div relative w-full h-screen m-0">
+      <InformacionTurno player_id={datosJugador.player_id}/>
       <TerminarTurno/>
       <Tablero tiles={tiles}/>
       <AbandonarPartida

@@ -51,6 +51,66 @@ describe('TerminarTurno Component', () => {
         expect(screen.getByText("Terminar turno")).toBeInTheDocument();
     });
 
+    test('boton desabilitado en START_MATCH si el turno no es del jugador', () => {
+        useWebSocket.mockReturnValue({
+            lastJsonMessage: {
+                key: 'START_MATCH',
+                payload: {
+                    player_name: "Player 2",
+                    turn_order: 2,
+                },
+            },
+        });
+        render(
+            <reactRouterDom.MemoryRouter>
+                <DatosPartidaProvider>
+                    <DatosJugadorContext.Provider
+                        value={{
+                        datosJugador: { player_id: 123, player_turn: 1 },
+                        setDatosJugador: jest.fn(),
+                        }}
+                    >
+                        <TerminarTurno />
+                    </DatosJugadorContext.Provider>
+                </DatosPartidaProvider>
+            </reactRouterDom.MemoryRouter>,
+        );
+
+        const button = screen.getByText("Terminar turno");
+        expect(button).toBeDisabled();
+    });
+
+    test('habilita boton en START_MATCH si es el turno del jugador', async () => {
+        useWebSocket.mockReturnValue({
+            lastJsonMessage: {
+                key: 'START_MATCH',
+                payload: {
+                    player_name: "Player 1",
+                    turn_order: 1,
+                },
+            },
+        });
+
+        render(
+            <reactRouterDom.MemoryRouter>
+                <DatosPartidaProvider>
+                    <DatosJugadorContext.Provider
+                        value={{
+                        datosJugador: { player_id: 123, player_turn: 1 },
+                        setDatosJugador: jest.fn(),
+                        }}
+                    >
+                        <TerminarTurno />
+                    </DatosJugadorContext.Provider>
+                </DatosPartidaProvider>
+            </reactRouterDom.MemoryRouter>,
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("Terminar turno")).not.toBeDisabled();
+        });
+    });
+
     test('boton desabilitado si el turno no es del jugador', () => {
         useWebSocket.mockReturnValue({
             lastJsonMessage: {
@@ -111,6 +171,35 @@ describe('TerminarTurno Component', () => {
         await waitFor(() => {
             expect(screen.getByText("Terminar turno")).not.toBeDisabled();
         });
+    });
+
+    test('muestra alerta en mensaje START_MATCH', async () => {
+        useWebSocket.mockReturnValue({
+            lastJsonMessage: {
+                key: 'START_MATCH',
+                payload: {
+                    player_name: 'Player 1',
+                    turn_order: 1,
+                },
+            },
+        });
+        render(
+            <reactRouterDom.MemoryRouter>
+                <DatosPartidaProvider>
+                    <DatosJugadorContext.Provider
+                        value={{
+                        datosJugador: { player_id: 123, player_turn: 1 },
+                        setDatosJugador: jest.fn(),
+                        }}
+                    >
+                        <TerminarTurno />
+                    </DatosJugadorContext.Provider>
+                </DatosPartidaProvider>
+            </reactRouterDom.MemoryRouter>,
+        );
+
+        const alerta = screen.getByText("Turno de Player 1.");
+        expect(alerta).toBeInTheDocument();
     });
 
     test('muestra alerta en mensaje END_PLAYER_TURN', async () => {

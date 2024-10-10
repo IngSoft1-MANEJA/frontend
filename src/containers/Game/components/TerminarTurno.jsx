@@ -20,6 +20,23 @@ export const TerminarTurno = () => {
     useEffect(() => {
         if (lastJsonMessage !== null) {
             switch (lastJsonMessage.key) {
+                case "START_MATCH":
+                    if (lastJsonMessage.payload.turn_order === 1){
+                        setHabilitarBoton(true);
+                    } else {
+                        setHabilitarBoton(false);
+                    }
+
+                    setMensajeAlerta(
+                        `Turno de ${lastJsonMessage.payload.player_name}.`,
+                    );
+                    setMostrarAlerta(true);
+
+                    setTimeout(() => {
+                        setMostrarAlerta(false);
+                    }, 1500);
+                break;
+
                 case "END_PLAYER_TURN":
                     setMensajeAlerta(
                         `${lastJsonMessage.payload.current_player_name} ha terminado su turno.`,

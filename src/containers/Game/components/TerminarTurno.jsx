@@ -21,24 +21,29 @@ export const TerminarTurno = () => {
         if (lastJsonMessage !== null) {
             switch (lastJsonMessage.key) {
                 case "END_PLAYER_TURN":
+                    setMensajeAlerta(
+                        `${lastJsonMessage.payload.current_player_name} ha terminado su turno.`,
+                    );
                     setMostrarAlerta(true);
                     setTimeout(() => {
-                        setMensajeAlerta(
-                            `${lastJsonMessage.payload.next_player_name} ha terminado su turno.`,
-                        );
+                        setMostrarAlerta(false);
                     }, 1500);
                     
                     if (lastJsonMessage.payload.next_player_turn === datosJugador.player_turn){
                         setHabilitarBoton(true);
+                    } else {
+                        setHabilitarBoton(false);
                     }
 
-                    setTimeout(() => {
-                        setMensajeAlerta(
-                            `Turno de ${lastJsonMessage.payload.next_player_name}.`,
-                        );
-                    }, 1500);
-                    setMostrarAlerta(false);
+                    setMensajeAlerta(
+                        `Turno de ${lastJsonMessage.payload.next_player_name}.`,
+                    );
+                    setMostrarAlerta(true);
 
+                    setTimeout(() => {
+                        setMostrarAlerta(false);
+                    }, 1500);
+                    
                 break;
         
                 default:
@@ -50,6 +55,7 @@ export const TerminarTurno = () => {
     lastJsonMessage,
     setMostrarAlerta,
     setMensajeAlerta,
+
     ]);
 
     const handleTerminarTurno = async () => {
@@ -68,7 +74,7 @@ export const TerminarTurno = () => {
                 <button
                 className="terminar-turno-boton btn"
                 onClick={handleTerminarTurno}
-                disabled={habilitarBoton ? "" : "disabled"}
+                disabled={!habilitarBoton}
                 >
                 Terminar turno
                 </button>

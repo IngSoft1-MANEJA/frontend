@@ -22,9 +22,9 @@ describe("CartasFiguras", () => {
         key: "PLAYER_RECEIVE_SHAPE_CARDS",
         payload: {
           shape_cards: [
-            { id: 1, name: 1 },
-            { id: 2, name: 2 },
-            { id: 3, name: 3 },
+            { id: 1, type: 1 },
+            { id: 2, type: 2 },
+            { id: 3, type: 3 },
           ],
         },
       },

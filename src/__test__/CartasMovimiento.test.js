@@ -22,9 +22,9 @@ describe("CartasMovimiento", () => {
         key: "GET_MOVEMENT_CARD",
         payload: {
           movement_card: [
-            { id: 1, name: "DIAGONAL", type: "someType" },
-            { id: 2, name: "INVERSE_DIAGONAL", type: "someType" },
-            { id: 3, name: "LINE", type: "someType" },
+            { id: 1, type: "DIAGONAL" },
+            { id: 2, type: "INVERSE_DIAGONAL"},
+            { id: 3, type: "LINE" },
           ],
         },
       },

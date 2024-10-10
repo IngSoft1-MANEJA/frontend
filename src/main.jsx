@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import App from "./containers/App/App.jsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./index.css";
 import Lobby from "./containers/Lobby/Lobby.jsx";
 import Game from "./containers/Game/Game.jsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
 
 const router = createBrowserRouter([
   {

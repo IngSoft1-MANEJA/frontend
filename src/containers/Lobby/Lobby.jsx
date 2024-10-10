@@ -33,7 +33,6 @@ export function Lobby() {
   useEffect(() => {
     if (lastJsonMessage !== null) {
       switch (lastJsonMessage.key) {
-
         case "PLAYER_JOIN":
           setCantPlayersLobby(cantPlayersLobby + 1);
           setMostrarAlerta(true);
@@ -42,9 +41,11 @@ export function Lobby() {
             `jugador ${lastJsonMessage.payload.name} se ha unido.`,
           );
           setEstaShaking(true);
-          setTimeout(() => {setEstaShaking(false), setMostrarAlerta(false)}, 3000);
+          setTimeout(() => {
+            setEstaShaking(false), setMostrarAlerta(false);
+          }, 3000);
           break;
-        
+
         case "PLAYER_LEFT":
           setCantPlayersLobby(cantPlayersLobby - 1);
           setMostrarAlerta(true);
@@ -53,9 +54,11 @@ export function Lobby() {
             `jugador ${lastJsonMessage.payload.name} ha abandonado.`,
           );
           setEstaShaking(true);
-          setTimeout(() => {setEstaShaking(false), setMostrarAlerta(false)}, 3000);
+          setTimeout(() => {
+            setEstaShaking(false), setMostrarAlerta(false);
+          }, 3000);
           break;
-        
+
         case "START_MATCH":
           navigate(`/matches/${match_id}`);
           break;
@@ -65,7 +68,13 @@ export function Lobby() {
           break;
       }
     }
-  }, [lastJsonMessage, setMostrarAlerta, setTipoAlerta, setMensajeAlerta, setCantPlayersLobby]);
+  }, [
+    lastJsonMessage,
+    setMostrarAlerta,
+    setTipoAlerta,
+    setMensajeAlerta,
+    setCantPlayersLobby,
+  ]);
 
   return (
     <div>

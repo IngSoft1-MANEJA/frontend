@@ -10,6 +10,7 @@ import { DatosPartidaContext } from "../../contexts/DatosPartidaContext";
 import "./Lobby.css";
 import IniciarPartida from "./components/IniciarPartida";
 import { useNavigate } from "react-router-dom";
+import { EventoProvider, EventoContext } from "../../contexts/EventoContext";
 
 export function Lobby() {
   const { match_id, player_id } = useParams();
@@ -29,16 +30,21 @@ export function Lobby() {
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
+  const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    if (lastJsonMessage !== null) {
-      switch (lastJsonMessage.key) {
+    setUltimoEvento(lastJsonMessage);
+  }, [lastJsonMessage, setUltimoEvento]);
+
+  useEffect(() => {
+    if (ultimoEvento !== null) {
+      switch (ultimoEvento.key) {
         case "PLAYER_JOIN":
           setCantPlayersLobby(cantPlayersLobby + 1);
           setMostrarAlerta(true);
           setTipoAlerta("info");
           setMensajeAlerta(
-            `jugador ${lastJsonMessage.payload.name} se ha unido.`,
+            `jugador ${ultimoEvento.payload.name} se ha unido.`,
           );
           setEstaShaking(true);
           setTimeout(() => {
@@ -51,7 +57,7 @@ export function Lobby() {
           setMostrarAlerta(true);
           setTipoAlerta("info");
           setMensajeAlerta(
-            `jugador ${lastJsonMessage.payload.name} ha abandonado.`,
+            `jugador ${ultimoEvento.payload.name} ha abandonado.`,
           );
           setEstaShaking(true);
           setTimeout(() => {
@@ -69,7 +75,7 @@ export function Lobby() {
       }
     }
   }, [
-    lastJsonMessage,
+    ultimoEvento,
     setMostrarAlerta,
     setTipoAlerta,
     setMensajeAlerta,

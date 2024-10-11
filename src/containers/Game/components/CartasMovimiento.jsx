@@ -1,9 +1,6 @@
 import React from "react";
 import { useEffect, useContext, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useWebSocket } from "react-use-websocket";
-import { WEBSOCKET_URL } from "../../../variablesConfiguracion";
-import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
+import { EventoContext } from "../../../contexts/EventoContext";
 import mov1 from "../../../assets/Movimientos/mov1.svg";
 import mov2 from "../../../assets/Movimientos/mov2.svg";
 import mov3 from "../../../assets/Movimientos/mov3.svg";
@@ -24,22 +21,18 @@ const urlMap = {
 };
 
 export const CartasMovimiento = () => {
-  const { match_id } = useParams();
-  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-
-  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
-  const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
   const [cartasMovimiento, setCartasMovimiento] = useState([]);
+  const {ultimoEvento} = useContext(EventoContext);
 
   useEffect(() => {
-    if (lastJsonMessage !== null) {
-      if (lastJsonMessage.key == "GET_MOVEMENT_CARD") {
-        setCartasMovimiento(lastJsonMessage.payload.movement_card);
+    if (ultimoEvento !== null) {
+      if (ultimoEvento.key == "GET_MOVEMENT_CARD") {
+        setCartasMovimiento(ultimoEvento.payload.movement_card);
       } else {
         console.error("key incorrecto recibido del websocket");
       }
     }
-  }, [lastJsonMessage, setCartasMovimiento]);
+  }, [ultimoEvento, setCartasMovimiento]);
 
   return (
     <div className="cartas-movimientos">

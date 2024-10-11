@@ -1,9 +1,6 @@
 import React from "react";
 import { useEffect, useContext, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useWebSocket } from "react-use-websocket";
-import { WEBSOCKET_URL } from "../../../variablesConfiguracion";
-import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
+import { EventoContext } from "../../../contexts/EventoContext";
 
 import fig1 from "../../../assets/Figuras/Blancas/fig01.svg";
 import fig2 from "../../../assets/Figuras/Blancas/fig02.svg";
@@ -64,30 +61,26 @@ const urlMap = {
 };
 
 export const CartasFiguras = () => {
-  const { match_id } = useParams();
-  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-
-  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
-  const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
   const [turnoCartas, setTurnoCartas] = useState(0);
+  const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    if (lastJsonMessage !== null) {
-      if (lastJsonMessage.key == "PLAYER_RECEIVE_SHAPE_CARDS") {
-        setTurnoCartas(lastJsonMessage.payload.turn_order);
+    if (ultimoEvento !== null) {
+      if (ultimoEvento.key == "PLAYER_RECEIVE_SHAPE_CARDS") {
+        setTurnoCartas(ultimoEvento.payload.turn_order);
 
         if (turnoCartas == miTurno) {
-          setCartasFiguras(lastJsonMessage.payload.shape_cards);
+          setCartasFiguras(ultimoEvento.payload.shape_cards);
         }
-      } else if (lastJsonMessage.key == "START_MATCH") {
-        setMiTurno(lastJsonMessage.payload.turn_order);
+      } else if (ultimoEvento.key == "START_MATCH") {
+        setMiTurno(ultimoEvento.payload.turn_order);
       } else {
         console.error("key incorrecto recibido del websocket");
       }
     }
-  }, [lastJsonMessage, miTurno]);
+  }, [ultimoEvento, miTurno]);
 
   return (
     <div className="cartas-figuras">

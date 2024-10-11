@@ -1,34 +1,35 @@
 import React from 'react'
 import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import useWebSocket from "react-use-websocket";
-import { WEBSOCKET_URL } from "../../../variablesConfiguracion";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { ServicioPartida } from "../../../services/ServicioPartida";
 import { Alerts } from "../../../components/Alerts";
+import {EventoContext} from "../../../contexts/EventoContext";
 
 export const TerminarTurno = () => {
     const { match_id } = useParams();
-    const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-    const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
-    const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
+
+    const { datosJugador } = useContext(DatosJugadorContext);
+    const {ultimoEvento} = useContext(EventoContext);
+
     const [mostrarAlerta, setMostrarAlerta] = useState(false);
     const [mensajeAlerta, setMensajeAlerta] = useState("");
     const [habilitarBoton, setHabilitarBoton] = useState(false);
+
     const tipoAlerta = "info";
 
     useEffect(() => {
-        if (lastJsonMessage !== null) {
-            switch (lastJsonMessage.key) {
+        if (ultimoEvento !== null) {
+            switch (ultimoEvento.key) {
                 case "START_MATCH":
-                    if (lastJsonMessage.payload.turn_order === 1){
+                    if (ultimoEvento.payload.turn_order === 1){
                         setHabilitarBoton(true);
                     } else {
                         setHabilitarBoton(false);
                     }
 
                     setMensajeAlerta(
-                        `Turno de ${lastJsonMessage.payload.player_name}.`,
+                        `Turno de ${ultimoEvento.payload.player_name}.`,
                     );
                     setMostrarAlerta(true);
 
@@ -39,21 +40,21 @@ export const TerminarTurno = () => {
 
                 case "END_PLAYER_TURN":
                     setMensajeAlerta(
-                        `${lastJsonMessage.payload.current_player_name} ha terminado su turno.`,
+                        `${ultimoEvento.payload.current_player_name} ha terminado su turno.`,
                     );
                     setMostrarAlerta(true);
                     setTimeout(() => {
                         setMostrarAlerta(false);
                     }, 1500);
                     
-                    if (lastJsonMessage.payload.next_player_turn === datosJugador.player_turn){
+                    if (ultimoEvento.payload.next_player_turn === datosJugador.player_turn){
                         setHabilitarBoton(true);
                     } else {
                         setHabilitarBoton(false);
                     }
 
                     setMensajeAlerta(
-                        `Turno de ${lastJsonMessage.payload.next_player_name}.`,
+                        `Turno de ${ultimoEvento.payload.next_player_name}.`,
                     );
                     setMostrarAlerta(true);
 
@@ -69,7 +70,7 @@ export const TerminarTurno = () => {
             }
         }
     }, [
-    lastJsonMessage,
+    ultimoEvento,
     setMostrarAlerta,
     setMensajeAlerta,
 

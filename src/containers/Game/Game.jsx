@@ -8,6 +8,7 @@ import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
+import {EventoContext} from "../../contexts/EventoContext";
 
 export function Game() {
   const { match_id } = useParams();
@@ -15,17 +16,22 @@ export function Game() {
   const [tiles, setTiles] = useState([]);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
   const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
+  const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    if (lastJsonMessage !== null) {
-        if (lastJsonMessage.key == "START_MATCH") {
-            setTiles(lastJsonMessage.payload.board);
+    setUltimoEvento(lastJsonMessage);
+  }, [lastJsonMessage, setUltimoEvento]);
+
+  useEffect(() => {
+    if (ultimoEvento !== null) {
+        if (ultimoEvento.key == "START_MATCH") {
+            setTiles(ultimoEvento.payload.board);
         } else {
             console.error("key incorrecto recibido del websocket");
         }
         }
     }, [
-        lastJsonMessage,
+        ultimoEvento,
         setTiles,
   ]);
 

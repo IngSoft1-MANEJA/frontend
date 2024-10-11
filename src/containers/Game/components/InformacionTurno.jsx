@@ -1,28 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import useWebSocket from "react-use-websocket";
-import { WEBSOCKET_URL } from "../../../variablesConfiguracion.js";
+import React, { useContext, useEffect, useState } from 'react';
+import { EventoContext } from '../../../contexts/EventoContext';
 import './InformacionTurno.css';
 
 export const InformacionTurno = ({player_id}) => {
 
-    const { match_id } = useParams();
     const [turnos, setTurnos] = useState({current_turn: ''});
-    const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${player_id}`;
-    const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
+    const {ultimoEvento} = useContext(EventoContext);
 
     useEffect(() => {
-        if (lastJsonMessage !== null) {
-            switch (lastJsonMessage.key) {
+        if (ultimoEvento !== null) {
+            switch (ultimoEvento.key) {
                 case "START_MATCH":
                     setTurnos({
-                        current_turn: lastJsonMessage.payload.player_name,
+                        current_turn: ultimoEvento.payload.player_name,
                     });
                 break;
 
                 case "END_PLAYER_TURN":
                     setTurnos({
-                        current_turn: lastJsonMessage.payload.next_player_name,
+                        current_turn: ultimoEvento.payload.next_player_name,
                     });
                 break;
         
@@ -32,7 +28,7 @@ export const InformacionTurno = ({player_id}) => {
             }
         }
     }, [
-        lastJsonMessage,
+        ultimoEvento,
         setTurnos,
     ]);
 

@@ -11,19 +11,11 @@ const images = {
     blue: BlueTile,
 };
 
-export const Ficha = ({color}) => {
+export const Ficha = ({ color, onClick }) => {
     const tileImage = images[color];
-    if (color in images === false) {
-        return(
-            <div className="flex celda items-center justify-center">
-                <img className="h-auto max-w-full" alt={`${color}`} />
-            </div>
-        ) ;
-            
-    }
 
     return (
-        <div className="celda">
+        <div className="celda" onClick={onClick}>
             <img className="h-auto max-w-full" src={tileImage} alt={`${color}`} />
         </div>
     )

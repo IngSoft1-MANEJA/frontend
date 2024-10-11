@@ -5,6 +5,7 @@ import { InformacionTurno } from "../containers/Game/components/InformacionTurno
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../variablesConfiguracion";
 import { Player } from "../__mocks__/InformacionTurno.mock.js";
+import { EventoContext } from "../contexts/EventoContext.jsx";
 
 jest.mock("react-use-websocket");
 
@@ -19,47 +20,46 @@ describe("InformacionTurno", () => {
     cleanup();
   });
 
-  test("deberia conectarse a el websocket", () => {
-    useWebSocket.mockReturnValue({
-      lastJsonMessage: null,
-    });
-    render(<InformacionTurno {...Player}/>);
-    expect(useWebSocket).toHaveBeenCalledTimes(1);
-    const websocket_url = `${WEBSOCKET_URL}/matches/1/ws/${Player.player_id}`;
-    expect(useWebSocket).toHaveBeenCalledWith(
-      websocket_url,
-      expect.objectContaining({ share: true }),
-    );
-  });
-
   test("se muestran los turnos por pantalla en START_MATCH", () => {
-    useWebSocket.mockReturnValue({
-      lastJsonMessage: { key: "START_MATCH", payload: {
+    const eventoValue = {
+      ultimoEvento: { key: "START_MATCH", payload: {
         player_name: "Player 1"
       }},
-    });
-    render(<InformacionTurno {...Player}/>);
+    };
+    render(
+      <EventoContext.Provider value={eventoValue}>
+        <InformacionTurno {...Player} />
+      </EventoContext.Provider>
+    );
     const turnoActual = screen.getByText("Player 1");
 
     expect(turnoActual).toBeInTheDocument();
   });
 
   test("se muestra el nuevo turno por pantalla en END_PLAYER_TURN", () => {
-    useWebSocket.mockReturnValue({
-      lastJsonMessage: { key: "END_PLAYER_TURN", payload: {
+    const eventoValue = {
+      ultimoEvento: { key: "END_PLAYER_TURN", payload: {
         next_player_name: "Player 1"
       }},
-    });
-    render(<InformacionTurno {...Player}/>);
+    };
+    render(
+      <EventoContext.Provider value={eventoValue}>
+        <InformacionTurno {...Player} />
+      </EventoContext.Provider>
+    );
     const turnoActual = screen.getByText("Player 1");
 
     expect(turnoActual).toBeInTheDocument();
   });
 
   test("loggea un mensaje de error si el key es incorrecto", () => {
-    useWebSocket.mockReturnValue({ lastJsonMessage: { key: "INVALID_KEY" } });
+    const eventoValue = { ultimoEvento: { key: "INVALID_KEY" } };
     console.error = jest.fn();
-    render(<InformacionTurno {...Player}/>);
+    render(
+      <EventoContext.Provider value={eventoValue}>
+        <InformacionTurno {...Player} />
+      </EventoContext.Provider>
+    );
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(
       "key incorrecto recibido del websocket",

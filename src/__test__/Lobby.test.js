@@ -13,6 +13,7 @@ import {
   DatosPartidaContext,
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext";
+import { EventoProvider } from "../contexts/EventoContext";
 
 jest.mock("react-use-websocket");
 
@@ -35,7 +36,9 @@ describe("Lobby", () => {
       <reactRouterDom.MemoryRouter>
         <DatosPartidaProvider>
           <DatosJugadorProvider>
-            <Lobby />
+            <EventoProvider>
+              <Lobby />
+            </EventoProvider>
           </DatosJugadorProvider>
         </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
@@ -56,7 +59,9 @@ describe("Lobby", () => {
       <reactRouterDom.MemoryRouter>
         <DatosPartidaProvider>
           <DatosJugadorProvider>
-            <Lobby />
+            <EventoProvider>
+              <Lobby />
+            </EventoProvider>
           </DatosJugadorProvider>
         </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
@@ -73,7 +78,9 @@ describe("Lobby", () => {
       <reactRouterDom.MemoryRouter>
         <DatosPartidaProvider>
           <DatosJugadorProvider>
-            <Lobby />
+            <EventoProvider>
+              <Lobby />
+            </EventoProvider>
           </DatosJugadorProvider>
         </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
@@ -96,7 +103,9 @@ describe("Lobby", () => {
               setDatosJugador: jest.fn(),
             }}
           >
-            <Lobby />
+            <EventoProvider>
+              <Lobby />
+            </EventoProvider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,

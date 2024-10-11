@@ -5,15 +5,13 @@ import useWebSocket from "react-use-websocket";
 import "@testing-library/jest-dom";
 import { TerminarTurno } from '../containers/Game/components/TerminarTurno';
 import {
-    DatosJugadorProvider,
     DatosJugadorContext,
   } from "../contexts/DatosJugadorContext";
   import {
-    DatosPartidaContext,
     DatosPartidaProvider,
   } from "../contexts/DatosPartidaContext";
+  import { EventoContext, EventoProvider } from '../contexts/EventoContext';
 import { ServicioPartida } from '../services/ServicioPartida';
-import { SET_TIMEOUT_MAX_ALLOWED_INT } from 'msw';
 
 jest.mock('react-use-websocket');
 jest.mock('../services/ServicioPartida');
@@ -30,9 +28,6 @@ describe('TerminarTurno Component', () => {
     });
     
     test('renderiza componente', () => {
-        useWebSocket.mockReturnValue({
-            lastJsonMessage: null,
-        });
         render(
             <reactRouterDom.MemoryRouter>
                 <DatosPartidaProvider>
@@ -42,7 +37,9 @@ describe('TerminarTurno Component', () => {
                         setDatosJugador: jest.fn(),
                         }}
                     >
-                        <TerminarTurno />
+                        <EventoProvider>
+                            <TerminarTurno />
+                        </EventoProvider>
                     </DatosJugadorContext.Provider>
                 </DatosPartidaProvider>
             </reactRouterDom.MemoryRouter>,
@@ -52,25 +49,25 @@ describe('TerminarTurno Component', () => {
     });
 
     test('boton desabilitado en START_MATCH si el turno no es del jugador', () => {
-        useWebSocket.mockReturnValue({
-            lastJsonMessage: {
-                key: 'START_MATCH',
-                payload: {
-                    player_name: "Player 2",
-                    turn_order: 2,
-                },
-            },
-        });
+        const datosJugadorValue = {
+          datosJugador: { player_id: 123, player_turn: 1 },
+          setDatosJugador: jest.fn(),
+        };
+        const ultimoEventoValue = {
+          ultimoEvento: {
+            key: "START_MATCH",
+            payload: { player_name: "Player 2", turn_order: 2 },
+          },
+        };
         render(
             <reactRouterDom.MemoryRouter>
                 <DatosPartidaProvider>
                     <DatosJugadorContext.Provider
-                        value={{
-                        datosJugador: { player_id: 123, player_turn: 1 },
-                        setDatosJugador: jest.fn(),
-                        }}
+                        value={datosJugadorValue}
                     >
-                        <TerminarTurno />
+                        <EventoContext.Provider value={ultimoEventoValue}>
+                            <TerminarTurno />
+                        </EventoContext.Provider>
                     </DatosJugadorContext.Provider>
                 </DatosPartidaProvider>
             </reactRouterDom.MemoryRouter>,
@@ -81,26 +78,30 @@ describe('TerminarTurno Component', () => {
     });
 
     test('habilita boton en START_MATCH si es el turno del jugador', async () => {
-        useWebSocket.mockReturnValue({
-            lastJsonMessage: {
+        const eventoValue = {
+            ultimoEvento: {
                 key: 'START_MATCH',
                 payload: {
                     player_name: "Player 1",
                     turn_order: 1,
                 },
             },
-        });
+        };
+
+        const datosJugadorValue = {
+          datosJugador: { player_id: 123, player_turn: 1 },
+          setDatosJugador: jest.fn(),
+        };
 
         render(
             <reactRouterDom.MemoryRouter>
                 <DatosPartidaProvider>
                     <DatosJugadorContext.Provider
-                        value={{
-                        datosJugador: { player_id: 123, player_turn: 1 },
-                        setDatosJugador: jest.fn(),
-                        }}
+                        value={datosJugadorValue}
                     >
-                        <TerminarTurno />
+                        <EventoContext.Provider value={eventoValue}>
+                            <TerminarTurno />
+                        </EventoContext.Provider>
                     </DatosJugadorContext.Provider>
                 </DatosPartidaProvider>
             </reactRouterDom.MemoryRouter>,
@@ -112,8 +113,8 @@ describe('TerminarTurno Component', () => {
     });
 
     test('boton desabilitado si el turno no es del jugador', () => {
-        useWebSocket.mockReturnValue({
-            lastJsonMessage: {
+        const eventoValue = {
+            ultimoEvento: {
                 key: 'END_PLAYER_TURN',
                 payload: {
                     current_player_name: 'Player 2',
@@ -121,17 +122,20 @@ describe('TerminarTurno Component', () => {
                     next_player_turn: 3,
                 },
             },
-        });
+        };
+        const datosJugadorValue = {
+          datosJugador: { player_id: 123, player_turn: 1 },
+          setDatosJugador: jest.fn(),
+        };
         render(
             <reactRouterDom.MemoryRouter>
                 <DatosPartidaProvider>
                     <DatosJugadorContext.Provider
-                        value={{
-                        datosJugador: { player_id: 123, player_turn: 1 },
-                        setDatosJugador: jest.fn(),
-                        }}
+                        value={datosJugadorValue}
                     >
-                        <TerminarTurno />
+                        <EventoContext.Provider value={eventoValue}>
+                            <TerminarTurno />
+                        </EventoContext.Provider>
                     </DatosJugadorContext.Provider>
                 </DatosPartidaProvider>
             </reactRouterDom.MemoryRouter>,
@@ -142,8 +146,8 @@ describe('TerminarTurno Component', () => {
     });
 
     test('habilita boton en turno de jugador', async () => {
-        useWebSocket.mockReturnValue({
-            lastJsonMessage: {
+        const eventoValue = {
+            ultimoEvento: {
                 key: 'END_PLAYER_TURN',
                 payload: {
                     current_player_name: 'Player 4',
@@ -151,18 +155,22 @@ describe('TerminarTurno Component', () => {
                     next_player_turn: 1,
                 },
             },
-        });
+        };
+
+        const datosJugadorValue = {
+          datosJugador: { player_id: 123, player_turn: 1 },
+          setDatosJugador: jest.fn(),
+        };
 
         render(
             <reactRouterDom.MemoryRouter>
                 <DatosPartidaProvider>
                     <DatosJugadorContext.Provider
-                        value={{
-                        datosJugador: { player_id: 123, player_turn: 1 },
-                        setDatosJugador: jest.fn(),
-                        }}
+                        value={datosJugadorValue}
                     >
-                        <TerminarTurno />
+                        <EventoContext.Provider value={eventoValue}>
+                            <TerminarTurno />
+                        </EventoContext.Provider>
                     </DatosJugadorContext.Provider>
                 </DatosPartidaProvider>
             </reactRouterDom.MemoryRouter>,
@@ -174,15 +182,15 @@ describe('TerminarTurno Component', () => {
     });
 
     test('muestra alerta en mensaje START_MATCH', async () => {
-        useWebSocket.mockReturnValue({
-            lastJsonMessage: {
+        const eventoValue = {
+            ultimoEvento: {
                 key: 'START_MATCH',
                 payload: {
                     player_name: 'Player 1',
                     turn_order: 1,
                 },
             },
-        });
+        };
         render(
             <reactRouterDom.MemoryRouter>
                 <DatosPartidaProvider>
@@ -192,7 +200,9 @@ describe('TerminarTurno Component', () => {
                         setDatosJugador: jest.fn(),
                         }}
                     >
-                        <TerminarTurno />
+                        <EventoContext.Provider value={eventoValue}>
+                            <TerminarTurno />
+                        </EventoContext.Provider>
                     </DatosJugadorContext.Provider>
                 </DatosPartidaProvider>
             </reactRouterDom.MemoryRouter>,
@@ -203,8 +213,8 @@ describe('TerminarTurno Component', () => {
     });
 
     test('muestra alerta en mensaje END_PLAYER_TURN', async () => {
-        useWebSocket.mockReturnValue({
-            lastJsonMessage: {
+        const eventoValue = {
+            ultimoEvento: {
                 key: 'END_PLAYER_TURN',
                 payload: {
                     current_player_name: 'Player 1',
@@ -212,7 +222,7 @@ describe('TerminarTurno Component', () => {
                     next_player_turn: 2,
                 },
             },
-        });
+        };
         render(
             <reactRouterDom.MemoryRouter>
                 <DatosPartidaProvider>
@@ -222,7 +232,9 @@ describe('TerminarTurno Component', () => {
                         setDatosJugador: jest.fn(),
                         }}
                     >
-                        <TerminarTurno />
+                        <EventoContext.Provider value={eventoValue}>
+                            <TerminarTurno />
+                        </EventoContext.Provider>
                     </DatosJugadorContext.Provider>
                 </DatosPartidaProvider>
             </reactRouterDom.MemoryRouter>,
@@ -237,8 +249,8 @@ describe('TerminarTurno Component', () => {
     });
 
     test('llama a terminar turno cuando el boton es clickeado', async () => {
-        useWebSocket.mockReturnValue({
-            lastJsonMessage: {
+        const eventoValue = {
+            ultimoEvento: {
                 key: 'END_PLAYER_TURN',
                 payload: {
                     current_player_name: 'Player 3',
@@ -246,7 +258,7 @@ describe('TerminarTurno Component', () => {
                     next_player_turn: 1,
                 },
             },
-        });
+        };
 
         render(
             <reactRouterDom.MemoryRouter>
@@ -257,7 +269,9 @@ describe('TerminarTurno Component', () => {
                         setDatosJugador: jest.fn(),
                         }}
                     >
-                        <TerminarTurno />
+                        <EventoContext.Provider value={eventoValue}>
+                            <TerminarTurno />
+                        </EventoContext.Provider>
                     </DatosJugadorContext.Provider>
                 </DatosPartidaProvider>
             </reactRouterDom.MemoryRouter>,

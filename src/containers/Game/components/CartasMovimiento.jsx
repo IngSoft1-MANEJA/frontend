@@ -22,7 +22,7 @@ const urlMap = {
 
 export const CartasMovimiento = () => {
   const [cartasMovimiento, setCartasMovimiento] = useState([]);
-  const {ultimoEvento} = useContext(EventoContext);
+  const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
     if (ultimoEvento !== null) {

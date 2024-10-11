@@ -11,7 +11,7 @@ jest.mock("react-use-websocket");
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useParams: () => ({ match_id: 1}),
+  useParams: () => ({ match_id: 1 }),
 }));
 
 describe("InformacionTurno", () => {
@@ -22,14 +22,17 @@ describe("InformacionTurno", () => {
 
   test("se muestran los turnos por pantalla en START_MATCH", () => {
     const eventoValue = {
-      ultimoEvento: { key: "START_MATCH", payload: {
-        player_name: "Player 1"
-      }},
+      ultimoEvento: {
+        key: "START_MATCH",
+        payload: {
+          player_name: "Player 1",
+        },
+      },
     };
     render(
       <EventoContext.Provider value={eventoValue}>
         <InformacionTurno {...Player} />
-      </EventoContext.Provider>
+      </EventoContext.Provider>,
     );
     const turnoActual = screen.getByText("Player 1");
 
@@ -38,14 +41,17 @@ describe("InformacionTurno", () => {
 
   test("se muestra el nuevo turno por pantalla en END_PLAYER_TURN", () => {
     const eventoValue = {
-      ultimoEvento: { key: "END_PLAYER_TURN", payload: {
-        next_player_name: "Player 1"
-      }},
+      ultimoEvento: {
+        key: "END_PLAYER_TURN",
+        payload: {
+          next_player_name: "Player 1",
+        },
+      },
     };
     render(
       <EventoContext.Provider value={eventoValue}>
         <InformacionTurno {...Player} />
-      </EventoContext.Provider>
+      </EventoContext.Provider>,
     );
     const turnoActual = screen.getByText("Player 1");
 
@@ -58,12 +64,11 @@ describe("InformacionTurno", () => {
     render(
       <EventoContext.Provider value={eventoValue}>
         <InformacionTurno {...Player} />
-      </EventoContext.Provider>
+      </EventoContext.Provider>,
     );
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(
       "key incorrecto recibido del websocket",
     );
   });
-
 });

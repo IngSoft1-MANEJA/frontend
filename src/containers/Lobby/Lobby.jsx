@@ -43,9 +43,7 @@ export function Lobby() {
           setCantPlayersLobby(cantPlayersLobby + 1);
           setMostrarAlerta(true);
           setTipoAlerta("info");
-          setMensajeAlerta(
-            `jugador ${ultimoEvento.payload.name} se ha unido.`,
-          );
+          setMensajeAlerta(`jugador ${ultimoEvento.payload.name} se ha unido.`);
           setEstaShaking(true);
           setTimeout(() => {
             setEstaShaking(false), setMostrarAlerta(false);

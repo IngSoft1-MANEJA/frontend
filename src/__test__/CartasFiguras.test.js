@@ -14,7 +14,6 @@ jest.mock("react-use-websocket", () => ({
   useWebSocket: jest.fn(),
 }));
 
-
 describe("CartasFiguras", () => {
   beforeEach(() => {
     useParams.mockReturnValue({ match_id: "1" });
@@ -47,7 +46,7 @@ describe("CartasFiguras", () => {
         <EventoContext.Provider value={eventoValue}>
           <CartasFiguras />
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>
+      </DatosJugadorContext.Provider>,
     );
 
     expect(screen.getByAltText("1")).toBeInTheDocument();
@@ -77,11 +76,11 @@ describe("CartasFiguras", () => {
         <EventoContext.Provider value={eventoValue}>
           <CartasFiguras />
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>
+      </DatosJugadorContext.Provider>,
     );
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "key incorrecto recibido del websocket"
+      "key incorrecto recibido del websocket",
     );
 
     consoleErrorSpy.mockRestore();
@@ -100,7 +99,7 @@ describe("CartasFiguras", () => {
         <EventoContext.Provider value={eventoValue}>
           <CartasFiguras />
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>
+      </DatosJugadorContext.Provider>,
     );
 
     expect(screen.queryByAltText("1")).not.toBeInTheDocument();

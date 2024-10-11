@@ -17,7 +17,6 @@ jest.mock("react-use-websocket", () => ({
 describe("CartasMovimiento", () => {
   beforeEach(() => {
     useParams.mockReturnValue({ match_id: "1" });
-
   });
 
   afterEach(() => {
@@ -36,7 +35,7 @@ describe("CartasMovimiento", () => {
         payload: {
           movement_card: [
             { id: 1, type: "DIAGONAL" },
-            { id: 2, type: "INVERSE_DIAGONAL"},
+            { id: 2, type: "INVERSE_DIAGONAL" },
             { id: 3, type: "LINE" },
           ],
         },
@@ -48,7 +47,7 @@ describe("CartasMovimiento", () => {
         <EventoContext.Provider value={eventoValue}>
           <CartasMovimiento />
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>
+      </DatosJugadorContext.Provider>,
     );
 
     expect(screen.getByAltText("DIAGONAL")).toBeInTheDocument();

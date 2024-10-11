@@ -13,7 +13,7 @@ export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const [tiles, setTiles] = useState([]);
-  const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${datosJugador.player_id}`;
+  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
   const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
 
   useEffect(() => {

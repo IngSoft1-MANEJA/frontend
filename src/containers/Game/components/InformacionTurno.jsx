@@ -8,7 +8,7 @@ export const InformacionTurno = ({player_id}) => {
 
     const { match_id } = useParams();
     const [turnos, setTurnos] = useState({current_turn: ''});
-    const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${player_id}`;
+    const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${player_id}`;
     const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
 
     useEffect(() => {

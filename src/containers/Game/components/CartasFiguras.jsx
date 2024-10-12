@@ -77,7 +77,7 @@ export const CartasFiguras = () => {
       } else if (ultimoEvento.key == "START_MATCH") {
         setMiTurno(ultimoEvento.payload.turn_order);
       } else {
-        console.error("key incorrecto recibido del websocket");
+        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
       }
     }
   }, [ultimoEvento, miTurno]);

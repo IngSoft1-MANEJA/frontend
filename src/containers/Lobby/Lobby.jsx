@@ -34,10 +34,19 @@ export function Lobby() {
 
   useEffect(() => {
     setUltimoEvento(lastJsonMessage);
-  }, [lastJsonMessage, setUltimoEvento]);
+    console.log("Lobby: lastJsonMessage ", lastJsonMessage);
+  }, [lastJsonMessage]);
+
+  useEffect(() => {
+    console.log("Lobby: mounted");
+    return () => {
+      console.log("Lobby: unmounted");
+    }
+  }, []);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
+      console.log("Lobby: ultimoEvento ", ultimoEvento);
       switch (ultimoEvento.key) {
         case "PLAYER_JOIN":
           setCantPlayersLobby(cantPlayersLobby + 1);
@@ -68,17 +77,11 @@ export function Lobby() {
           break;
 
         default:
-          console.error("key incorrecto recibido del websocket");
+        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
           break;
       }
     }
-  }, [
-    ultimoEvento,
-    setMostrarAlerta,
-    setTipoAlerta,
-    setMensajeAlerta,
-    setCantPlayersLobby,
-  ]);
+  }, [ ultimoEvento ]);
 
   return (
     <div>

@@ -65,11 +65,11 @@ export const TerminarTurno = () => {
           break;
 
         default:
-          console.error("key incorrecto recibido del websocket");
+        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
           break;
       }
     }
-  }, [ultimoEvento, setMostrarAlerta, setMensajeAlerta]);
+  }, [ultimoEvento]);
 
   const handleTerminarTurno = async () => {
     const respuesta = await ServicioPartida.terminarTurno(

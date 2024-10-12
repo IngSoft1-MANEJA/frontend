@@ -22,11 +22,11 @@ export const InformacionTurno = ({ player_id }) => {
           break;
 
         default:
-          console.error("key incorrecto recibido del websocket");
+        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
           break;
       }
     }
-  }, [ultimoEvento, setTurnos]);
+  }, [ultimoEvento]);
 
   return (
     <div className="informacion-div absolute left-6 top-6 w-fit max-w-md h-fit p-1">

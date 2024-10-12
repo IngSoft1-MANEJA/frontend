@@ -20,17 +20,26 @@ export function Game() {
 
   useEffect(() => {
     setUltimoEvento(lastJsonMessage);
-  }, [lastJsonMessage, setUltimoEvento]);
+  }, [lastJsonMessage]);
+
+  useEffect(() => {
+    console.log("Game: mounted");
+    return () => {
+      console.log("Game: unmounted");
+    }
+  }, []);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
+      console.log("Game: ultimoEvento ", ultimoEvento);
       if (ultimoEvento.key == "START_MATCH") {
+        console.log("recibio start match");
         setTiles(ultimoEvento.payload.board);
       } else {
-        console.error("key incorrecto recibido del websocket");
+        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
       }
     }
-  }, [ultimoEvento, setTiles]);
+  }, [ultimoEvento]);
 
   return (
     <div className="game-div relative w-full h-screen m-0">

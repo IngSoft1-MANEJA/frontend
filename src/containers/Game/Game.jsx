@@ -7,6 +7,7 @@ import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
+import { UsarMovimientoProvider } from "../../contexts/UsarMovimientoContext";
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
 import { CartasMovimiento } from "./components/CartasMovimiento.jsx";
 
@@ -30,19 +31,6 @@ export function Game() {
   //       setTiles,
   // ]);
 
-  const [selectedCarta, setSelectedCarta] = useState(null);
-  const [usedCards, setUsedCards] = useState([]);
-
-  const handleCartaSeleccionada = (carta) => {
-    setSelectedCarta(carta);
-  };
-
-  const handleFichasSeleccionadas = (fichas) => {
-    // Mark the carta as used and reset the selection
-    setUsedCards([...usedCards, selectedCarta.name]);
-    setSelectedCarta(null);
-  };
-
   const tiles = [
     ['red', 'red', 'green', 'yellow', 'red', 'yellow'], 
     ['green', 'blue', 'red', 'yellow', 'green', 'blue'], 
@@ -52,19 +40,33 @@ export function Game() {
     ['green', 'blue', 'blue', 'yellow', 'green', 'blue']
   ];
 
+  const [cartaSeleccionada, setCartaSeleccionada] = useState(null);
+  const [cartasUsadas, setCartasUsadas] = useState([]);
+
+  const handleCartaSeleccionada = (carta) => {
+    setCartaSeleccionada(carta);
+  };
+
+  const handleFichasSeleccionadas = (fichas) => {
+    setCartasUsadas([...cartasUsadas, cartaSeleccionada.name]);
+    setCartaSeleccionada(null);
+  };
+
   return (
     <div className="game-div relative w-full h-screen m-0">
-      <CartasMovimiento 
-        onCartaSeleccionada={handleCartaSeleccionada} 
-        usedCards={usedCards}
-      />
+      <UsarMovimientoProvider>
+        <CartasMovimiento 
+          onCartaSeleccionada={handleCartaSeleccionada} 
+          cartasUsadas={cartasUsadas}
+        />
+        <Tablero 
+          tiles={tiles} 
+          cartaSeleccionada={cartaSeleccionada} 
+          onFichasSeleccionadas={handleFichasSeleccionadas} 
+        />
+      </UsarMovimientoProvider>
       <InformacionTurno player_id={datosJugador.player_id}/>
       <TerminarTurno/>
-      <Tablero 
-        tiles={tiles} 
-        selectedCarta={selectedCarta} 
-        onFichasSeleccionadas={handleFichasSeleccionadas} 
-      />
       <AbandonarPartida
         estadoPartida="STARTED"
         esAnfitrion={datosJugador.is_owner}

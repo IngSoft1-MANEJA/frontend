@@ -30,7 +30,7 @@ export const CartasMovimiento = ({ onCartaSeleccionada }) => {
   // const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${datosJugador.player_id}`;
   // const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
   // const [cartasMovimiento, setCartasMovimiento] = useState([]);
-  const [usedCards, setUsedCards] = useState([]); // Track used cards
+  const [cartasUsadas, setCartasUsadas] = useState([]); // Track used cards
 
   // useEffect(() => {
   //   if (lastJsonMessage !== null) {
@@ -44,8 +44,13 @@ export const CartasMovimiento = ({ onCartaSeleccionada }) => {
 
   const cartasMovimiento = [ { id: 1, name: "DIAGONAL", type: "someType" }, { id: 2, name: "INVERSE_DIAGONAL", type: "someType" }, { id: 3, name: "LINE", type: "someType" }, ];
 
-  const handleCartaClick = (carta) => {
-    if (!usedCards.includes(carta.name)) {
+  const [hovering, setHovering] = useState(false);
+  const [highlightCarta, setHighlightCarta] = useState({state: false, key: ''});
+
+  const handleCartaClick = ({carta, index}) => {
+    
+    if (!cartasUsadas.includes(carta.name)) {
+      setHighlightCarta({state: !highlightCarta.state, key: index});
       onCartaSeleccionada(carta);
     }
   };
@@ -55,9 +60,14 @@ export const CartasMovimiento = ({ onCartaSeleccionada }) => {
       <div className="cartas-movimientos-propias">
         {cartasMovimiento.map((carta, index) => (
           <div 
-            key={index} 
-            className={`carta-movimiento hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,0.5)] hover:scale-105 tran ${usedCards.includes(carta.name) ? 'greyed-out' : ''}`}
-            onClick={() => handleCartaClick(carta)}
+            key={index}
+            onMouseEnter={() => setHovering(true)}
+            onMouseLeave={() => setHovering(false)}
+            className={`carta-movimiento 
+              ${hovering  && !highlightCarta.state && !cartasUsadas.includes(carta.name) ? 'hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,0.5)] hover:scale-105': ''} 
+              ${highlightCarta.state && highlightCarta.key === index ? 'cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,0.8)] scale-105': ''}
+              ${cartasUsadas.includes(carta.name) ? 'opacity-25 pointer-events-none' : ''}`}
+            onClick={() => handleCartaClick({carta, index})}
           >
             <img className="carta" src={urlMap[carta.name]} alt={carta.name} />
           </div>

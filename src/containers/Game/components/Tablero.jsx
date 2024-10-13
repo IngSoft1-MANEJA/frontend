@@ -1,46 +1,52 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { Ficha } from './Ficha.jsx';
 import "./Tablero.css";
+import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 
-export const Tablero = ({ tiles, cartaSeleccionada, onFichasSeleccionadas }) => {
-  const [fichasSeleccionadas, setFichasSeleccionadas] = useState([]);
-  const [highlightFicha, setHighlightFicha] = useState([]);
+export const Tablero = ({ tiles }) => {
+  const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
   
   const handleFichaClick = (rowIndex, columnIndex) => {
-    if (cartaSeleccionada !== null) {
-      const fichaEstaSeleccionada = fichasSeleccionadas.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
+    if (usarMovimiento.cartaSeleccionada !== null) {
+      const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
 
       if (fichaEstaSeleccionada) {
         // si la ficha ya esta seleccionada, deseleccionarla al hacer click nuevamente
-        const newFichasSeleccionadas = fichasSeleccionadas.filter(ficha => ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex);
-        const newHighlightFicha = highlightFicha.filter(ficha => ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex);
-        setFichasSeleccionadas(newFichasSeleccionadas);
-        setHighlightFicha(newHighlightFicha);
+        const newFichasSeleccionadas = usarMovimiento.fichasSeleccionadas.filter(ficha => ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex);
+        setUsarMovimiento({ ...usarMovimiento, fichasSeleccionadas: newFichasSeleccionadas });
       } 
-      else if (fichasSeleccionadas.length < 2) {
+      else if (usarMovimiento.fichasSeleccionadas.length < 2) {
         // si la ficha no esta seleccionada, seleccionarla
-        const newFichasSeleccionadas = [...fichasSeleccionadas, { rowIndex, columnIndex }];
-        setFichasSeleccionadas(newFichasSeleccionadas);
-        setHighlightFicha([...highlightFicha, { rowIndex, columnIndex }]);
+        const newFichasSeleccionadas = [...usarMovimiento.fichasSeleccionadas, { rowIndex, columnIndex }];
+        setUsarMovimiento({ ...usarMovimiento, fichasSeleccionadas: newFichasSeleccionadas });
 
-        if (newFichasSeleccionadas.length === 2) {
+        if (usarMovimiento.fichasSeleccionadas.length === 1) {
           // TODO enviar movimiento al server para confirmar si es valido
 
           // Si el movimiento es valido, enviar las fichas seleccionadas al padre
-          onFichasSeleccionadas(newFichasSeleccionadas);
-          setFichasSeleccionadas([]);
+
+          const carta = usarMovimiento.cartaSeleccionada;
           setTimeout(() => {
-            setHighlightFicha([]);
-          }, 1000);
+            setUsarMovimiento({
+              ...usarMovimiento,
+              fichasSeleccionadas: [],
+              cartaSeleccionada: null,
+              cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
+              highlightCarta: { state: false, key: '' },
+            });
+          }, 700);
           
         }
       }
     }
+    else {
+      setUsarMovimiento({ ...usarMovimiento, fichasSeleccionadas: [] });
+    }
   };
 
   const estaHighlighted = (rowIndex, columnIndex) => {
-    return highlightFicha.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
+    return usarMovimiento.fichasSeleccionadas.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
   };
 
   const gridCell = tiles.map((row, rowIndex) => {
@@ -51,7 +57,7 @@ export const Tablero = ({ tiles, cartaSeleccionada, onFichasSeleccionadas }) => 
           id={`${rowIndex}-${columnIndex}`}
           color={tileColor} 
           onClick={() => handleFichaClick(rowIndex, columnIndex)}
-          highlightClass={estaHighlighted(rowIndex, columnIndex) ? 'cursor-pointer shadow-[0px_0px_25px_rgba(100,200,44,1)] scale-105' : ''}
+          highlightClass={estaHighlighted(rowIndex, columnIndex)}
         />
       );
     });

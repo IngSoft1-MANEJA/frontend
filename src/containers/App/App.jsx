@@ -5,6 +5,7 @@ import { Lobby } from "../Lobby/Lobby.jsx";
 import { Game } from "../Game/Game.jsx";
 import { DatosJugadorProvider } from "../../contexts/DatosJugadorContext.jsx";
 import { DatosPartidaProvider } from "../../contexts/DatosPartidaContext.jsx";
+import { UsarMovimientoProvider } from "../../contexts/UsarMovimientoContext";
 
 function App() {
 
@@ -34,11 +35,13 @@ function App() {
         <Route
           path="/matches/:match_id"
           element={
-            <DatosPartidaProvider>
-              <DatosJugadorProvider>
-                <Game />
-              </DatosJugadorProvider>
-            </DatosPartidaProvider>
+            <UsarMovimientoProvider>
+              <DatosPartidaProvider>
+                <DatosJugadorProvider>
+                  <Game />
+                </DatosJugadorProvider>
+              </DatosPartidaProvider>
+            </UsarMovimientoProvider>
           }
         />
       </Routes>

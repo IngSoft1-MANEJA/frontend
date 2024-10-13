@@ -1,9 +1,10 @@
 import React from 'react'
-import { useState } from 'react'
+import { useContext } from 'react'
 import RedTile from '../../../assets/Colores/A.svg';
 import YellowTile from '../../../assets/Colores/B.svg';
 import GreenTile from '../../../assets/Colores/C.svg';
 import BlueTile from '../../../assets/Colores/D.svg';
+import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 
 const images = {
     red: RedTile,
@@ -12,17 +13,17 @@ const images = {
     blue: BlueTile,
 };
 
-export const Ficha = ({id, color, onClick, highlightClass }) => {
+export const Ficha = ({color, onClick, highlightClass }) => {
     const tileImage = images[color];
-    const [hovering, setHovering] = useState(false);
+    const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
 
     return (
         <div
-            onMouseEnter={() => setHovering(true)}
-            onMouseLeave={() => setHovering(false)}
+            onMouseEnter={() => setUsarMovimiento({ ...usarMovimiento, fichaHovering: true })}
+            onMouseLeave={() => setUsarMovimiento({ ...usarMovimiento, fichaHovering: false })}
             className={`celda
-                ${hovering ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1)] hover:scale-105': ''} 
-                ${highlightClass}`} 
+                ${usarMovimiento.fichaHovering && !highlightClass ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1)] hover:scale-105': ''} 
+                ${highlightClass ? 'cursor-pointer shadow-[0px_0px_25px_rgba(100,200,44,1)] scale-105' : ''}`} 
             onClick={onClick}
         >
             <img className="h-auto max-w-full" src={tileImage} alt={`${color}`} />

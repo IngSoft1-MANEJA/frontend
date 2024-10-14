@@ -69,7 +69,7 @@ export const Tablero = ({ tiles }) => {
             setMensajeAlerta("Error creando sala de partida");
             console.log(err);
           }
-
+          
         }
       }
     }

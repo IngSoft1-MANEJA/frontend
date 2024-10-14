@@ -13,9 +13,11 @@ const images = {
     blue: BlueTile,
 };
 
-export const Ficha = ({color, onClick, highlightClass }) => {
+export const Ficha = ({ color, onClick, highlightClass }) => {
     const tileImage = images[color];
     const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
+
+    const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.length > 0;
 
     return (
         <div
@@ -23,7 +25,8 @@ export const Ficha = ({color, onClick, highlightClass }) => {
             onMouseLeave={() => setUsarMovimiento({ ...usarMovimiento, fichaHovering: false })}
             className={`celda
                 ${usarMovimiento.fichaHovering && !highlightClass ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1)] hover:scale-105': ''} 
-                ${highlightClass ? 'cursor-pointer shadow-[0px_0px_17px_rgba(100,200,44,0.8),0px_0px_25px_rgba(100,200,44,1)] scale-105' : ''}`} 
+                ${highlightClass ? 'cursor-pointer shadow-[0px_0px_12px_rgba(17,195,22,.8),0px_0px_20px_rgba(31,222,37,1)] scale-105' : ''}
+                ${!highlightClass && fichaEstaSeleccionada ? 'opacity-75 backdrop-grayscale' : ''}`} 
             onClick={onClick}
         >
             <img className="h-auto max-w-full" src={tileImage} alt={`${color}`} />

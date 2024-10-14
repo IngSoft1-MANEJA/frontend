@@ -44,7 +44,7 @@ export const CartasMovimiento = () => {
   }, [lastJsonMessage, setCartasMovimiento]);
 
   const handleCartaClick = ({carta, index}) => {
-    if (!usarMovimiento.cartasUsadas.includes(carta.name)) {
+    if (!usarMovimiento.cartasUsadas.includes(carta.type)) {
       const isCartaHighlighted = usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index;
 
       if (isCartaHighlighted) {
@@ -57,7 +57,7 @@ export const CartasMovimiento = () => {
       } else {
         setUsarMovimiento({
            ...usarMovimiento, 
-           cartaSeleccionada: carta.name, 
+           cartaSeleccionada: carta.type, 
            highlightCarta: { state: true, key: index } 
         });
       }
@@ -73,13 +73,14 @@ export const CartasMovimiento = () => {
             onMouseEnter={() => setUsarMovimiento({ ...usarMovimiento, cartaHovering: true })}
             onMouseLeave={() => setUsarMovimiento({ ...usarMovimiento, cartaHovering: false })}
             className={`carta-movimiento 
-              ${usarMovimiento.cartaHovering && !usarMovimiento.highlightCarta.state ? 'hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,0.5)] hover:scale-105': ''} 
-              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index && !usarMovimiento.cartasUsadas.includes(carta.name)? 'cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,0.8)] scale-105': ''}
-              ${usarMovimiento.cartasUsadas.includes(carta.name) ? 'opacity-25 pointer-events-none greyscale' : ''}`}
+              ${usarMovimiento.cartaHovering && !usarMovimiento.highlightCarta.state ? 'hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105': ''} 
+              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index && !usarMovimiento.cartasUsadas.includes(carta.type)? 'cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105': ''}
+              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index && !usarMovimiento.cartasUsadas.includes(carta.type) ? 'opacity-75 hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]': ''}
+              ${usarMovimiento.cartasUsadas.includes(carta.type) ? 'opacity-25 pointer-events-none greyscale' : ''}`}
               
             onClick={() => handleCartaClick({carta, index})}
           >
-            <img className="carta" src={urlMap[carta.name]} alt={carta.name} />
+            <img className="carta" src={urlMap[carta.type]} alt={carta.type} />
           </div>
         ))}
       </div>

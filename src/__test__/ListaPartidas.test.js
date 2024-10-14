@@ -68,24 +68,31 @@ describe("ListarPartidas", () => {
     });
   });
 
-  test("debe manejar errores de fetch", async () => {
+  test("debe manejar errores de fetch y registrar el mensaje de error en la consola", async () => {
+    
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
     fetch.mockImplementationOnce(() => Promise.reject("API is down"));
+
     render(
       <DatosPartidaProvider>
         <DatosJugadorProvider>
           <ListaPartidas />
         </DatosJugadorProvider>
-        ,
       </DatosPartidaProvider>,
     );
 
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
 
     await waitFor(() => {
-      expect(
-        screen.getByText("No hay partidas disponibles"),
-      ).toBeInTheDocument();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Error en fetch de partidas: API is down",
+      );
     });
+
+    consoleErrorSpy.mockRestore();
   });
 
   test("debe refrescar las partidas al hacer clic en el botón de refresco", async () => {

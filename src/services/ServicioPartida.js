@@ -122,7 +122,7 @@ export class ServicioPartida {
     return json;
   }
 
-  static async validarMovimiento(idPartida) {
+  static async validarMovimiento(idPartida, fichas, carta) {
     const respuesta = await fetch(
       `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/partial-move`,
       {
@@ -130,6 +130,7 @@ export class ServicioPartida {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ match_id: idPartida, movement_card: carta, tiles: fichas }),
       },
     );
 

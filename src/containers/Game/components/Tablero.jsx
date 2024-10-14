@@ -32,14 +32,18 @@ export const Tablero = ({ tiles }) => {
         const newFichasSeleccionadas = [...usarMovimiento.fichasSeleccionadas, { rowIndex, columnIndex }];
         setUsarMovimiento({ ...usarMovimiento, fichasSeleccionadas: newFichasSeleccionadas });
 
-        if (usarMovimiento.fichasSeleccionadas.length === 1) {
-          //validar movimiento
+        if (newFichasSeleccionadas.length === 2) {
           try {
             const resJson = await ServicioPartida.validarMovimiento(
-              match_id
+              match_id,
+              newFichasSeleccionadas,
+              usarMovimiento.cartaSeleccionada
             );
             console.log(resJson);
-            if (resJson.isValid) { 
+            if (resJson.isValid) {
+              // Realizar animacion de swap.
+
+              // Actualizar selecciones
               setTimeout(() => {
                 setUsarMovimiento({
                   ...usarMovimiento,
@@ -65,6 +69,7 @@ export const Tablero = ({ tiles }) => {
             setMensajeAlerta("Error creando sala de partida");
             console.log(err);
           }
+
         }
       }
     }
@@ -82,7 +87,6 @@ export const Tablero = ({ tiles }) => {
       return (
         <Ficha 
           key={`${rowIndex}-${columnIndex}`}
-          id={`${rowIndex}-${columnIndex}`}
           color={tileColor} 
           onClick={() => handleFichaClick(rowIndex, columnIndex)}
           highlightClass={estaHighlighted(rowIndex, columnIndex)}

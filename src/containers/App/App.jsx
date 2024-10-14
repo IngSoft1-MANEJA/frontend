@@ -7,7 +7,6 @@ import { DatosJugadorProvider } from "../../contexts/DatosJugadorContext.jsx";
 import { DatosPartidaProvider } from "../../contexts/DatosPartidaContext.jsx";
 
 function App() {
-
   return (
     <div>
       <Routes>

@@ -122,9 +122,9 @@ export class ServicioPartida {
     return json;
   }
 
-  static async validarMovimiento(idPartida, idJugador) {
+  static async validarMovimiento(idPartida) {
     const respuesta = await fetch(
-      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/end-turn/${idJugador}`,
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/partial-move`,
       {
         method: "POST",
         headers: {

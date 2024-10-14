@@ -6,13 +6,11 @@ import { WEBSOCKET_URL } from "../../../variablesConfiguracion.js";
 import { Ficha } from './Ficha.jsx';
 import { Alerts } from "../../../components/Alerts";
 import "./Tablero.css";
-import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
 export const Tablero = ({ tiles }) => {
   const { match_id } = useParams();
-  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
@@ -38,7 +36,7 @@ export const Tablero = ({ tiles }) => {
           //validar movimiento
           try {
             const resJson = await ServicioPartida.validarMovimiento(
-              match_id, datosJugador.player_id
+              match_id
             );
             console.log(resJson);
             if (resJson.isValid) { 

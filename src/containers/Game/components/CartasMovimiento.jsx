@@ -29,22 +29,19 @@ export const CartasMovimiento = () => {
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
 
-  // const websocket_url = `${WEBSOCKET_URL}/${match_id}/ws/${datosJugador.player_id}`;
-  // const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
-  // const [cartasMovimiento, setCartasMovimiento] = useState([]);
+  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
+  const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
+  const [cartasMovimiento, setCartasMovimiento] = useState([]);
 
-  // useEffect(() => {
-  //   if (lastJsonMessage !== null) {
-  //     if (lastJsonMessage.key == "GET_MOVEMENT_CARD") {
-  //       setCartasMovimiento(lastJsonMessage.payload.movement_card);
-  //     } else {
-  //       console.error("key incorrecto recibido del websocket");
-  //     }
-  //   }
-  // }, [lastJsonMessage, setCartasMovimiento]);
-
-  //cartas hardcodeadas
-  const cartasMovimiento = [ { id: 1, name: "DIAGONAL", type: "someType" }, { id: 2, name: "INVERSE_DIAGONAL", type: "someType" }, { id: 3, name: "LINE", type: "someType" }, ];
+  useEffect(() => {
+    if (lastJsonMessage !== null) {
+      if (lastJsonMessage.key == "GET_MOVEMENT_CARD") {
+        setCartasMovimiento(lastJsonMessage.payload.movement_card);
+      } else {
+        console.error("key incorrecto recibido del websocket");
+      }
+    }
+  }, [lastJsonMessage, setCartasMovimiento]);
 
   const handleCartaClick = ({carta, index}) => {
     if (!usarMovimiento.cartasUsadas.includes(carta.name)) {

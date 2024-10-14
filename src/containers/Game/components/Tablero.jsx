@@ -1,13 +1,26 @@
 import React from 'react'
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import useWebSocket from "react-use-websocket";
+import { WEBSOCKET_URL } from "../../../variablesConfiguracion.js";
 import { Ficha } from './Ficha.jsx';
+import { Alerts } from "../../../components/Alerts";
 import "./Tablero.css";
+import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
+import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
 export const Tablero = ({ tiles }) => {
+  const { match_id } = useParams();
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
-  
-  const handleFichaClick = (rowIndex, columnIndex) => {
+
+  const [mostrarAlerta, setMostrarAlerta] = useState(false);
+  const [mensajeAlerta, setMensajeAlerta] = useState("");
+
+
+  const handleFichaClick = async (rowIndex, columnIndex) => {
+
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
 
@@ -22,21 +35,38 @@ export const Tablero = ({ tiles }) => {
         setUsarMovimiento({ ...usarMovimiento, fichasSeleccionadas: newFichasSeleccionadas });
 
         if (usarMovimiento.fichasSeleccionadas.length === 1) {
-          // TODO enviar movimiento al server para confirmar si es valido
-
-          // Si el movimiento es valido, enviar las fichas seleccionadas al padre
-
-          const carta = usarMovimiento.cartaSeleccionada;
-          setTimeout(() => {
-            setUsarMovimiento({
-              ...usarMovimiento,
-              fichasSeleccionadas: [],
-              cartaSeleccionada: null,
-              cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
-              highlightCarta: { state: false, key: '' },
-            });
-          }, 700);
-          
+          //validar movimiento
+          try {
+            const resJson = await ServicioPartida.validarMovimiento(
+              match_id, datosJugador.player_id
+            );
+            console.log(resJson);
+            if (resJson.isValid) { 
+              setTimeout(() => {
+                setUsarMovimiento({
+                  ...usarMovimiento,
+                  fichasSeleccionadas: [],
+                  cartaSeleccionada: null,
+                  cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
+                  highlightCarta: { state: false, key: '' },
+                });
+              }, 700);
+            } else {
+              setMensajeAlerta("Movimiento inválido");
+              setMostrarAlerta(true);
+              setUsarMovimiento({
+                ...usarMovimiento,
+                fichasSeleccionadas: [],
+              });
+              setTimeout(() => {
+                setMostrarAlerta(false);
+              },1000);
+              console.log('Movimiento inválido');
+            }
+          } catch (err) {
+            setMensajeAlerta("Error creando sala de partida");
+            console.log(err);
+          }
         }
       }
     }
@@ -64,6 +94,7 @@ export const Tablero = ({ tiles }) => {
   });
   return (
     <div className="tablero flex w-100 h-screen justify-center items-center">
+      {mostrarAlerta && <Alerts type={'error'} message={mensajeAlerta} />}
       <div className="tablero-grid grid grid-cols-6 gap-1">
         {gridCell}
       </div>

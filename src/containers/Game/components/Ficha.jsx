@@ -23,7 +23,7 @@ export const Ficha = ({color, onClick, highlightClass }) => {
             onMouseLeave={() => setUsarMovimiento({ ...usarMovimiento, fichaHovering: false })}
             className={`celda
                 ${usarMovimiento.fichaHovering && !highlightClass ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1)] hover:scale-105': ''} 
-                ${highlightClass ? 'cursor-pointer shadow-[0px_0px_25px_rgba(100,200,44,1)] scale-105' : ''}`} 
+                ${highlightClass ? 'cursor-pointer shadow-[0px_0px_17px_rgba(100,200,44,0.8),0px_0px_25px_rgba(100,200,44,1)] scale-105' : ''}`} 
             onClick={onClick}
         >
             <img className="h-auto max-w-full" src={tileImage} alt={`${color}`} />

@@ -23,8 +23,10 @@ export const TerminarTurno = () => {
                 case "START_MATCH":
                     if (lastJsonMessage.payload.turn_order === 1){
                         setHabilitarBoton(true);
+                        setDatosJugador({...datosJugador, is_player_turn: true});
                     } else {
                         setHabilitarBoton(false);
+                        setDatosJugador({...datosJugador, is_player_turn: false});
                     }
 
                     setMensajeAlerta(
@@ -48,8 +50,10 @@ export const TerminarTurno = () => {
                     
                     if (lastJsonMessage.payload.next_player_turn === datosJugador.player_turn){
                         setHabilitarBoton(true);
+                        setDatosJugador({...datosJugador, is_player_turn: true});
                     } else {
                         setHabilitarBoton(false);
+                        setDatosJugador({...datosJugador, is_player_turn: false});
                     }
 
                     setMensajeAlerta(

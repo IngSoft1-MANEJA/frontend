@@ -45,24 +45,26 @@ export const CartasMovimiento = () => {
   }, [lastJsonMessage, setCartasMovimiento]);
 
   const handleCartaClick = ({carta, index}) => {
-    if (!usarMovimiento.cartasUsadas.includes(carta.type)) {
-      const isCartaHighlighted = usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index;
+    if (datosJugador.is_player_turn) {
+      if (!usarMovimiento.cartasUsadas.includes(carta.type)) {
+        const isCartaHighlighted = usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index;
 
-      if (isCartaHighlighted) {
-        setUsarMovimiento({
-          ...usarMovimiento,
-          cartaSeleccionada: null,
-          fichasSeleccionadas: [],
-          highlightCarta: { state: false, key: null },
-        });
-      } else {
-        setUsarMovimiento({
-           ...usarMovimiento, 
-           cartaSeleccionada: carta.type, 
-           highlightCarta: { state: true, key: index } 
-        });
-      }
-    };
+        if (isCartaHighlighted) {
+          setUsarMovimiento({
+            ...usarMovimiento,
+            cartaSeleccionada: null,
+            fichasSeleccionadas: [],
+            highlightCarta: { state: false, key: null },
+          });
+        } else {
+          setUsarMovimiento({
+            ...usarMovimiento, 
+            cartaSeleccionada: carta.type, 
+            highlightCarta: { state: true, key: index } 
+          });
+        }
+      };
+    }
   };
 
   return (

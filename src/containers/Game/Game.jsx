@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import useWebSocket from "react-use-websocket";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
@@ -16,7 +16,7 @@ export function Game() {
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const [tiles, setTiles] = useState([]);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
-  const { lastJsonMessage } = useWebSocket(websocket_url, {
+  const { lastJsonMessage, readyState } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Game: conexión cerrada."),
     onMessage: (message) => console.log("Websocket - Game: mensaje recibido: ", message),
@@ -31,20 +31,18 @@ export function Game() {
   }, [lastJsonMessage]);
 
   useEffect(() => {
-    console.log("Game: mounted");
-    try {
-      ServicioPartida.obtenerInfoPartidaParaJugador(
-        match_id,
-        datosJugador.player_id
-      );
-    } catch (error) {
-      console.error(error);
+    if (readyState === ReadyState.OPEN) {
+      try {
+        ServicioPartida.obtenerInfoPartidaParaJugador(
+          match_id,
+          datosJugador.player_id
+        );
+      } catch (error) {
+        console.error(error);
+      }
     }
 
-    return () => {
-      console.log("Game: unmounted");
-    }
-  }, []);
+  }, [readyState]);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
@@ -52,6 +50,10 @@ export function Game() {
       if (ultimoEvento.key == "GET_PLAYER_MATCH_INFO") {
         console.log("recibio get player match info");
         setTiles(ultimoEvento.payload.board);
+        setDatosJugador({
+          ...datosJugador,
+          player_turn: ultimoEvento.payload.turn_order,
+        });
       }
     }
   }, [ultimoEvento]);

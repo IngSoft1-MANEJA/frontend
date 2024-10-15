@@ -19,9 +19,9 @@
 }
   
 .celda {
-    width: 65px;
-    height: 65px;
-    border: 3px solid rgb(143, 120, 120);
+    width: 63px;
+    height: 63px;
+    border: 2px solid rgb(143, 120, 120);
     border-radius: 8px;
     background-color: rgb(212, 212, 212);
     box-sizing: border-box;

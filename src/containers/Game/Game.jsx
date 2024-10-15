@@ -7,7 +7,9 @@ import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
+import { UsarMovimientoContext } from '../../contexts/UsarMovimientoContext';
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
+import { CartasMovimiento } from "./components/CartasMovimiento.jsx";
 
 export function Game() {
   const { match_id } = useParams();
@@ -31,9 +33,12 @@ export function Game() {
 
   return (
     <div className="game-div relative w-full h-screen m-0">
+      <CartasMovimiento />
+      <Tablero 
+        initialTiles={tiles}
+      />
       <InformacionTurno player_id={datosJugador.player_id}/>
       <TerminarTurno/>
-      <Tablero tiles={tiles}/>
       <AbandonarPartida
         estadoPartida="STARTED"
         esAnfitrion={datosJugador.is_owner}

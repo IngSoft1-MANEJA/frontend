@@ -121,4 +121,24 @@ export class ServicioPartida {
     const json = await respuesta.json();
     return json;
   }
+
+  static async validarMovimiento(idPartida, fichas, carta) {
+    const respuesta = await fetch(
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/partial-move`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ match_id: idPartida, movement_card: carta, tiles: fichas }),
+      },
+    );
+
+    if (!respuesta.ok) {
+      throw new Error(`Error al validar movimiento - estado: ${respuesta.status}`);
+    }
+
+    const json = await respuesta.json();
+    return json;
+  }
 }

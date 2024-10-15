@@ -28,8 +28,6 @@ export const CartasMovimiento = () => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key == "GET_MOVEMENT_CARD") {
         setCartasMovimiento(ultimoEvento.payload.movement_card);
-      } else {
-        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
       }
     }
   }, [ultimoEvento]);

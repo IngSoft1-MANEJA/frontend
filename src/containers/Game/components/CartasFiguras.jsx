@@ -68,16 +68,20 @@ export const CartasFiguras = () => {
 
   useEffect(() => {
     if (ultimoEvento !== null) {
-      if (ultimoEvento.key == "PLAYER_RECEIVE_SHAPE_CARDS") {
-        setTurnoCartas(ultimoEvento.payload.turn_order);
+      switch (ultimoEvento.key) {
+        case "PLAYER_RECEIVE_SHAPE_CARDS":
+          setTurnoCartas(ultimoEvento.payload.turn_order);
 
-        if (turnoCartas == miTurno) {
-          setCartasFiguras(ultimoEvento.payload.shape_cards);
-        }
-      } else if (ultimoEvento.key == "START_MATCH") {
-        setMiTurno(ultimoEvento.payload.turn_order);
-      } else {
-        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
+          if (turnoCartas == miTurno) {
+            setCartasFiguras(ultimoEvento.payload.shape_cards);
+          }
+          break;
+        
+        case "GET_PLAYER_MATCH_INFO":
+          setMiTurno(ultimoEvento.payload.turn_order);
+      
+        default:
+          break;
       }
     }
   }, [ultimoEvento, miTurno]);

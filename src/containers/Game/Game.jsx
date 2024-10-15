@@ -9,21 +9,38 @@ import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
 import { EventoContext } from "../../contexts/EventoContext";
+import { ServicioPartida } from "../../services/ServicioPartida.js";
 
 export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const [tiles, setTiles] = useState([]);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
-  const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
+  const { lastJsonMessage } = useWebSocket(websocket_url, {
+    share: true,
+    onClose: () => console.log("Websocket - Game: conexión cerrada."),
+    onMessage: (message) => console.log("Websocket - Game: mensaje recibido: ", message),
+    onError: (event) => console.error("Websocket - Game: error: ", event),
+    onOpen: () => console.log("Websocket - Game: conexión abierta."),
+  });
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
+    console.log("Game: lastJsonMessage ", lastJsonMessage);
     setUltimoEvento(lastJsonMessage);
   }, [lastJsonMessage]);
 
   useEffect(() => {
     console.log("Game: mounted");
+    try {
+      ServicioPartida.obtenerInfoPartidaParaJugador(
+        match_id,
+        datosJugador.player_id
+      );
+    } catch (error) {
+      console.error(error);
+    }
+
     return () => {
       console.log("Game: unmounted");
     }
@@ -32,11 +49,9 @@ export function Game() {
   useEffect(() => {
     if (ultimoEvento !== null) {
       console.log("Game: ultimoEvento ", ultimoEvento);
-      if (ultimoEvento.key == "START_MATCH") {
-        console.log("recibio start match");
+      if (ultimoEvento.key == "GET_PLAYER_MATCH_INFO") {
+        console.log("recibio get player match info");
         setTiles(ultimoEvento.payload.board);
-      } else {
-        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
       }
     }
   }, [ultimoEvento]);

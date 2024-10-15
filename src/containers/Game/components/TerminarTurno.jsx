@@ -21,7 +21,7 @@ export const TerminarTurno = () => {
   useEffect(() => {
     if (ultimoEvento !== null) {
       switch (ultimoEvento.key) {
-        case "START_MATCH":
+        case "GET_PLAYER_MATCH_INFO":
           if (ultimoEvento.payload.turn_order === 1) {
             setHabilitarBoton(true);
           } else {
@@ -65,7 +65,6 @@ export const TerminarTurno = () => {
           break;
 
         default:
-        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
           break;
       }
     }

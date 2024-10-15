@@ -9,7 +9,7 @@ export const InformacionTurno = ({ player_id }) => {
   useEffect(() => {
     if (ultimoEvento !== null) {
       switch (ultimoEvento.key) {
-        case "START_MATCH":
+        case "GET_PLAYER_MATCH_INFO":
           setTurnos({
             current_turn: ultimoEvento.payload.player_name,
           });
@@ -22,7 +22,6 @@ export const InformacionTurno = ({ player_id }) => {
           break;
 
         default:
-        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
           break;
       }
     }

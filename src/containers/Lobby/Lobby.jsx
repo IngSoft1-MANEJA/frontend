@@ -19,6 +19,7 @@ export function Lobby() {
   const { lastJsonMessage } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Lobby: conexión cerrada."),
+    onMessage: (message) => console.log("Websocket - Lobby: mensaje recibido: ", message),
     onError: (event) => console.error("Websocket - Lobby: error: ", event),
     onOpen: () => console.log("Websocket - Lobby: conexión abierta."),
   });
@@ -77,7 +78,6 @@ export function Lobby() {
           break;
 
         default:
-        console.error("key incorrecto recibido del websocket", ultimoEvento?.key);
           break;
       }
     }

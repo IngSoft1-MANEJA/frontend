@@ -26,7 +26,6 @@ export function Game() {
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    console.log("Game: lastJsonMessage ", lastJsonMessage);
     setUltimoEvento(lastJsonMessage);
   }, [lastJsonMessage]);
 
@@ -46,9 +45,7 @@ export function Game() {
 
   useEffect(() => {
     if (ultimoEvento !== null) {
-      console.log("Game: ultimoEvento ", ultimoEvento);
       if (ultimoEvento.key == "GET_PLAYER_MATCH_INFO") {
-        console.log("recibio get player match info");
         setTiles(ultimoEvento.payload.board);
         setDatosJugador({
           ...datosJugador,

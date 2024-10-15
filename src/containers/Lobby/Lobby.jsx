@@ -35,15 +35,7 @@ export function Lobby() {
 
   useEffect(() => {
     setUltimoEvento(lastJsonMessage);
-    console.log("Lobby: lastJsonMessage ", lastJsonMessage);
   }, [lastJsonMessage]);
-
-  useEffect(() => {
-    console.log("Lobby: mounted");
-    return () => {
-      console.log("Lobby: unmounted");
-    }
-  }, []);
 
   useEffect(() => {
     if (ultimoEvento !== null) {

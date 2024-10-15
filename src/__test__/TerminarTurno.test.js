@@ -13,7 +13,6 @@ import {
     DatosPartidaProvider,
   } from "../contexts/DatosPartidaContext";
 import { ServicioPartida } from '../services/ServicioPartida';
-import { SET_TIMEOUT_MAX_ALLOWED_INT } from 'msw';
 
 jest.mock('react-use-websocket');
 jest.mock('../services/ServicioPartida');

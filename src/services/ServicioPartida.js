@@ -130,7 +130,7 @@ export class ServicioPartida {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ match_id: idPartida, movement_card: carta, tiles: fichas }),
+        body: JSON.stringify({ tiles: fichas , movement_card: carta}),
       },
     );
 

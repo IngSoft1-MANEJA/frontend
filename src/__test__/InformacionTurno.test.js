@@ -25,7 +25,7 @@ describe("InformacionTurno", () => {
     });
     render(<InformacionTurno {...Player}/>);
     expect(useWebSocket).toHaveBeenCalledTimes(1);
-    const websocket_url = `${WEBSOCKET_URL}/1/ws/${Player.player_id}`;
+    const websocket_url = `${WEBSOCKET_URL}/matches/1/ws/${Player.player_id}`;
     expect(useWebSocket).toHaveBeenCalledWith(
       websocket_url,
       expect.objectContaining({ share: true }),

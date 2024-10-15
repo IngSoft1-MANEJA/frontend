@@ -33,6 +33,7 @@ export const CartasMovimiento = () => {
   const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
   const [cartasMovimiento, setCartasMovimiento] = useState([]);
 
+  
   useEffect(() => {
     if (lastJsonMessage !== null) {
       if (lastJsonMessage.key == "GET_MOVEMENT_CARD") {

@@ -13,7 +13,7 @@ const images = {
     blue: BlueTile,
 };
 
-export const Ficha = ({ color, onClick, highlightClass }) => {
+export const Ficha = ({id, color, onClick, highlightClass }) => {
     const tileImage = images[color];
     const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
 
@@ -21,6 +21,7 @@ export const Ficha = ({ color, onClick, highlightClass }) => {
 
     return (
         <div
+            id={id}
             onMouseEnter={() => setUsarMovimiento({ ...usarMovimiento, fichaHovering: true })}
             onMouseLeave={() => setUsarMovimiento({ ...usarMovimiento, fichaHovering: false })}
             className={`celda

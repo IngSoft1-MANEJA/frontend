@@ -70,12 +70,12 @@ describe("TerminarTurno Component", () => {
     expect(button).toBeDisabled();
   });
 
-  test("habilita boton en START_MATCH si es el turno del jugador", async () => {
+  test("habilita boton en GET_PLAYER_MATCH_INFO si es el turno del jugador", async () => {
     const eventoValue = {
       ultimoEvento: {
-        key: "START_MATCH",
+        key: "GET_PLAYER_MATCH_INFO",
         payload: {
-          player_name: "Player 1",
+          current_turn_player: "Player 1",
           turn_order: 1,
         },
       },
@@ -168,12 +168,12 @@ describe("TerminarTurno Component", () => {
     });
   });
 
-  test("muestra alerta en mensaje START_MATCH", async () => {
+  test("muestra alerta en mensaje GET_PLAYER_MATCH_INFO", async () => {
     const eventoValue = {
       ultimoEvento: {
-        key: "START_MATCH",
+        key: "GET_PLAYER_MATCH_INFO",
         payload: {
-          player_name: "Player 1",
+          current_turn_player: "Player 1",
           turn_order: 1,
         },
       },

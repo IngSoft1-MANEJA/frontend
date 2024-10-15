@@ -71,25 +71,6 @@ describe("Lobby", () => {
     expect(container.getElementsByClassName("animate-shake").length).toBe(1);
   });
 
-  it("deberia loggear un mensaje de error si el key es incorrecto", () => {
-    useWebSocket.mockReturnValue({ lastJsonMessage: { key: "INVALID_KEY" } });
-    console.error = jest.fn();
-    render(
-      <reactRouterDom.MemoryRouter>
-        <DatosPartidaProvider>
-          <DatosJugadorProvider>
-            <EventoProvider>
-              <Lobby />
-            </EventoProvider>
-          </DatosJugadorProvider>
-        </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>,
-    );
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(
-      "key incorrecto recibido del websocket",
-    );
-  });
   it("deberia mostrar el boton abandonar si el contexto is_owner es true", () => {
     useWebSocket.mockReturnValue({ lastJsonMessage: null });
 

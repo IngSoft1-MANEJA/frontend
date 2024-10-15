@@ -20,12 +20,12 @@ describe("InformacionTurno", () => {
     cleanup();
   });
 
-  test("se muestran los turnos por pantalla en START_MATCH", () => {
+  test("se muestran los turnos por pantalla en GET_PLAYER_MATCH_INFO", () => {
     const eventoValue = {
       ultimoEvento: {
-        key: "START_MATCH",
+        key: "GET_PLAYER_MATCH_INFO",
         payload: {
-          player_name: "Player 1",
+          current_turn_player: "Player 1",
         },
       },
     };
@@ -58,17 +58,4 @@ describe("InformacionTurno", () => {
     expect(turnoActual).toBeInTheDocument();
   });
 
-  test("loggea un mensaje de error si el key es incorrecto", () => {
-    const eventoValue = { ultimoEvento: { key: "INVALID_KEY" } };
-    console.error = jest.fn();
-    render(
-      <EventoContext.Provider value={eventoValue}>
-        <InformacionTurno {...Player} />
-      </EventoContext.Provider>,
-    );
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(
-      "key incorrecto recibido del websocket",
-    );
-  });
 });

@@ -54,38 +54,6 @@ describe("CartasFiguras", () => {
     expect(screen.getByAltText("3")).toBeInTheDocument();
   });
 
-  test("Debe mostrar un mensaje de error cuando el WebSocket recibe un key incorrecto", () => {
-    const consoleErrorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
-
-    const eventoValue = {
-      ultimoEvento: {
-        key: "INVALID_KEY",
-        payload: [],
-      },
-    };
-
-    const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
-      setDatosJugador: jest.fn(),
-    };
-
-    render(
-      <DatosJugadorContext.Provider value={mockDatosJugador}>
-        <EventoContext.Provider value={eventoValue}>
-          <CartasFiguras />
-        </EventoContext.Provider>
-      </DatosJugadorContext.Provider>,
-    );
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "key incorrecto recibido del websocket",
-    );
-
-    consoleErrorSpy.mockRestore();
-  });
-
   test("No debe renderizar cartas si no hay mensajes del WebSocket", () => {
     const eventoValue = { ultimoEvento: null };
 

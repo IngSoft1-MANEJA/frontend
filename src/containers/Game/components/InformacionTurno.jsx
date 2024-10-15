@@ -11,7 +11,7 @@ export const InformacionTurno = ({ player_id }) => {
       switch (ultimoEvento.key) {
         case "GET_PLAYER_MATCH_INFO":
           setTurnos({
-            current_turn: ultimoEvento.payload.player_name,
+            current_turn: ultimoEvento.payload.current_turn_player,
           });
           break;
 

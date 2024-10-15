@@ -17,8 +17,6 @@ export const Tablero = ({ initialTiles }) => {
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
 
-  let newFichasSeleccionadas = [];
-
   const swapFichas = (fichasSeleccionadas) => {
 
     if (fichasSeleccionadas.length === 2) {
@@ -44,29 +42,43 @@ export const Tablero = ({ initialTiles }) => {
   };
 
   const handleFichaClick = async (rowIndex, columnIndex) => {
-  
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
-
+  
       if (fichaEstaSeleccionada) {
-        // si la ficha ya esta seleccionada, deseleccionarla al hacer click nuevamente
-        newFichasSeleccionadas = usarMovimiento.fichasSeleccionadas.filter(ficha => ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex);
-        setUsarMovimiento({ ...usarMovimiento, fichasSeleccionadas: newFichasSeleccionadas });
+        // Deseleccionar la ficha si ya estaba seleccionada
+        const newFichasSeleccionadas = usarMovimiento.fichasSeleccionadas.filter(ficha => ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex);
+        setUsarMovimiento(prev => ({ ...prev, fichasSeleccionadas: newFichasSeleccionadas }));
       } 
       else if (usarMovimiento.fichasSeleccionadas.length < 2) {
-        // si la ficha no esta seleccionada, seleccionarla
-        newFichasSeleccionadas = [...newFichasSeleccionadas, { rowIndex, columnIndex }];
-        setUsarMovimiento({ ...usarMovimiento, fichasSeleccionadas: newFichasSeleccionadas });
-
-        if (newFichasSeleccionadas.length === 2) {
-          await llamarServicio(newFichasSeleccionadas);
-        }
+        // Agregar la ficha seleccionada si el array tiene menos de 2 fichas
+        setUsarMovimiento(prev => {
+          const newFichasSeleccionadas = [...prev.fichasSeleccionadas, { rowIndex, columnIndex }];
+          return { ...prev, fichasSeleccionadas: newFichasSeleccionadas };
+        });
       }
-    }
-    else {
+    } else {
       setUsarMovimiento({ ...usarMovimiento, fichasSeleccionadas: [] });
     }
   };
+
+  useEffect(() => {
+    console.log('Fichas seleccionadas:', usarMovimiento.fichasSeleccionadas);
+    if (usarMovimiento.fichasSeleccionadas.length === 2) {
+      // Ejecutar swapFichas y limpiar fichas seleccionadas
+      llamarServicio(usarMovimiento.fichasSeleccionadas);
+      // Actualizar el estado inmediatamente después de llamar a swapFichas
+      setTimeout(() => {
+        setUsarMovimiento({
+          ...usarMovimiento,
+          fichasSeleccionadas: [],
+          cartaSeleccionada: null,
+          cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
+          highlightCarta: { state: false, key: '' },
+        });
+      }, 700);
+    }
+  }, [usarMovimiento.fichasSeleccionadas]);
 
   const llamarServicio = async (newFichasSeleccionadas) => {
     try {

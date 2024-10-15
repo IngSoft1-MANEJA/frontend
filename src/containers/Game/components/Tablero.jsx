@@ -16,7 +16,6 @@ export const Tablero = ({ tiles }) => {
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
 
-
   const handleFichaClick = async (rowIndex, columnIndex) => {
 
     if (usarMovimiento.cartaSeleccionada !== null) {
@@ -33,43 +32,7 @@ export const Tablero = ({ tiles }) => {
         setUsarMovimiento({ ...usarMovimiento, fichasSeleccionadas: newFichasSeleccionadas });
 
         if (newFichasSeleccionadas.length === 2) {
-          try {
-            const resJson = await ServicioPartida.validarMovimiento(
-              match_id,
-              newFichasSeleccionadas,
-              usarMovimiento.cartaSeleccionada
-            );
-            console.log(resJson);
-            if (resJson.isValid) {
-              // Realizar animacion de swap.
-
-              // Actualizar selecciones
-              setTimeout(() => {
-                setUsarMovimiento({
-                  ...usarMovimiento,
-                  fichasSeleccionadas: [],
-                  cartaSeleccionada: null,
-                  cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
-                  highlightCarta: { state: false, key: '' },
-                });
-              }, 700);
-            } else {
-              setMensajeAlerta("Movimiento inválido");
-              setMostrarAlerta(true);
-              setUsarMovimiento({
-                ...usarMovimiento,
-                fichasSeleccionadas: [],
-              });
-              setTimeout(() => {
-                setMostrarAlerta(false);
-              },1000);
-              console.log('Movimiento inválido');
-            }
-          } catch (err) {
-            setMensajeAlerta("Error creando sala de partida");
-            console.log(err);
-          }
-          
+          llamarServicio(newFichasSeleccionadas);
         }
       }
     }
@@ -78,6 +41,45 @@ export const Tablero = ({ tiles }) => {
     }
   };
 
+  const llamarServicio = async (newFichasSeleccionadas) => {
+    try {
+      const resJson = await ServicioPartida.validarMovimiento(
+        match_id,
+        newFichasSeleccionadas,
+        usarMovimiento.cartaSeleccionada
+      );
+      console.log(resJson);
+      if (resJson.isValid) {
+        // Realizar animacion de swap.
+
+        // Actualizar selecciones
+        setTimeout(() => {
+          setUsarMovimiento({
+            ...usarMovimiento,
+            fichasSeleccionadas: [],
+            cartaSeleccionada: null,
+            cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
+            highlightCarta: { state: false, key: '' },
+          });
+        }, 700);
+      } else {
+        setMensajeAlerta('Movimiento invalido');
+        setMostrarAlerta(true);
+        setUsarMovimiento({
+          ...usarMovimiento,
+          fichasSeleccionadas: [],
+        });
+        setTimeout(() => {
+          setMostrarAlerta(false);
+        },1000);
+        console.log('Movimiento invalido');
+      }
+    } catch (err) {
+      setMensajeAlerta("Error al validar movimiento");
+      console.log(err);
+    }
+  }
+
   const estaHighlighted = (rowIndex, columnIndex) => {
     return usarMovimiento.fichasSeleccionadas.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
   };
@@ -85,7 +87,8 @@ export const Tablero = ({ tiles }) => {
   const gridCell = tiles.map((row, rowIndex) => {
     return row.map((tileColor, columnIndex) => {
       return (
-        <Ficha 
+        <Ficha
+          id={`ficha-${rowIndex}-${columnIndex}`}
           key={`${rowIndex}-${columnIndex}`}
           color={tileColor} 
           onClick={() => handleFichaClick(rowIndex, columnIndex)}

@@ -19,7 +19,8 @@ export function Game() {
   const { lastJsonMessage, readyState } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Game: conexión cerrada."),
-    onMessage: (message) => console.log("Websocket - Game: mensaje recibido: ", message),
+    onMessage: (message) =>
+      console.log("Websocket - Game: mensaje recibido: ", message),
     onError: (event) => console.error("Websocket - Game: error: ", event),
     onOpen: () => console.log("Websocket - Game: conexión abierta."),
   });
@@ -34,13 +35,12 @@ export function Game() {
       try {
         ServicioPartida.obtenerInfoPartidaParaJugador(
           match_id,
-          datosJugador.player_id
+          datosJugador.player_id,
         );
       } catch (error) {
         console.error(error);
       }
     }
-
   }, [readyState]);
 
   useEffect(() => {

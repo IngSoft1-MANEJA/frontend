@@ -15,10 +15,7 @@ const IniciarPartida = ({
       return;
     }
     try {
-      await ServicioPartida.iniciarPartida(
-        idPartida,
-        idJugador,
-      );
+      await ServicioPartida.iniciarPartida(idPartida, idJugador);
     } catch (error) {
       console.error(error.message);
     }

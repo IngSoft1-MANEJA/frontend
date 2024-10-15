@@ -57,5 +57,4 @@ describe("InformacionTurno", () => {
 
     expect(turnoActual).toBeInTheDocument();
   });
-
 });

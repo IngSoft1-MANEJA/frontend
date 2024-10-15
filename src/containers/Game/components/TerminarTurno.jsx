@@ -28,7 +28,9 @@ export const TerminarTurno = () => {
             setHabilitarBoton(false);
           }
 
-          setMensajeAlerta(`Turno de ${ultimoEvento.payload.current_turn_player}.`);
+          setMensajeAlerta(
+            `Turno de ${ultimoEvento.payload.current_turn_player}.`,
+          );
           setMostrarAlerta(true);
 
           setTimeout(() => {

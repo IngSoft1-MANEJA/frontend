@@ -76,10 +76,10 @@ export const CartasFiguras = () => {
             setCartasFiguras(ultimoEvento.payload.shape_cards);
           }
           break;
-        
+
         case "GET_PLAYER_MATCH_INFO":
           setMiTurno(ultimoEvento.payload.turn_order);
-      
+
         default:
           break;
       }

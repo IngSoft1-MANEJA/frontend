@@ -134,7 +134,9 @@ export class ServicioPartida {
     );
 
     if (!respuesta.ok) {
-      throw new Error(`Error al obtener info de partida - estado: ${respuesta.status}`);
+      throw new Error(
+        `Error al obtener info de partida - estado: ${respuesta.status}`,
+      );
     }
 
     const json = await respuesta.json();

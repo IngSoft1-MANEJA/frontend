@@ -33,7 +33,6 @@ export function Lobby() {
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    console.log("Lobby - Setting ultimoEvento: ", lastJsonMessage);
     setUltimoEvento(lastJsonMessage);
   }, [lastJsonMessage]);
 

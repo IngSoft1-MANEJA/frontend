@@ -33,8 +33,6 @@ export function Game() {
         const newEvent = lastMessage
           ? JSON.parse(lastMessage.data)
           : lastMessage;
-        console.log("Game - last ultimoEvento: ", prev);
-        console.log("Game - new ultimoEvento: ", newEvent);
         return newEvent;
       });
     });
@@ -54,7 +52,6 @@ export function Game() {
   }, [readyState]);
 
   useEffect(() => {
-    console.log("Game - using ultimoEvento: ", ultimoEvento);
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setTiles(ultimoEvento.payload.board);

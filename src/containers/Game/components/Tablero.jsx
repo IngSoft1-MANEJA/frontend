@@ -158,4 +158,3 @@ export const Tablero = ({ initialTiles , initialFigures }) => {
 };
 
 export default Tablero;
-

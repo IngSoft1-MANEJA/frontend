@@ -1,9 +1,6 @@
 import React from "react";
 import { useEffect, useContext, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useWebSocket } from "react-use-websocket";
-import { WEBSOCKET_URL } from "../../../variablesConfiguracion";
-import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
+import { EventoContext } from "../../../contexts/EventoContext";
 
 import fig1 from "../../../assets/Figuras/Blancas/fig01.svg";
 import fig2 from "../../../assets/Figuras/Blancas/fig02.svg";
@@ -64,42 +61,50 @@ const urlMap = {
 };
 
 export const CartasFiguras = () => {
-  const { match_id } = useParams();
-  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-
-  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
-  const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
-  const [turnoCartas, setTurnoCartas] = useState(0);
+  const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    if (lastJsonMessage !== null) {
-      if (lastJsonMessage.key == "PLAYER_RECEIVE_SHAPE_CARDS") {
-        setTurnoCartas(lastJsonMessage.payload.turn_order);
-
-        if (turnoCartas == miTurno) {
-          setCartasFiguras(lastJsonMessage.payload.shape_cards);
-        }
-      } else if (lastJsonMessage.key == "START_MATCH") {
-        setMiTurno(lastJsonMessage.payload.turn_order);
-      } else {
-        console.error("key incorrecto recibido del websocket");
+    if (ultimoEvento !== null) {
+      if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
+        setMiTurno(ultimoEvento.payload.turn_order);
       }
     }
-  }, [lastJsonMessage, miTurno]);
+  }, [ultimoEvento]);
+
+  useEffect(() => {
+    if (
+      ultimoEvento &&
+      ultimoEvento.key === "PLAYER_RECIEVE_ALL_SHAPES" &&
+      miTurno !== 0
+    ) {
+      const jugadorData = ultimoEvento.payload.find(
+        (jugador) => jugador.turn_order === miTurno,
+      );
+
+      if (jugadorData) {
+        setCartasFiguras(jugadorData.shape_cards);
+      } else {
+        console.log(
+          "CartasFiguras - No se encontró jugador con turn_order:",
+          miTurno,
+        );
+      }
+    }
+  }, [ultimoEvento, miTurno]);
 
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        {cartasFiguras.map((carta, index) => (
-          <div key={index} className="carta-movimiento">
-            <img src={urlMap[carta.type]} alt={carta.type} />
-          </div>
-        ))}
         <div className="mazo-propio">
           <img src={backfig} alt="back" />
         </div>
+        {cartasFiguras.map((carta, index) => (
+          <div key={index} className="carta-movimiento">
+            <img src={urlMap[carta[1]]} alt={carta[1]} />
+          </div>
+        ))}
       </div>
     </div>
   );

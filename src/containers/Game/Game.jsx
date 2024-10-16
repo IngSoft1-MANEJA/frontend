@@ -1,7 +1,7 @@
 import React from "react";
-import { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import useWebSocket from "react-use-websocket";
+import { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router-dom";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
@@ -9,7 +9,11 @@ import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from '../../contexts/UsarMovimientoContext';
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
-import { CartasMovimiento } from "./components/CartasMovimiento.jsx";
+import { CartasFiguras } from "./components/CartasFiguras";
+import { CartasMovimiento } from "./components/CartasMovimiento";
+import { EventoContext } from "../../contexts/EventoContext";
+import { ServicioPartida } from "../../services/ServicioPartida.js";
+import { flushSync } from "react-dom";
 
 export function Game() {
   const { match_id } = useParams();
@@ -17,40 +21,49 @@ export function Game() {
   const [tiles, setTiles] = useState([]);
   const [figures, setFigures] = useState([]);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
-  const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
+  const { lastMessage, readyState } = useWebSocket(websocket_url, {
+    share: true,
+    onClose: () => console.log("Websocket - Game: conexión cerrada."),
+    onError: (event) => console.error("Websocket - Game: error: ", event),
+    onOpen: () => console.log("Websocket - Game: conexión abierta."),
+  });
+  const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    if (lastJsonMessage !== null) {
-        if (lastJsonMessage.key == "START_MATCH") {
-            setTiles(lastJsonMessage.payload.board);
-        } else if (lastJsonMessage.key == "ALLOW_FIGURES") {
-            setFigures(lastJsonMessage.payload.figures);
-        } else {
-            console.error("key incorrecto recibido del websocket");
-        }
-        }
-    }, [
-        lastJsonMessage,
-        setTiles,
-        setFigures,
-  ]);
+    flushSync(() => {
+      setUltimoEvento((prev) => {
+        const newEvent = lastMessage
+          ? JSON.parse(lastMessage.data)
+          : lastMessage;
+        return newEvent;
+      });
+    });
+  }, [lastMessage]);
 
-  /*
-  const tiles = [
-    ['red', 'red', 'green', 'yellow', 'red', 'yellow'], 
-    ['green', 'blue', 'red', 'yellow', 'green', 'blue'], 
-    ['red', 'yellow', 'green', 'blue', 'blue', 'yellow'], 
-    ['green', 'blue', 'red', 'yellow', 'green', 'blue'], 
-    ['red', 'yellow', 'green', 'yellow', 'red', 'green'], 
-    ['green', 'blue', 'blue', 'yellow', 'green', 'blue']
-  ];*/
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN) {
+      try {
+        ServicioPartida.obtenerInfoPartidaParaJugador(
+          match_id,
+          datosJugador.player_id,
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [readyState]);
 
-  /*
-  const figures = [
-    [[0, 0], [0, 1], [0, 2]],
-    [[1, 5], [2, 5], [3, 5]],
-    [[5, 0], [5, 1], [5, 2]],
-  ];*/ 
+  useEffect(() => {
+    if (ultimoEvento !== null) {
+      if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
+        setTiles(ultimoEvento.payload.board);
+        setDatosJugador({
+          ...datosJugador,
+          player_turn: ultimoEvento.payload.turn_order,
+        });
+      }
+    }
+  }, [ultimoEvento]);
 
   return (
     <div className="game-div relative w-full h-screen m-0">

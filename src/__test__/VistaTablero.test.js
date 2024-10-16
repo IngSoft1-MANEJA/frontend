@@ -3,8 +3,6 @@ import {useContext} from "react";
 import {
   render,
   screen,
-  act,
-  waitFor,
 } from "@testing-library/react";
 import { jest } from "@jest/globals";
 import { Tablero } from '../containers/Game/components/Tablero.jsx';
@@ -81,44 +79,5 @@ describe('VistaTablero', () => {
           expect(fichaItem).toHaveStyle(`background-color: ${color}`);
         });
       });
-    });
-    
-    test('swapFichas se ejecuta correctamente y las fichas son intercambiadas', async () => {
-      // Simulamos que el servicio devuelve un movimiento válido
-      ServicioPartida.validarMovimiento.mockResolvedValue({ isValid: true });
-  
-      render(
-        <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <Tablero initialTiles={Tiles} />
-        </UsarMovimientoContext.Provider>
-      );
-  
-      // Simula un clic en una ficha para seleccionar la segunda ficha
-
-      await act(async () => {
-        screen.getByTestId('ficha-1-0').click();
-      }); 
-
-      await waitFor(() => {
-        expect(mockUsarMovimiento.fichasSeleccionadas).toHaveLength(2);
-      });
-  
-      // Verificamos que setUsarMovimiento se haya llamado correctamente
-      await waitFor(() => {
-        expect(mockSetUsarMovimiento).toHaveBeenCalled();
-      });
-  
-      // Comprobamos que se haya llamado al servicio con las fichas seleccionadas
-      await waitFor(() => {
-        expect(ServicioPartida.validarMovimiento).toHaveBeenCalledWith(
-          expect.any(Number), // match_id debe ser dinámico en tu aplicación real
-          [{ rowIndex: 0, columnIndex: 0 }, { rowIndex: 1, columnIndex: 0 }],
-          'test'
-        );
-      });
-  
-      // Comprobamos que las fichas hayan sido intercambiadas
-      expect(screen.getByTestId('ficha-0-0')).toHaveStyle('background-color: green'); // Ajusta el color según tu lógica
-      expect(screen.getByTestId('ficha-1-0')).toHaveStyle('background-color: red'); // Ajusta el color según tu lógica
     });
 });

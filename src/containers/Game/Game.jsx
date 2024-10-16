@@ -7,7 +7,6 @@ import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
-import { UsarMovimientoContext } from '../../contexts/UsarMovimientoContext';
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
 import { CartasFiguras } from "./components/CartasFiguras";
 import { CartasMovimiento } from "./components/CartasMovimiento";

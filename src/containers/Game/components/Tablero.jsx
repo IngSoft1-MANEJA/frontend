@@ -9,7 +9,7 @@ import "./Tablero.css";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
-export const Tablero = ({ initialTiles }) => {
+export const Tablero = ({ initialTiles , initialFigures }) => {
   const { match_id } = useParams();
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
 
@@ -39,6 +39,12 @@ export const Tablero = ({ initialTiles }) => {
         cartaSeleccionada: null,
       }));
     }
+  };
+
+  const estaFiguraInicial = (rowIndex, columnIndex) => {
+    return initialFigures.some(figure =>
+      figure.some(([figRow, figCol]) => figRow === rowIndex && figCol === columnIndex)
+    );
   };
 
   const handleFichaClick = async (rowIndex, columnIndex) => {
@@ -125,17 +131,22 @@ export const Tablero = ({ initialTiles }) => {
 
   const gridCell = tiles.map((row, rowIndex) => {
     return row.map((tileColor, columnIndex) => {
+      const isHighlighted = estaHighlighted(rowIndex, columnIndex); // Seleccionadas por el usuario
+      const isFiguraInicial = estaFiguraInicial(rowIndex, columnIndex); // Para las figuras iniciales
+  
       return (
         <Ficha 
           id={`ficha-${rowIndex}-${columnIndex}`}
           key={`${rowIndex}-${columnIndex}`}
           color={tileColor} 
           onClick={() => handleFichaClick(rowIndex, columnIndex)}
-          highlightClass={estaHighlighted(rowIndex, columnIndex)}
+          highlightClass={isHighlighted} // Fichas seleccionadas
+          highlightFiguraInicial={isFiguraInicial} // Fichas de figuras iniciales con brillo blanco
         />
       );
     });
   });
+
   return (
     <div className="tablero flex w-100 h-screen justify-center items-center">
       {mostrarAlerta && <Alerts type={'error'} message={mensajeAlerta} />}

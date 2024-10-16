@@ -14,7 +14,8 @@ import { CartasMovimiento } from "./components/CartasMovimiento.jsx";
 export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-  /*const [tiles, setTiles] = useState([]);
+  const [tiles, setTiles] = useState([]);
+  const [figures, setFigures] = useState([]);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
   const { lastJsonMessage } = useWebSocket(websocket_url, { share: true });
 
@@ -22,6 +23,8 @@ export function Game() {
     if (lastJsonMessage !== null) {
         if (lastJsonMessage.key == "START_MATCH") {
             setTiles(lastJsonMessage.payload.board);
+        } else if (lastJsonMessage.key == "ALLOW_FIGURES") {
+            setFigures(lastJsonMessage.payload.figures);
         } else {
             console.error("key incorrecto recibido del websocket");
         }
@@ -29,8 +32,10 @@ export function Game() {
     }, [
         lastJsonMessage,
         setTiles,
-  ]);*/
+        setFigures,
+  ]);
 
+  /*
   const tiles = [
     ['red', 'red', 'green', 'yellow', 'red', 'yellow'], 
     ['green', 'blue', 'red', 'yellow', 'green', 'blue'], 
@@ -38,20 +43,21 @@ export function Game() {
     ['green', 'blue', 'red', 'yellow', 'green', 'blue'], 
     ['red', 'yellow', 'green', 'yellow', 'red', 'green'], 
     ['green', 'blue', 'blue', 'yellow', 'green', 'blue']
-  ];
+  ];*/
 
-  const Figures = [
+  /*
+  const figures = [
     [[0, 0], [0, 1], [0, 2]],
     [[1, 5], [2, 5], [3, 5]],
     [[5, 0], [5, 1], [5, 2]],
-  ];
+  ];*/ 
 
   return (
     <div className="game-div relative w-full h-screen m-0">
       <CartasMovimiento />
       <Tablero 
         initialTiles={tiles}
-        initialFigures={Figures}
+        initialFigures={figures}
       />
       <InformacionTurno player_id={datosJugador.player_id}/>
       <TerminarTurno/>

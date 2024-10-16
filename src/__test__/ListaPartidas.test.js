@@ -69,7 +69,6 @@ describe("ListarPartidas", () => {
   });
 
   test("debe manejar errores de fetch y registrar el mensaje de error en la consola", async () => {
-    
     const consoleErrorSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => {});

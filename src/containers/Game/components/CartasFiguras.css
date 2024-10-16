@@ -1,12 +1,11 @@
 .cartas-figuras {
   position: absolute;
-  bottom: 60px;
+  bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: row;
   align-items: center;
-  overflow: hidden;
 }
 
 .cartas-figuras-propias {
@@ -16,7 +15,7 @@
 }
 
 .cartas-figuras-propias img {
-  width: 80px;
+  width: 75px;
   height: auto;
   background-color: rgb(206, 191, 172);
   padding: 1px;

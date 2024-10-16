@@ -67,20 +67,22 @@ export const CartasFiguras = () => {
 
   useEffect(() => {
     if (ultimoEvento !== null) {
-      switch (ultimoEvento.key) {
-        case "PLAYER_RECIEVE_ALL_SHAPES":
-          const jugadorData = ultimoEvento.payload.find(
-            (jugador) => jugador.turn_order === miTurno
-          );
-          setCartasFiguras(jugadorData.shape_cards);
-          break;
+      if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
+        setMiTurno(ultimoEvento.payload.turn_order);
+      }
+    }
+  }, [ultimoEvento]);
 
-        case "GET_PLAYER_MATCH_INFO":
-            setMiTurno(ultimoEvento.payload.turn_order);
-          break;
+  useEffect(() => {
+    if (ultimoEvento && ultimoEvento.key === "PLAYER_RECIEVE_ALL_SHAPES" && miTurno !== 0) {
+      const jugadorData = ultimoEvento.payload.find(
+        (jugador) => jugador.turn_order === miTurno
+      );
 
-        default:
-          break;
+      if (jugadorData) {
+        setCartasFiguras(jugadorData.shape_cards);
+      } else {
+        console.log("CartasFiguras - No se encontró jugador con turn_order:", miTurno);
       }
     }
   }, [ultimoEvento, miTurno]);

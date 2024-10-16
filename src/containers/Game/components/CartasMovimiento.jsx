@@ -15,7 +15,7 @@ const urlMap = {
   'Inverse Diagonal': mov2,
   'Line': mov3,
   'Line Between': mov4,
-  'Line Border"': mov5,
+  'Line Border': mov5,
   'L': mov6,
   'Inverse L': mov7,
 };

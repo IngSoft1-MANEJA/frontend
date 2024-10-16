@@ -1,42 +1,94 @@
+import React from "react";
+import { useEffect, useState, useContext } from "react";
 import React, { useEffect } from "react";
 
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
+import useWebSocket, { ReadyState } from "react-use-websocket";
+import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
+import { AbandonarPartida } from "../../components/AbandonarPartida";
+import { Tablero } from "./components/Tablero";
+import { TerminarTurno } from "./components/TerminarTurno";
+import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
+import { InformacionTurno } from "./components/InformacionTurno.jsx";
+import { CartasFiguras } from "./components/CartasFiguras";
+import { CartasMovimiento } from "./components/CartasMovimiento";
+import { EventoContext } from "../../contexts/EventoContext";
+import { ServicioPartida } from "../../services/ServicioPartida.js";
+import { flushSync } from "react-dom";
 // import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 import { crearWebsocket, WebsocketEvents } from "../../services/ServicioWebsocket";
 import { JugadorGanoMotivo } from "../../services/ServicioPartida";
 
 export function Game() {
-  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { match_id } = useParams();
-  const { LastJsonMessage } = crearWebsocket(match_id, datosJugador.player_id);
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const [tiles, setTiles] = useState([]);
+  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
+  const { lastMessage, readyState } = useWebSocket(websocket_url, {
+    share: true,
+    onClose: () => console.log("Websocket - Game: conexión cerrada."),
+    onError: (event) => console.error("Websocket - Game: error: ", event),
+    onOpen: () => console.log("Websocket - Game: conexión abierta."),
+  });
+  const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    if (LastJsonMessage !== null) {
-      switch (LastJsonMessage.key) {
-        case WebsocketEvents.WINNER:
-          if (LastJsonMessage.payload.reason === JugadorGanoMotivo.FORFEIT) {
-            setDatosJugador({ player_id: null, is_owner: false });
-            setDatosPartida({ max_players: 2 });
-            Navigate("/");
-          }
-          break;
-      
-        default:
-          break;
+    flushSync(() => {
+      setUltimoEvento((prev) => {
+        const newEvent = lastMessage
+          ? JSON.parse(lastMessage.data)
+          : lastMessage;
+        return newEvent;
+      });
+    });
+  }, [lastMessage]);
+
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN) {
+      try {
+        ServicioPartida.obtenerInfoPartidaParaJugador(
+          match_id,
+          datosJugador.player_id,
+        );
+      } catch (error) {
+        console.error(error);
       }
     }
-  }, [LastJsonMessage]);
+  }, [readyState]);
+
+  useEffect(() => {
+    if (ultimoEvento !== null) {
+      if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
+        setTiles(ultimoEvento.payload.board);
+        setDatosJugador({
+          ...datosJugador,
+          player_turn: ultimoEvento.payload.turn_order,
+        });
+      } else if (ultimoEvento.key === WebsocketEvents.WINNER) {
+        if (ultimoEvento.payload.reason === JugadorGanoMotivo.FORFEIT) {
+          setDatosJugador({ player_id: null, is_owner: false });
+          setDatosPartida({ max_players: 2 });
+          Navigate("/");
+        }
+      }
+    }
+  }, [ultimoEvento]);
 
   return (
-    <div>
-      {/*<AbandonarPartida
+    <div className="game-div relative w-full h-screen m-0 z-0">
+      <CartasMovimiento />
+      <CartasFiguras />
+      <Tablero tiles={tiles} />
+      <InformacionTurno player_id={datosJugador.player_id} />
+      <TerminarTurno />
+      <AbandonarPartida
         estadoPartida="STARTED"
         esAnfitrion={datosJugador.is_owner}
         idJugador={datosJugador.player_id}
         idPartida={match_id}
-      />*/}
+      />
     </div>
   );
 }

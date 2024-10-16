@@ -29,7 +29,6 @@ function UnirsePartida({ idPartida }) {
 
         setEstaCargando(false);
         navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
-        console.log("lobby called");
       } catch (error) {
         console.error(error.message);
         setEstaCargando(false);

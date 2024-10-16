@@ -32,13 +32,17 @@ export const InformacionTurno = ({ player_id }) => {
       <table className="table table-xs overflow-hidden break-words text-balance rounded-none">
         <thead>
           <tr className="bg-base-100 text-center">
-            <th className="w-20" colSpan="2">Turno Actual</th>
+            <th className="w-20" colSpan="2">
+              Turno Actual
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr className="bg-base-200 h-8">
             <th className="w-10 text-left">Jugador:</th>
-            <td className="min-w-20 max-w-44 text-right">{turnos.current_turn}</td>
+            <td className="min-w-20 max-w-44 text-right">
+              {turnos.current_turn}
+            </td>
           </tr>
         </tbody>
       </table>

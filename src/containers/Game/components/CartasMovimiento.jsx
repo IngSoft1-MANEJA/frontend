@@ -11,13 +11,13 @@ import mov7 from "../../../assets/Movimientos/mov7.svg";
 import "./CartasMovimiento.css";
 
 const urlMap = {
-  'Diagonal': mov1,
-  'Inverse Diagonal': mov2,
-  'Line': mov3,
-  'Line Between': mov4,
-  'Line Border': mov5,
-  'L': mov6,
-  'Inverse L': mov7,
+  Diagonal: mov1,
+  "Inverse Diagonal": mov2,
+  Line: mov3,
+  "Line Between": mov4,
+  "Line Border": mov5,
+  L: mov6,
+  "Inverse L": mov7,
 };
 
 export const CartasMovimiento = () => {

@@ -70,11 +70,9 @@ export function Game() {
     <div className="game-div relative w-full h-screen m-0 z-0">
       <CartasMovimiento />
       <CartasFiguras />
-      <Tablero 
-        tiles={tiles}
-      />
-      <InformacionTurno player_id={datosJugador.player_id}/>
-      <TerminarTurno/>
+      <Tablero tiles={tiles} />
+      <InformacionTurno player_id={datosJugador.player_id} />
+      <TerminarTurno />
       <AbandonarPartida
         estadoPartida="STARTED"
         esAnfitrion={datosJugador.is_owner}

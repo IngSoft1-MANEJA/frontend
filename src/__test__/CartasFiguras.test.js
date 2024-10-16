@@ -39,14 +39,16 @@ describe("CartasFiguras", () => {
     const mockEvento = {
       ultimoEvento: {
         key: "PLAYER_RECIEVE_ALL_SHAPES",
-        payload: [{
-          turn_order: 1,
-          shape_cards: [
-            [1, 1 ],
-            [2, 2 ],
-            [3, 3 ],
-          ],
-        }],
+        payload: [
+          {
+            turn_order: 1,
+            shape_cards: [
+              [1, 1],
+              [2, 2],
+              [3, 3],
+            ],
+          },
+        ],
       },
     };
 

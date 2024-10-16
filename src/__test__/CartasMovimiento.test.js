@@ -34,9 +34,9 @@ describe("CartasMovimiento", () => {
         key: "GET_MOVEMENT_CARD",
         payload: {
           movement_card: [
-            [1, "Diagonal" ],
-            [2, "Inverse L" ],
-            [3, "Line" ],
+            [1, "Diagonal"],
+            [2, "Inverse L"],
+            [3, "Line"],
           ],
         },
       },

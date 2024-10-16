@@ -1,6 +1,6 @@
 import React from "react";
-import { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
@@ -18,22 +18,19 @@ export function Game() {
 
   useEffect(() => {
     if (lastJsonMessage !== null) {
-        if (lastJsonMessage.key == "START_MATCH") {
-            setTiles(lastJsonMessage.payload.board);
-        } else {
-            console.error("key incorrecto recibido del websocket");
-        }
-        }
-    }, [
-        lastJsonMessage,
-        setTiles,
-  ]);
+      if (lastJsonMessage.key == "START_MATCH") {
+        setTiles(lastJsonMessage.payload.board);
+      } else {
+        console.error("key incorrecto recibido del websocket");
+      }
+    }
+  }, [lastJsonMessage, setTiles]);
 
   return (
     <div className="game-div relative w-full h-screen m-0">
-      <InformacionTurno player_id={datosJugador.player_id}/>
-      <TerminarTurno/>
-      <Tablero tiles={tiles}/>
+      <InformacionTurno player_id={datosJugador.player_id} />
+      <TerminarTurno />
+      <Tablero tiles={tiles} />
       <AbandonarPartida
         estadoPartida="STARTED"
         esAnfitrion={datosJugador.is_owner}

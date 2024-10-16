@@ -49,7 +49,7 @@ describe("CartasMovimiento", () => {
 
   test("Debe renderizar correctamente las cartas del jugador cuando recibe el mensaje GET_MOVEMENT_CARD", () => {
     const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
+      datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
 
@@ -79,7 +79,7 @@ describe("CartasMovimiento", () => {
     });
 
     const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
+      datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
 
@@ -104,7 +104,7 @@ describe("CartasMovimiento", () => {
     });
 
     const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
+      datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
 
@@ -121,9 +121,9 @@ describe("CartasMovimiento", () => {
     expect(screen.queryByAltText("LINE")).not.toBeInTheDocument();
   });
 
-  test("Debe permitir seleccionar una carta al hacer click si no ha sido usada", () => {
+  test("Debe permitir seleccionar una carta al hacer click si no ha sido usada", async () => {
     const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
+      datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
   
@@ -137,7 +137,7 @@ describe("CartasMovimiento", () => {
   
     const carta = screen.getByAltText("DIAGONAL");
     fireEvent.click(carta);
-  
+ 
     expect(mockUsarMovimiento.setUsarMovimiento).toHaveBeenCalledWith({
       ...mockUsarMovimiento.usarMovimiento,
       cartaSeleccionada: "DIAGONAL",
@@ -156,7 +156,7 @@ describe("CartasMovimiento", () => {
     };
   
     const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
+      datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
   
@@ -189,7 +189,7 @@ describe("CartasMovimiento", () => {
     };
   
     const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
+      datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
   
@@ -209,7 +209,7 @@ describe("CartasMovimiento", () => {
 
   test("Debe aplicar effecto de hover correctamente al pasar el mouse sobre una carta", () => {
     const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
+      datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
   

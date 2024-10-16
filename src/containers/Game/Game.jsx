@@ -36,7 +36,7 @@ export function Game() {
     <div className="game-div relative w-full h-screen m-0">
       <CartasMovimiento />
       <Tablero 
-        tiles={tiles}
+        initialTiles={tiles}
       />
       <InformacionTurno player_id={datosJugador.player_id}/>
       <TerminarTurno/>

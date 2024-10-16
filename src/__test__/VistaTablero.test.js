@@ -57,7 +57,7 @@ describe('VistaTablero', () => {
     test('renderiza correctamente el numero de fichas', () => {
       render(
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <Tablero initialTiles={tiles} />
+           <Tablero initialTiles={tiles} initialFigures={[]} />
         </UsarMovimientoContext.Provider>
       );
       const fichaElements = tiles.flatMap((row, rowIndex) =>
@@ -69,7 +69,7 @@ describe('VistaTablero', () => {
     test('renderiza componentes Ficha con los colores correctos', () => {
       render(
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <Tablero initialTiles={tiles} />
+          <Tablero initialTiles={tiles} initialFigures={[]} />
         </UsarMovimientoContext.Provider>
       );
 

@@ -1,8 +1,6 @@
 import React from 'react'
 import { useEffect, useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useWebSocket from "react-use-websocket";
-import { WEBSOCKET_URL } from "../../../variablesConfiguracion.js";
 import { Ficha } from './Ficha.jsx';
 import { Alerts } from "../../../components/Alerts";
 import "./Tablero.css";

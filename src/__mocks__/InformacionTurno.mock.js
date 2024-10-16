@@ -1,3 +1,3 @@
 export const Player = {
-    player_id: 1,
+  player_id: 1,
 };

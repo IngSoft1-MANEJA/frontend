@@ -8,7 +8,6 @@ import { DatosPartidaProvider } from "../../contexts/DatosPartidaContext.jsx";
 import { UsarMovimientoProvider } from "../../contexts/UsarMovimientoContext";
 
 function App() {
-
   return (
     <div>
       <Routes>

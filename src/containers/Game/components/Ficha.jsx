@@ -7,10 +7,10 @@ import BlueTile from '../../../assets/Colores/D.svg';
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 
 const images = {
-    red: RedTile,
-    yellow: YellowTile,
-    green: GreenTile,
-    blue: BlueTile,
+  red: RedTile,
+  yellow: YellowTile,
+  green: GreenTile,
+  blue: BlueTile,
 };
 
 export const Ficha = ({id, color, onClick, highlightClass }) => {

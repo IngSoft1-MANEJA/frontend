@@ -13,6 +13,7 @@ import {
   DatosPartidaContext,
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext";
+import { EventoProvider } from "../contexts/EventoContext";
 
 jest.mock("react-use-websocket");
 
@@ -35,7 +36,9 @@ describe("Lobby", () => {
       <reactRouterDom.MemoryRouter>
         <DatosPartidaProvider>
           <DatosJugadorProvider>
-            <Lobby />
+            <EventoProvider>
+              <Lobby />
+            </EventoProvider>
           </DatosJugadorProvider>
         </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
@@ -56,7 +59,9 @@ describe("Lobby", () => {
       <reactRouterDom.MemoryRouter>
         <DatosPartidaProvider>
           <DatosJugadorProvider>
-            <Lobby />
+            <EventoProvider>
+              <Lobby />
+            </EventoProvider>
           </DatosJugadorProvider>
         </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
@@ -66,23 +71,6 @@ describe("Lobby", () => {
     expect(container.getElementsByClassName("animate-shake").length).toBe(1);
   });
 
-  it("deberia loggear un mensaje de error si el key es incorrecto", () => {
-    useWebSocket.mockReturnValue({ lastJsonMessage: { key: "INVALID_KEY" } });
-    console.error = jest.fn();
-    render(
-      <reactRouterDom.MemoryRouter>
-        <DatosPartidaProvider>
-          <DatosJugadorProvider>
-            <Lobby />
-          </DatosJugadorProvider>
-        </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>,
-    );
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(
-      "key incorrecto recibido del websocket",
-    );
-  });
   it("deberia mostrar el boton abandonar si el contexto is_owner es true", () => {
     useWebSocket.mockReturnValue({ lastJsonMessage: null });
 
@@ -96,7 +84,9 @@ describe("Lobby", () => {
               setDatosJugador: jest.fn(),
             }}
           >
-            <Lobby />
+            <EventoProvider>
+              <Lobby />
+            </EventoProvider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,

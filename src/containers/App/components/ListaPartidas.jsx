@@ -8,18 +8,18 @@ import { ServicioPartida } from "../../../services/ServicioPartida.js";
 export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
   const [selectedPartida, setSelectedPartida] = useState(null);
-  const [alert, setAlert] = useState(null);
+  const [mensaje, setMensaje] = useState("");
 
   const fetchPartidas = async () => {
     try {
       const data = await ServicioPartida.listarPartidas();
       setPartidas(data);
-      setAlert(null);
+
+      if (data.length === 0) {
+        setMensaje("No se encuentran partidas disponibles");
+      }
     } catch (error) {
-      setAlert({
-        type: "info",
-        message: "No hay partidas disponibles",
-      });
+      console.error(`Error en fetch de partidas: ${error}`);
     }
   };
 
@@ -37,9 +37,6 @@ export const ListaPartidas = () => {
 
   return (
     <>
-      {alert && alert.type && alert.message && (
-        <Alerts type={alert.type} message={alert.message} />
-      )}
       <div className="Partidas">
         <div className="table-container">
           <table className="table-xs">
@@ -52,26 +49,45 @@ export const ListaPartidas = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Defino las filas de la tabla */}
-              {partidas.map((partida) => (
-                <tr
-                  key={partida.match_id}
-                  onClick={() => handleSelectPartida(partida)}
-                  style={{
-                    cursor: "pointer",
-                    backgroundColor:
-                      selectedPartida?.id === partida.id
-                        ? "rgba(0, 123, 255,0.4)"
-                        : "transparent",
-                  }}
-                >
-                  <td>{partida.id}</td>
-                  <td>{partida.match_name}</td>
-                  <td className="cantidad-jugadores">
-                    {partida.current_players}/{partida.max_players}
-                  </td>
-                </tr>
-              ))}
+              {partidas.length === 0 ? (
+                <>
+                  <tr>
+                    <td colSpan="3" style={{ height: "20px" }}></td>
+                  </tr>
+                  <tr>
+                    <td
+                      colSpan="3"
+                      style={{
+                        textAlign: "center",
+                        color: "gray",
+                        fontSize: "1.2em",
+                      }}
+                    >
+                      {mensaje}
+                    </td>
+                  </tr>
+                </>
+              ) : (
+                partidas.map((partida) => (
+                  <tr
+                    key={partida.match_id}
+                    onClick={() => handleSelectPartida(partida)}
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor:
+                        selectedPartida?.id === partida.id
+                          ? "rgba(0, 123, 255,0.4)"
+                          : "transparent",
+                    }}
+                  >
+                    <td>{partida.id}</td>
+                    <td>{partida.match_name}</td>
+                    <td className="cantidad-jugadores">
+                      {partida.current_players}/{partida.max_players}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

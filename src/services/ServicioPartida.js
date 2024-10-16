@@ -141,4 +141,25 @@ export class ServicioPartida {
     const json = await respuesta.json();
     return json;
   }
+
+  static async obtenerInfoPartidaParaJugador(idPartida, idJugador) {
+    const respuesta = await fetch(
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/player/${idJugador}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!respuesta.ok) {
+      throw new Error(
+        `Error al obtener info de partida - estado: ${respuesta.status}`,
+      );
+    }
+
+    const json = await respuesta.json();
+    return json;
+  }
 }

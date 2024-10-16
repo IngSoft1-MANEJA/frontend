@@ -6,45 +6,47 @@ import { Game } from "../Game/Game.jsx";
 import { DatosJugadorProvider } from "../../contexts/DatosJugadorContext.jsx";
 import { DatosPartidaProvider } from "../../contexts/DatosPartidaContext.jsx";
 import { UsarMovimientoProvider } from "../../contexts/UsarMovimientoContext";
+import { EventoProvider } from "../../contexts/EventoContext.jsx";
 
 function App() {
-
   return (
     <div>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <DatosPartidaProvider>
-              <DatosJugadorProvider>
-                <ListaPartidas />
-              </DatosJugadorProvider>
-            </DatosPartidaProvider>
-          }
-        />
-        <Route
-          path="/lobby/:match_id/player/:player_id"
-          element={
-            <DatosPartidaProvider>
-              <DatosJugadorProvider>
-                <Lobby />
-              </DatosJugadorProvider>
-            </DatosPartidaProvider>
-          }
-        />
-        <Route
-          path="/matches/:match_id"
-          element={
-            <UsarMovimientoProvider>
+      <EventoProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
               <DatosPartidaProvider>
                 <DatosJugadorProvider>
-                  <Game />
+                  <ListaPartidas />
                 </DatosJugadorProvider>
               </DatosPartidaProvider>
-            </UsarMovimientoProvider>
-          }
-        />
-      </Routes>
+            }
+          />
+          <Route
+            path="/lobby/:match_id/player/:player_id"
+            element={
+              <DatosPartidaProvider>
+                <DatosJugadorProvider>
+                  <Lobby />
+                </DatosJugadorProvider>
+              </DatosPartidaProvider>
+            }
+          />
+          <Route
+            path="/matches/:match_id"
+            element={
+              <UsarMovimientoProvider>
+                <DatosPartidaProvider>
+                  <DatosJugadorProvider>
+                    <Game />
+                  </DatosJugadorProvider>
+                </DatosPartidaProvider>
+              </UsarMovimientoProvider>
+            }
+          />
+        </Routes>
+      </EventoProvider>
     </div>
   );
 }

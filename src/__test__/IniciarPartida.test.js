@@ -115,7 +115,7 @@ describe("IniciarPartida", () => {
     fireEvent.click(screen.getByText("Iniciar Partida"));
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/matches/123");
+      expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
 

@@ -81,7 +81,11 @@ export const TerminarTurno = () => {
 
   return (
     <div className="terminar-turno-div">
-      {mostrarAlerta && <Alerts type={tipoAlerta} message={mensajeAlerta} />}
+      {mostrarAlerta && (
+        <div className="fixed top-3 right-3 w-2/5 z-50">
+          <Alerts type={tipoAlerta} message={mensajeAlerta} />
+        </div>
+      )}
       <div className="terminar-turno-boton-div absolute right-8 bottom-8">
         <button
           className="terminar-turno-boton btn"

@@ -23,27 +23,44 @@ describe("CartasFiguras", () => {
     jest.clearAllMocks();
   });
 
-  test("Debe renderizar correctamente las cartas del jugador cuando recibe el mensaje PLAYER_RECEIVE_SHAPE_CARDS", () => {
+  test("Debe renderizar correctamente las cartas del jugador cuando recibe el mensaje PLAYER_RECIEVE_ALL_SHAPES", () => {
     const mockDatosJugador = {
       datosJugador: { player_id: "123" },
       setDatosJugador: jest.fn(),
     };
-    const eventoValue = {
+
+    const mockInfoJugador = {
       ultimoEvento: {
-        key: "PLAYER_RECEIVE_SHAPE_CARDS",
-        payload: {
-          shape_cards: [
-            { id: 1, type: 1 },
-            { id: 2, type: 2 },
-            { id: 3, type: 3 },
-          ],
-        },
+        key: "GET_PLAYER_MATCH_INFO",
+        payload: { turn_order: 1 },
       },
     };
 
-    render(
+    const mockEvento = {
+      ultimoEvento: {
+        key: "PLAYER_RECIEVE_ALL_SHAPES",
+        payload: [{
+          turn_order: 1,
+          shape_cards: [
+            [1, 1 ],
+            [2, 2 ],
+            [3, 3 ],
+          ],
+        }],
+      },
+    };
+
+    const { rerender } = render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
-        <EventoContext.Provider value={eventoValue}>
+        <EventoContext.Provider value={mockInfoJugador}>
+          <CartasFiguras />
+        </EventoContext.Provider>
+      </DatosJugadorContext.Provider>,
+    );
+
+    rerender(
+      <DatosJugadorContext.Provider value={mockDatosJugador}>
+        <EventoContext.Provider value={mockEvento}>
           <CartasFiguras />
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,

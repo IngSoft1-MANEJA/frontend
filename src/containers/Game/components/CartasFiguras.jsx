@@ -63,22 +63,21 @@ const urlMap = {
 export const CartasFiguras = () => {
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
-  const [turnoCartas, setTurnoCartas] = useState(0);
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
       switch (ultimoEvento.key) {
-        case "PLAYER_RECEIVE_SHAPE_CARDS":
-          setTurnoCartas(ultimoEvento.payload.turn_order);
-
-          if (turnoCartas == miTurno) {
-            setCartasFiguras(ultimoEvento.payload.shape_cards);
-          }
+        case "PLAYER_RECIEVE_ALL_SHAPES":
+          const jugadorData = ultimoEvento.payload.find(
+            (jugador) => jugador.turn_order === miTurno
+          );
+          setCartasFiguras(jugadorData.shape_cards);
           break;
 
         case "GET_PLAYER_MATCH_INFO":
-          setMiTurno(ultimoEvento.payload.turn_order);
+            setMiTurno(ultimoEvento.payload.turn_order);
+          break;
 
         default:
           break;
@@ -89,14 +88,15 @@ export const CartasFiguras = () => {
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        {cartasFiguras.map((carta, index) => (
-          <div key={index} className="carta-movimiento">
-            <img src={urlMap[carta.type]} alt={carta.type} />
-          </div>
-        ))}
         <div className="mazo-propio">
           <img src={backfig} alt="back" />
         </div>
+        {cartasFiguras.map((carta, index) => (
+          <div key={index} className="carta-movimiento">
+            <img src={urlMap[carta[1]]} alt={carta[1]} />
+          </div>
+        ))}
+        
       </div>
     </div>
   );

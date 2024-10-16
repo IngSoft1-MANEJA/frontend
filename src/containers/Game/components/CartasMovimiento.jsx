@@ -11,13 +11,13 @@ import mov7 from "../../../assets/Movimientos/mov7.svg";
 import "./CartasMovimiento.css";
 
 const urlMap = {
-  DIAGONAL: mov1,
-  LINE_BETWEEN: mov2,
-  LINE: mov3,
-  INVERSE_DIAGONAL: mov4,
-  INVERSE_L: mov5,
-  L: mov6,
-  LINE_BORDER: mov7,
+  'Diagonal': mov1,
+  'Inverse Diagonal': mov2,
+  'Line': mov3,
+  'Line Between': mov4,
+  'Line Border"': mov5,
+  'L': mov6,
+  'Inverse L': mov7,
 };
 
 export const CartasMovimiento = () => {
@@ -37,7 +37,7 @@ export const CartasMovimiento = () => {
       <div className="cartas-movimientos-propias">
         {cartasMovimiento.map((carta, index) => (
           <div key={index} className="carta-movimiento">
-            <img src={urlMap[carta.type]} alt={carta.type} />
+            <img src={urlMap[carta[1]]} alt={carta[1]} />
           </div>
         ))}
       </div>

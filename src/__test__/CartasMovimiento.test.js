@@ -34,9 +34,9 @@ describe("CartasMovimiento", () => {
         key: "GET_MOVEMENT_CARD",
         payload: {
           movement_card: [
-            { id: 1, type: "DIAGONAL" },
-            { id: 2, type: "INVERSE_DIAGONAL" },
-            { id: 3, type: "LINE" },
+            [1, "Diagonal" ],
+            [2, "Inverse L" ],
+            [3, "Line" ],
           ],
         },
       },
@@ -50,9 +50,9 @@ describe("CartasMovimiento", () => {
       </DatosJugadorContext.Provider>,
     );
 
-    expect(screen.getByAltText("DIAGONAL")).toBeInTheDocument();
-    expect(screen.getByAltText("INVERSE_DIAGONAL")).toBeInTheDocument();
-    expect(screen.getByAltText("LINE")).toBeInTheDocument();
+    expect(screen.getByAltText("Diagonal")).toBeInTheDocument();
+    expect(screen.getByAltText("Inverse L")).toBeInTheDocument();
+    expect(screen.getByAltText("Line")).toBeInTheDocument();
   });
 
   test("No debe renderizar cartas si no hay mensajes del WebSocket", () => {
@@ -73,8 +73,8 @@ describe("CartasMovimiento", () => {
       </DatosJugadorContext.Provider>,
     );
 
-    expect(screen.queryByAltText("DIAGONAL")).not.toBeInTheDocument();
-    expect(screen.queryByAltText("INVERSE_DIAGONAL")).not.toBeInTheDocument();
-    expect(screen.queryByAltText("LINE")).not.toBeInTheDocument();
+    expect(screen.queryByAltText("Diagonal")).not.toBeInTheDocument();
+    expect(screen.queryByAltText("Inverse L")).not.toBeInTheDocument();
+    expect(screen.queryByAltText("Line")).not.toBeInTheDocument();
   });
 });

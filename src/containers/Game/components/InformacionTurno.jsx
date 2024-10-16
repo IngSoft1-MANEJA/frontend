@@ -31,15 +31,14 @@ export const InformacionTurno = ({ player_id }) => {
     <div className="informacion-div absolute left-6 top-6 w-fit max-w-md h-fit p-1">
       <table className="table table-xs overflow-hidden break-words text-balance rounded-none">
         <thead>
-          <tr className="bg-base-100">
-            <th className="w-16">Turno</th>
-            <th className="min-w-20">Nombre</th>
+          <tr className="bg-base-100 text-center">
+            <th className="w-20" colSpan="2">Turno Actual</th>
           </tr>
         </thead>
         <tbody>
           <tr className="bg-base-200 h-8">
-            <th className="w-16">Jugando:</th>
-            <td className="min-w-20 max-w-44">{turnos.current_turn}</td>
+            <th className="w-10 text-left">Jugador:</th>
+            <td className="min-w-20 max-w-44 text-right">{turnos.current_turn}</td>
           </tr>
         </tbody>
       </table>

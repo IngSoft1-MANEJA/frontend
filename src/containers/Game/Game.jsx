@@ -8,6 +8,8 @@ import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
+import { CartasFiguras } from "./components/CartasFiguras";
+import { CartasMovimiento } from "./components/CartasMovimiento";
 import { EventoContext } from "../../contexts/EventoContext";
 import { ServicioPartida } from "../../services/ServicioPartida.js";
 import { flushSync } from "react-dom";
@@ -65,10 +67,14 @@ export function Game() {
   }, [ultimoEvento]);
 
   return (
-    <div className="game-div relative w-full h-screen m-0">
-      <InformacionTurno player_id={datosJugador.player_id} />
-      <TerminarTurno />
-      <Tablero tiles={tiles} />
+    <div className="game-div relative w-full h-screen m-0 z-0">
+      <CartasMovimiento />
+      <CartasFiguras />
+      <Tablero 
+        tiles={tiles}
+      />
+      <InformacionTurno player_id={datosJugador.player_id}/>
+      <TerminarTurno/>
       <AbandonarPartida
         estadoPartida="STARTED"
         esAnfitrion={datosJugador.is_owner}

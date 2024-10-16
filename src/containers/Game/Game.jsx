@@ -10,25 +10,33 @@ import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
 import { EventoContext } from "../../contexts/EventoContext";
 import { ServicioPartida } from "../../services/ServicioPartida.js";
+import { flushSync } from "react-dom";
 
 export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const [tiles, setTiles] = useState([]);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
-  const { lastJsonMessage, readyState } = useWebSocket(websocket_url, {
+  const { lastMessage, readyState } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Game: conexión cerrada."),
-    onMessage: (message) =>
-      console.log("Websocket - Game: mensaje recibido: ", message),
     onError: (event) => console.error("Websocket - Game: error: ", event),
     onOpen: () => console.log("Websocket - Game: conexión abierta."),
   });
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    setUltimoEvento(lastJsonMessage);
-  }, [lastJsonMessage]);
+    flushSync(() => {
+      setUltimoEvento((prev) => {
+        const newEvent = lastMessage
+          ? JSON.parse(lastMessage.data)
+          : lastMessage;
+        console.log("Game - last ultimoEvento: ", prev);
+        console.log("Game - new ultimoEvento: ", newEvent);
+        return newEvent;
+      });
+    });
+  }, [lastMessage]);
 
   useEffect(() => {
     if (readyState === ReadyState.OPEN) {
@@ -44,8 +52,9 @@ export function Game() {
   }, [readyState]);
 
   useEffect(() => {
+    console.log("Game - using ultimoEvento: ", ultimoEvento);
     if (ultimoEvento !== null) {
-      if (ultimoEvento.key == "GET_PLAYER_MATCH_INFO") {
+      if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setTiles(ultimoEvento.payload.board);
         setDatosJugador({
           ...datosJugador,

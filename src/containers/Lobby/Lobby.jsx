@@ -19,8 +19,6 @@ export function Lobby() {
   const { lastJsonMessage } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Lobby: conexión cerrada."),
-    onMessage: (message) =>
-      console.log("Websocket - Lobby: mensaje recibido: ", message),
     onError: (event) => console.error("Websocket - Lobby: error: ", event),
     onOpen: () => console.log("Websocket - Lobby: conexión abierta."),
   });
@@ -35,12 +33,12 @@ export function Lobby() {
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
+    console.log("Lobby - Setting ultimoEvento: ", lastJsonMessage);
     setUltimoEvento(lastJsonMessage);
   }, [lastJsonMessage]);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
-      console.log("Lobby: ultimoEvento ", ultimoEvento);
       switch (ultimoEvento.key) {
         case "PLAYER_JOIN":
           setCantPlayersLobby(cantPlayersLobby + 1);

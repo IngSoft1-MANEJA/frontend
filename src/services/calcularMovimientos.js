@@ -4,7 +4,7 @@ export function calcularMovimientos (rowIndex, columnIndex, carta) {
     const estaDentroDelTablero = (i, j) => i >= 0 && i < tableroTam && j >= 0 && j < tableroTam;
   
     switch (carta) {
-      case "DIAGONAL": {
+      case "Diagonal": {
         const diagonal = [
           [-2, -2], [-2, 2], [2, -2], [2, 2]
         ];
@@ -18,7 +18,7 @@ export function calcularMovimientos (rowIndex, columnIndex, carta) {
         break;
       }
   
-      case "LINE_BETWEEN": {
+      case "Line Between": {
         const lineBetween = [
           [-2, 0], [2, 0], [0, -2], [0, 2]
         ];
@@ -32,7 +32,7 @@ export function calcularMovimientos (rowIndex, columnIndex, carta) {
         break;
       }
   
-      case "LINE": {
+      case "Line": {
         const line = [
           [-1, 0], [1, 0], [0, -1], [0, 1]
         ];
@@ -46,7 +46,7 @@ export function calcularMovimientos (rowIndex, columnIndex, carta) {
         break;
       }
   
-      case "INVERSE_DIAGONAL": {
+      case "Inverse Diagonal": {
         const inverseDiagonal = [
           [-1, -1], [-1, 1], [1, -1], [1, 1]
         ];
@@ -62,8 +62,7 @@ export function calcularMovimientos (rowIndex, columnIndex, carta) {
   
       case "L": {
         const saltoL = [
-          [-2, -1], [-2, 1], [2, -1], [2, 1], 
-          [-1, -2], [-1, 2], [1, -2], [1, 2]  
+          [2, 1], [-1, 2], [1, -2], [-2, -1]
         ];
         saltoL.forEach(([dx, dy]) => {
           const nuevaX = rowIndex + dx;
@@ -75,10 +74,9 @@ export function calcularMovimientos (rowIndex, columnIndex, carta) {
         break;
       }
   
-      case "INVERSE_L": {
+      case "Inverse L": {
         const saltoInverseL = [
-          [-2, -1], [-2, 1], [2, -1], [2, 1],
-          [-1, -2], [-1, 2], [1, -2], [1, 2]
+          [-2, 1], [2, -1], [-1, -2], [1, 2]
         ];
         saltoInverseL.forEach(([dx, dy]) => {
           const nuevaX = rowIndex + dx;
@@ -90,12 +88,12 @@ export function calcularMovimientos (rowIndex, columnIndex, carta) {
         break;
       }
   
-      case "LINE_BORDER": {
+      case "Line Border": {
         const lineBorder = [
           [0, columnIndex], [rowIndex, 0], [rowIndex, 5], [5, columnIndex],  
         ];
         lineBorder.forEach(([dx, dy]) => {
-          if (dx !== rowIndex && dy !== columnIndex) {
+          if (!(dx === rowIndex && dy === columnIndex)) {
             movimientosPosibles.push([dx, dy]);
           }
         });

@@ -1,5 +1,4 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
 import {
   render,
   screen,
@@ -7,13 +6,8 @@ import {
 } from "@testing-library/react";
 import { jest } from "@jest/globals";
 import { Tablero } from "../containers/Game/components/Tablero.jsx";
-import { Tiles, TilesError } from "../__mocks__/Tablero.mock.js";
-import { Tablero } from '../containers/Game/components/Tablero.jsx';
-import { Ficha } from '../containers/Game/components/Ficha.jsx';
-import { Tiles, TilesError } from '../__mocks__/Tablero.mock.js';
-import { UsarMovimientoProvider, UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
-import { waitFor } from "@testing-library/dom";
-import { ServicioPartida } from "../services/ServicioPartida.js";
+import { Tiles } from "../__mocks__/Tablero.mock.js";
+import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -22,10 +16,6 @@ jest.mock("react-router-dom", () => ({
 
 jest.mock('../services/ServicioPartida');
 
-jest.mock("../containers/Game/components/Ficha.jsx", () => ({
-  Ficha: ({ color }) => (
-    <div data-testid="ficha" style={{ backgroundColor: color }}></div>
-  ),
 jest.mock('../containers/Game/components/Ficha.jsx', () => ({
   Ficha: ({ id, color, onClick }) => (
     <div
@@ -36,26 +26,6 @@ jest.mock('../containers/Game/components/Ficha.jsx', () => ({
   ),
 }));
 
-describe("VistaTablero", () => {
-  const tiles = Tiles;
-  const tilesError = TilesError;
-
-  test("renderiza correctamente el numero de fichas", () => {
-    render(<Tablero tiles={tiles} />);
-    const fichaElements = screen.getAllByTestId("ficha");
-    expect(fichaElements).toHaveLength(tiles.length * tiles[0].length);
-  });
-
-  test("renderiza componentes Ficha con los colores correctos", () => {
-    render(<Tablero tiles={tiles} />);
-    tiles.forEach((row, rowIndex) => {
-      row.forEach((color, colIndex) => {
-        const fichaItem =
-          screen.getAllByTestId("ficha")[rowIndex * tiles[0].length + colIndex];
-        expect(fichaItem).toHaveStyle(`backgroundColor: ${color}`);
-      });
-    });
-  });
 describe('VistaTablero', () => {
   const tiles = Tiles;
   afterEach(() => {

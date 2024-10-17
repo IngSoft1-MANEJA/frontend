@@ -52,7 +52,16 @@ export const Tablero = ({ initialTiles }) => {
   useEffect(() => {
     console.log('Fichas seleccionadas:', usarMovimiento.fichasSeleccionadas);
     if (usarMovimiento.fichasSeleccionadas.length === 2) {
-      llamarServicio(usarMovimiento.fichasSeleccionadas);
+      // llamarServicio(usarMovimiento.fichasSeleccionadas);
+      setTimeout(() => {
+        setUsarMovimiento({
+          ...usarMovimiento,
+          fichasSeleccionadas: [],
+          cartaSeleccionada: null,
+          cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
+          highlightCarta: { state: false, key: '' },
+        });
+      }, 700);
     }
   }, [usarMovimiento.fichasSeleccionadas]);
 

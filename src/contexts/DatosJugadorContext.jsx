@@ -6,6 +6,7 @@ export const DatosJugadorProvider = ({ children }) => {
   const [datosJugador, setDatosJugador] = useState({
     is_owner: false,
     player_id: null,
+    is_player_turn: null,
   });
 
   return (

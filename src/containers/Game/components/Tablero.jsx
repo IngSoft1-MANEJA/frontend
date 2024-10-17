@@ -6,31 +6,38 @@ import { Alerts } from "../../../components/Alerts";
 import "./Tablero.css";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 import { DatosJugadorContext } from '../../../contexts/DatosJugadorContext.jsx';
+import { EventoContext } from '../../../contexts/EventoContext.jsx';
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
+import { set } from 'react-hook-form';
 
 export const Tablero = () => {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
-  const { ultimoEvento } = useContext(DatosJugadorContext);
+  const { ultimoEvento } = useContext(EventoContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [tiles, setTiles] = useState([]);
+  const [haValidadoMovimiento, setHaValidadoMovimiento] = useState(false);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
+        console.log("Llegó el evento GET_PLAYER_MATCH_INFO en tablero");
         setTiles(ultimoEvento.payload.board);
       }
-      if (ultimoEvento.key === "PLAYER_RECEIVE_BOARD") {
+      if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
+        console.log("Llegó el evento PLAYER_RECEIVE_NEW_BOARD");
         setTiles(ultimoEvento.payload.board);
+        
       }
     }
-  }, [ultimoEvento], [setTiles]);
+  }, [ultimoEvento]);
 
 
   const swapFichas = (fichasSeleccionadas) => {
+
     if (fichasSeleccionadas.length === 2) {
       const [ficha1, ficha2] = usarMovimiento.fichasSeleccionadas;
     
@@ -92,14 +99,18 @@ export const Tablero = () => {
 
   useEffect(() => {
     console.log('Fichas seleccionadas:', usarMovimiento.fichasSeleccionadas);
-    if (usarMovimiento.fichasSeleccionadas.length === 2) {
+    if (usarMovimiento.fichasSeleccionadas.length === 2 && !haValidadoMovimiento) {
       // Ejecutar swapFichas y limpiar fichas seleccionadas
+      setHaValidadoMovimiento(true);
       llamarServicio(usarMovimiento.fichasSeleccionadas);
     }
   }, [usarMovimiento.fichasSeleccionadas]);
 
   const llamarServicio = async (newFichasSeleccionadas) => {
+    console.log("Entrando al servicio");
     try {
+      console.log(newFichasSeleccionadas);
+      console.log(usarMovimiento.cartaSeleccionada);
       const resJson = await ServicioPartida.validarMovimiento(
         match_id,
         datosJugador.player_id,
@@ -107,31 +118,20 @@ export const Tablero = () => {
         usarMovimiento.cartaSeleccionada
       );
       console.log(resJson);
-      if (resJson.status === 200) {
-        // Realizar animacion de swap.
-        swapFichas(newFichasSeleccionadas);
-        // Actualizar selecciones
-        setTimeout(() => {
-          setUsarMovimiento({
-            ...usarMovimiento,
-            fichasSeleccionadas: [],
-            cartaSeleccionada: null,
-            cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
-            highlightCarta: { state: false, key: '' },
-          });
-        }, 700);
-      } else {
-        setMensajeAlerta('Movimiento invalido');
-        setMostrarAlerta(true);
+      // Realizar animacion de swap.
+      console.log("Use swapFichas");
+      swapFichas(newFichasSeleccionadas);
+      // Actualizar selecciones
+      setTimeout(() => {
         setUsarMovimiento({
           ...usarMovimiento,
           fichasSeleccionadas: [],
+          cartaSeleccionada: null,
+          cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
+          highlightCarta: { state: false, key: '' },
         });
-        setTimeout(() => {
-          setMostrarAlerta(false);
-        },1000);
-        console.log('Movimiento invalido');
-      }
+      }, 700);
+      setHaValidadoMovimiento(false);
     } catch (err) {
       setMensajeAlerta("Error al validar movimiento");
       console.log(err);

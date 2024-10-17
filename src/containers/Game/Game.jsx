@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
+import { UsarMovimientoProvider } from '../../contexts/UsarMovimientoContext';
 import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
@@ -25,6 +26,7 @@ export function Game() {
     onOpen: () => console.log("Websocket - Game: conexión abierta."),
   });
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
+  const [tiles, setTiles] = useState([]);
 
   useEffect(() => {
     flushSync(() => {
@@ -53,6 +55,7 @@ export function Game() {
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
+        console.log("Llegó el evento GET_PLAYER_MATCH_INFO en game");
         setDatosJugador({
           ...datosJugador,
           player_turn: ultimoEvento.payload.turn_order,
@@ -63,6 +66,8 @@ export function Game() {
 
   return (
     <div className="game-div relative w-full h-screen m-0">
+
+    <UsarMovimientoProvider>
       <CartasMovimiento />
       <Tablero />
       <InformacionTurno player_id={datosJugador.player_id}/>
@@ -73,6 +78,7 @@ export function Game() {
         idJugador={datosJugador.player_id}
         idPartida={match_id}
       />
+    </UsarMovimientoProvider>
     </div>
   );
 }

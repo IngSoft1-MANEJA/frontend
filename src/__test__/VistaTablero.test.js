@@ -8,6 +8,8 @@ import { jest } from "@jest/globals";
 import { Tablero } from "../containers/Game/components/Tablero.jsx";
 import { Tiles } from "../__mocks__/Tablero.mock.js";
 import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
+import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
+import { DatosPartidaContext } from "../contexts/DatosPartidaContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -35,20 +37,26 @@ describe('VistaTablero', () => {
   test('renderiza correctamente el numero de fichas', () => {
     const mockUsarMovimiento = {
       usarMovimiento: {
-        cartaHovering: false,
-        fichaHovering: false,
         cartaSeleccionada: "test",
         fichasSeleccionadas: [],
+        cartasUsadas: [],
         highlightCarta: { state: false, key: '' },
-        cartasUsadas: [] 
+        movimientosPosibles: []
       },
       setUsarMovimiento: jest.fn(),
-    }
+    };
+
+    const mockDatosJugador = {
+      datosJugador: { player_id: 123 },
+      setDatosJugador: jest.fn(),
+    };
   
     render(
-      <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-        <Tablero initialTiles={tiles} />
-      </UsarMovimientoContext.Provider>
+      <DatosJugadorContext.Provider value={mockDatosJugador}>
+        <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+          <Tablero tiles={tiles} />
+        </UsarMovimientoContext.Provider>
+      </DatosJugadorContext.Provider>
     );
 
     const fichaElements = tiles.flatMap((row, rowIndex) =>
@@ -60,20 +68,26 @@ describe('VistaTablero', () => {
   test('renderiza componentes Ficha con los colores correctos', () => {
     const mockUsarMovimiento = {
       usarMovimiento: {
-        cartaHovering: false,
-        fichaHovering: false,
         cartaSeleccionada: "test",
         fichasSeleccionadas: [],
+        cartasUsadas: [],
         highlightCarta: { state: false, key: '' },
-        cartasUsadas: [] 
+        movimientosPosibles: []
       },
       setUsarMovimiento: jest.fn(),
-    }
+    };
+
+    const mockDatosJugador = {
+      datosJugador: { player_id: 123 },
+      setDatosJugador: jest.fn(),
+    };
   
     render(
-      <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-        <Tablero initialTiles={tiles} />
-      </UsarMovimientoContext.Provider>
+      <DatosJugadorContext.Provider value={mockDatosJugador}>
+        <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+          <Tablero tiles={tiles} />
+        </UsarMovimientoContext.Provider>
+      </DatosJugadorContext.Provider>
     );
 
     tiles.forEach((row, rowIndex) => {
@@ -85,21 +99,28 @@ describe('VistaTablero', () => {
   });
 
   test('selecciona una ficha al hacer clic', async () => {
-
     const mockUsarMovimiento = {
       usarMovimiento: {
         cartaSeleccionada: "test",
         fichasSeleccionadas: [],
         cartasUsadas: [],
         highlightCarta: { state: false, key: '' },
+        movimientosPosibles: []
       },
       setUsarMovimiento: jest.fn(),
     };
-  
+
+    const mockDatosJugador = {
+      datosJugador: { player_id: 123 },
+      setDatosJugador: jest.fn(),
+    };
+
     render(
-      <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-        <Tablero initialTiles={tiles} />
-      </UsarMovimientoContext.Provider>
+      <DatosJugadorContext.Provider value={mockDatosJugador}>
+        <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+          <Tablero tiles={tiles} />
+        </UsarMovimientoContext.Provider>
+      </DatosJugadorContext.Provider>
     );
   
     const fichaElement = screen.getByTestId('ficha-0-0');
@@ -120,21 +141,28 @@ describe('VistaTablero', () => {
   });
 
   test('deselecciona una ficha si ya está seleccionada', () => {
-
     const mockUsarMovimiento = {
       usarMovimiento: {
         cartaSeleccionada: "test",
         fichasSeleccionadas: [{ rowIndex: 0, columnIndex: 0 }],
         cartasUsadas: [],
         highlightCarta: { state: false, key: '' },
+        movimientosPosibles: []
       },
       setUsarMovimiento: jest.fn(),
     };
 
+    const mockDatosJugador = {
+      datosJugador: { player_id: 123 },
+      setDatosJugador: jest.fn(),
+    };
+
     render(
-      <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-        <Tablero initialTiles={tiles} />
-      </UsarMovimientoContext.Provider>
+      <DatosJugadorContext.Provider value={mockDatosJugador}>
+        <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+          <Tablero tiles={tiles} />
+        </UsarMovimientoContext.Provider>
+      </DatosJugadorContext.Provider>
     );
     
     const ficha = screen.getByTestId(`ficha-0-0`);

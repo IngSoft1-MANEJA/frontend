@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
-
 import { useNavigate, useParams } from "react-router-dom";
+import { flushSync } from "react-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
@@ -13,7 +14,6 @@ import { CartasFiguras } from "./components/CartasFiguras";
 import { CartasMovimiento } from "./components/CartasMovimiento";
 import { EventoContext } from "../../contexts/EventoContext";
 import { ServicioPartida } from "../../services/ServicioPartida.js";
-import { flushSync } from "react-dom";
 import { WebsocketEvents } from "../../services/ServicioWebsocket";
 import { JugadorGanoMotivo } from "../../services/ServicioPartida";
 import ModalGanaste from "./components/ModalGanaste.jsx";

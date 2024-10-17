@@ -13,7 +13,6 @@ import { CartasMovimiento } from "./components/CartasMovimiento";
 import { EventoContext } from "../../contexts/EventoContext";
 import { ServicioPartida } from "../../services/ServicioPartida.js";
 import { flushSync } from "react-dom";
-// import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { WebsocketEvents } from "../../services/ServicioWebsocket";
 import { JugadorGanoMotivo } from "../../services/ServicioPartida";
 import ModalGanaste from "./components/ModalGanaste.jsx";
@@ -69,11 +68,11 @@ export function Game() {
           player_turn: ultimoEvento.payload.turn_order,
         });
       } else if (ultimoEvento.key === WebsocketEvents.WINNER) {
+        setMostrarModalGanador(true);
         if (ultimoEvento.payload.reason === JugadorGanoMotivo.FORFEIT) {
           setMensajeGanador(
-            "¡Ganaste!, todos los demás jugadores han abandonado la partida."
+            "¡Ganaste!, todos los demás jugadores han abandonado la partida.",
           );
-          setMostrarModalGanador(true);
         }
       }
     }
@@ -109,6 +108,5 @@ export function Game() {
       />
     </div>
   );
-
 }
 export default Game;

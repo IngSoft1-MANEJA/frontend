@@ -1,5 +1,4 @@
 function Modal() {
-
   const cerrarModal = (e) => {
     e.stopPropagation();
     document.getElementById("modal").close();
@@ -7,8 +6,7 @@ function Modal() {
 
   return (
     <>
-      <div className="unirse-partida">
-      </div>
+      <div className="unirse-partida"></div>
       <dialog id="modal-unirse-partida" className="modal">
         <div className="modal-box">
           <button

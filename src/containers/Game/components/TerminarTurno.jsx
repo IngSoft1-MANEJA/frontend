@@ -26,12 +26,8 @@ export const TerminarTurno = () => {
         case "GET_PLAYER_MATCH_INFO":
           if (ultimoEvento.payload.turn_order === 1) {
             setHabilitarBoton(true);
-            setTimeout(() => {
-              setDatosJugador({...datosJugador, is_player_turn: true});
-            }, 0);
           } else {
             setHabilitarBoton(false);
-            setDatosJugador({...datosJugador, is_player_turn: false});
           }
           setMensajeAlerta(
             `Turno de ${ultimoEvento.payload.current_turn_player}.`,

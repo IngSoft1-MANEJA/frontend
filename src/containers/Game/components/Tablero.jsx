@@ -32,7 +32,7 @@ export const Tablero = ({ tiles }) => {
         });
   
         // Calcular movimientos inmediatamente después de seleccionar la primera ficha
-        const movimientosCalculados = ServicioMovimiento.calcularMovimientos(rowIndex, columnIndex, usarMovimiento.cartaSeleccionada);
+        const movimientosCalculados = ServicioMovimiento.calcularMovimientos(rowIndex, columnIndex, usarMovimiento.cartaSeleccionada[1]);
         setTimeout(() => {
           setUsarMovimiento(prev => ({ ...prev, movimientosPosibles: movimientosCalculados }));
         }, 0);

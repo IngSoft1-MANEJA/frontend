@@ -52,27 +52,30 @@ export const CartasMovimiento = () => {
           });
         }
         else if (usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index) {
-          // Actualiza el estado de cartaSeleccionada y recalcula movimientos posibles en una sola operación
+          // Actualiza el estado de cartaSeleccionada y recalcula movimientos posibles
           setUsarMovimiento((prev) => {
             const movimientosCalculados = ServicioMovimiento.calcularMovimientos(
               prev.fichasSeleccionadas.length ? prev.fichasSeleccionadas[0].rowIndex : null,
               prev.fichasSeleccionadas.length ? prev.fichasSeleccionadas[0].columnIndex : null,
-              carta[1] // nueva carta seleccionada
+              carta[1]
             );
+            
             return {
               ...prev,
-              cartaSeleccionada: carta[1], // Actualiza la carta seleccionada
-              highlightCarta: { state: true, key: index }, // Resalta la nueva carta
-              movimientosPosibles: movimientosCalculados // Actualiza los movimientos calculados
+              cartaSeleccionada: carta,
+              highlightCarta: { state: true, key: index },
+              movimientosPosibles: movimientosCalculados
             };
           });
+          console.log("Carta seleccionada: ", carta[1]);
         }
         else {
           setUsarMovimiento({
             ...usarMovimiento, 
-            cartaSeleccionada: carta[1], 
+            cartaSeleccionada: carta, 
             highlightCarta: { state: true, key: index } 
           });
+          console.log("Carta seleccionada: ", carta[1]);
         }
       };
     }
@@ -88,9 +91,9 @@ export const CartasMovimiento = () => {
             onMouseLeave={() => setUsarMovimiento({ ...usarMovimiento, cartaHovering: false })}
             className={`carta-movimiento 
               ${usarMovimiento.cartaHovering && !usarMovimiento.highlightCarta.state ? 'hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105': ''} 
-              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index && !usarMovimiento.cartasUsadas.includes(carta[1])? 'cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105': ''}
-              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index && !usarMovimiento.cartasUsadas.includes(carta[1]) ? 'opacity-75 hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]': ''}
-              ${usarMovimiento.cartasUsadas.includes(carta[1]) ? 'opacity-25 pointer-events-none greyscale' : ''}`}
+              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index && !usarMovimiento.cartasUsadas.includes(carta)? 'cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105': ''}
+              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index && !usarMovimiento.cartasUsadas.includes(carta) ? 'opacity-75 hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]': ''}
+              ${usarMovimiento.cartasUsadas.includes(carta) ? 'opacity-25 pointer-events-none greyscale' : ''}`}
               
             onClick={() => handleCartaClick({carta, index})}
           >

@@ -65,10 +65,19 @@ export function Game() {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setTiles(ultimoEvento.payload.board);
-        setDatosJugador({
-          ...datosJugador,
-          player_turn: ultimoEvento.payload.turn_order,
-        });
+        if (ultimoEvento.payload.turn_order === 1) {
+          setDatosJugador({
+            ...datosJugador,
+            player_turn: ultimoEvento.payload.turn_order,
+            is_player_turn: true,
+          });
+        } else {
+          setDatosJugador({
+            ...datosJugador,
+            player_turn: ultimoEvento.payload.turn_order,
+            is_player_turn: false,
+          });
+        }
       } else if (ultimoEvento.key === WebsocketEvents.WINNER) {
         setMostrarModalGanador(true);
         if (ultimoEvento.payload.reason === JugadorGanoMotivo.FORFEIT) {

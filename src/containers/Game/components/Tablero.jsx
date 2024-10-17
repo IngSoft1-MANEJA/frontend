@@ -5,13 +5,14 @@ import { Ficha } from './Ficha.jsx';
 import { Alerts } from "../../../components/Alerts";
 import "./Tablero.css";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
+import { DatosJugadorContext } from '../../../contexts/DatosJugadorContext.jsx';
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
-export const Tablero = ({ initialTiles }) => {
+export const Tablero = ({ Tiles }) => {
   const { match_id } = useParams();
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
 
-  const [tiles, setTiles] = useState(initialTiles);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
 
@@ -66,15 +67,6 @@ export const Tablero = ({ initialTiles }) => {
       // Ejecutar swapFichas y limpiar fichas seleccionadas
       llamarServicio(usarMovimiento.fichasSeleccionadas);
       // Actualizar el estado inmediatamente después de llamar a swapFichas
-      setTimeout(() => {
-        setUsarMovimiento({
-          ...usarMovimiento,
-          fichasSeleccionadas: [],
-          cartaSeleccionada: null,
-          cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
-          highlightCarta: { state: false, key: '' },
-        });
-      }, 700);
     }
   }, [usarMovimiento.fichasSeleccionadas]);
 
@@ -82,11 +74,12 @@ export const Tablero = ({ initialTiles }) => {
     try {
       const resJson = await ServicioPartida.validarMovimiento(
         match_id,
+        datosJugador.player_id,
         newFichasSeleccionadas,
         usarMovimiento.cartaSeleccionada
       );
       console.log(resJson);
-      if (resJson.isValid) {
+      if (resJson.status === 200) {
         // Realizar animacion de swap.
         swapFichas(newFichasSeleccionadas);
         // Actualizar selecciones
@@ -121,7 +114,7 @@ export const Tablero = ({ initialTiles }) => {
     return usarMovimiento.fichasSeleccionadas.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
   };
 
-  const gridCell = tiles.map((row, rowIndex) => {
+  const gridCell = Tiles.map((row, rowIndex) => {
     return row.map((tileColor, columnIndex) => {
       return (
         <Ficha 

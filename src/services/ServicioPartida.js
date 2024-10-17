@@ -143,15 +143,15 @@ export class ServicioPartida {
     return json;
   }
 
-  static async validarMovimiento(idPartida, fichas, carta) {
+  static async validarMovimiento(idPartida, idJudador, fichas, carta) {
     const respuesta = await fetch(
-      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/partial-move`,
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/partial-move/${idJudador}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ match_id: idPartida, movement_card: carta, tiles: fichas }),
+        body: JSON.stringify({ tiles: fichas , movement_card: carta}),
       },
     );
 

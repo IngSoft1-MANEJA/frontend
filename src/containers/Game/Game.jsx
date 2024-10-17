@@ -60,14 +60,17 @@ export function Game() {
           player_turn: ultimoEvento.payload.turn_order,
         });
       }
+      if (ultimoEvento.key === "PLAYER_RECEIVE_BOARD") {
+        setTiles(ultimoEvento.payload.board);
+      }
     }
-  }, [ultimoEvento]);
+  }, [ultimoEvento], [setTiles]);
 
   return (
     <div className="game-div relative w-full h-screen m-0">
       <CartasMovimiento />
       <Tablero 
-        initialTiles={tiles}
+        Tiles={tiles}
       />
       <InformacionTurno player_id={datosJugador.player_id}/>
       <TerminarTurno/>

@@ -17,7 +17,6 @@ import { flushSync } from "react-dom";
 export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-  const [tiles, setTiles] = useState([]);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
   const { lastMessage, readyState } = useWebSocket(websocket_url, {
     share: true,
@@ -54,24 +53,18 @@ export function Game() {
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
-        setTiles(ultimoEvento.payload.board);
         setDatosJugador({
           ...datosJugador,
           player_turn: ultimoEvento.payload.turn_order,
         });
       }
-      if (ultimoEvento.key === "PLAYER_RECEIVE_BOARD") {
-        setTiles(ultimoEvento.payload.board);
-      }
     }
-  }, [ultimoEvento], [setTiles]);
+  }, [ultimoEvento]);
 
   return (
     <div className="game-div relative w-full h-screen m-0">
       <CartasMovimiento />
-      <Tablero 
-        Tiles={tiles}
-      />
+      <Tablero />
       <InformacionTurno player_id={datosJugador.player_id}/>
       <TerminarTurno/>
       <AbandonarPartida

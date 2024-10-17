@@ -3,7 +3,7 @@ import { useEffect, useContext, useState } from "react";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { EventoContext } from "../../../contexts/EventoContext";
-import { calcularMovimientos } from "../../../services/calcularMovimientos.js";
+import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 import mov1 from "../../../assets/Movimientos/mov1.svg";
 import mov2 from "../../../assets/Movimientos/mov2.svg";
 import mov3 from "../../../assets/Movimientos/mov3.svg";
@@ -12,7 +12,6 @@ import mov5 from "../../../assets/Movimientos/mov5.svg";
 import mov6 from "../../../assets/Movimientos/mov6.svg";
 import mov7 from "../../../assets/Movimientos/mov7.svg";
 import "./CartasMovimiento.css";
-import { set } from "react-hook-form";
 
 const urlMap = {
   "Diagonal": mov1,
@@ -55,7 +54,7 @@ export const CartasMovimiento = () => {
         else if (usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index) {
           // Actualiza el estado de cartaSeleccionada y recalcula movimientos posibles en una sola operación
           setUsarMovimiento((prev) => {
-            const movimientosCalculados = calcularMovimientos(
+            const movimientosCalculados = ServicioMovimiento.calcularMovimientos(
               prev.fichasSeleccionadas.length ? prev.fichasSeleccionadas[0].rowIndex : null,
               prev.fichasSeleccionadas.length ? prev.fichasSeleccionadas[0].columnIndex : null,
               carta[1] // nueva carta seleccionada

@@ -7,7 +7,7 @@ import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
-import { UsarMovimientoContext } from '../../contexts/UsarMovimientoContext';
+import { UsarMovimientoProvider } from '../../contexts/UsarMovimientoContext';
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
 import { CartasFiguras } from "./components/CartasFiguras";
 import { CartasMovimiento } from "./components/CartasMovimiento";
@@ -67,17 +67,19 @@ export function Game() {
 
   return (
     <div className="game-div relative w-full h-screen m-0 z-0">
-      <CartasMovimiento />
-      <CartasFiguras />
-      <Tablero initialTiles={tiles} />
-      <InformacionTurno player_id={datosJugador.player_id} />
-      <TerminarTurno />
-      <AbandonarPartida
-        estadoPartida="STARTED"
-        esAnfitrion={datosJugador.is_owner}
-        idJugador={datosJugador.player_id}
-        idPartida={match_id}
-      />
+      <UsarMovimientoProvider>
+        <CartasMovimiento />
+        <CartasFiguras />
+        <Tablero tiles={tiles} />
+        <InformacionTurno player_id={datosJugador.player_id} />
+        <TerminarTurno />
+        <AbandonarPartida
+          estadoPartida="STARTED"
+          esAnfitrion={datosJugador.is_owner}
+          idJugador={datosJugador.player_id}
+          idPartida={match_id}
+        />
+      </UsarMovimientoProvider>
     </div>
   );
 }

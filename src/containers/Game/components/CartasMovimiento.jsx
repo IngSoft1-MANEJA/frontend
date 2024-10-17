@@ -3,6 +3,7 @@ import { useEffect, useContext, useState } from "react";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { EventoContext } from "../../../contexts/EventoContext";
+import { calcularMovimientos } from "../../../services/calcularMovimientos.js";
 import mov1 from "../../../assets/Movimientos/mov1.svg";
 import mov2 from "../../../assets/Movimientos/mov2.svg";
 import mov3 from "../../../assets/Movimientos/mov3.svg";
@@ -11,6 +12,7 @@ import mov5 from "../../../assets/Movimientos/mov5.svg";
 import mov6 from "../../../assets/Movimientos/mov6.svg";
 import mov7 from "../../../assets/Movimientos/mov7.svg";
 import "./CartasMovimiento.css";
+import { set } from "react-hook-form";
 
 const urlMap = {
   "Diagonal": mov1,
@@ -39,7 +41,7 @@ export const CartasMovimiento = () => {
 
   const handleCartaClick = ({carta, index}) => {
     if (datosJugador.is_player_turn) {
-      if (!usarMovimiento.cartasUsadas.includes(carta.type)) {
+      if (!usarMovimiento.cartasUsadas.includes(carta[1])) {
         const isCartaHighlighted = usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index;
 
         if (isCartaHighlighted) {
@@ -49,7 +51,24 @@ export const CartasMovimiento = () => {
             fichasSeleccionadas: [],
             highlightCarta: { state: false, key: null },
           });
-        } else {
+        }
+        else if (usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index) {
+          // Actualiza el estado de cartaSeleccionada y recalcula movimientos posibles en una sola operación
+          setUsarMovimiento((prev) => {
+            const movimientosCalculados = calcularMovimientos(
+              prev.fichasSeleccionadas.length ? prev.fichasSeleccionadas[0].rowIndex : null,
+              prev.fichasSeleccionadas.length ? prev.fichasSeleccionadas[0].columnIndex : null,
+              carta[1] // nueva carta seleccionada
+            );
+            return {
+              ...prev,
+              cartaSeleccionada: carta[1], // Actualiza la carta seleccionada
+              highlightCarta: { state: true, key: index }, // Resalta la nueva carta
+              movimientosPosibles: movimientosCalculados // Actualiza los movimientos calculados
+            };
+          });
+        }
+        else {
           setUsarMovimiento({
             ...usarMovimiento, 
             cartaSeleccionada: carta[1], 

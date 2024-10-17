@@ -20,16 +20,21 @@ export const TerminarTurno = () => {
 
   useEffect(() => {
     if (ultimoEvento !== null) {
+      console.log("log antes de switch");
       switch (ultimoEvento.key) {
         case "GET_PLAYER_MATCH_INFO":
           if (ultimoEvento.payload.turn_order === 1) {
             setHabilitarBoton(true);
-            setDatosJugador({...datosJugador, is_player_turn: true});
+            console.log("log entre switch y setDatosJugador turn order 1");
+            setTimeout(() => {
+              setDatosJugador({...datosJugador, is_player_turn: true});
+            }, 0);
           } else {
             setHabilitarBoton(false);
+            console.log("log entre switch y setDatosJugador turn order != 1");
             setDatosJugador({...datosJugador, is_player_turn: false});
           }
-
+          console.log("log fuera de if turn order");
           setMensajeAlerta(
             `Turno de ${ultimoEvento.payload.current_turn_player}.`,
           );

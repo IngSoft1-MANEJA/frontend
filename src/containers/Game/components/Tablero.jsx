@@ -50,7 +50,6 @@ export const Tablero = ({ tiles }) => {
   };
 
   useEffect(() => {
-    console.log(usarMovimiento.fichasSeleccionadas);
     if (usarMovimiento.fichasSeleccionadas.length === 2) {
       ServicioMovimiento.llamarServicio(
         match_id, 

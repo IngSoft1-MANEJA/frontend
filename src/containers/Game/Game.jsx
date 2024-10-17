@@ -1,9 +1,6 @@
-import React from "react";
-import { useEffect, useState, useContext } from "react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
-import { useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
@@ -17,15 +14,20 @@ import { EventoContext } from "../../contexts/EventoContext";
 import { ServicioPartida } from "../../services/ServicioPartida.js";
 import { flushSync } from "react-dom";
 // import { AbandonarPartida } from "../../components/AbandonarPartida";
-import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
-import { crearWebsocket, WebsocketEvents } from "../../services/ServicioWebsocket";
+import { WebsocketEvents } from "../../services/ServicioWebsocket";
 import { JugadorGanoMotivo } from "../../services/ServicioPartida";
+import ModalGanaste from "./components/ModalGanaste.jsx";
+import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
 
 export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
   const [tiles, setTiles] = useState([]);
+  const [mensajeGanador, setMensajeGanador] = useState("");
+  const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
+  const navigate = useNavigate();
   const { lastMessage, readyState } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Game: conexión cerrada."),
@@ -68,16 +70,32 @@ export function Game() {
         });
       } else if (ultimoEvento.key === WebsocketEvents.WINNER) {
         if (ultimoEvento.payload.reason === JugadorGanoMotivo.FORFEIT) {
-          setDatosJugador({ player_id: null, is_owner: false });
-          setDatosPartida({ max_players: 2 });
-          Navigate("/");
+          setMensajeGanador(
+            "¡Ganaste!, todos los demás jugadores han abandonado la partida."
+          );
+          setMostrarModalGanador(true);
         }
       }
     }
   }, [ultimoEvento]);
 
+  const limpiarContextos = () => {
+    setDatosJugador({ player_id: null, is_owner: false });
+    setDatosPartida({ max_players: 2 });
+  };
+
+  const moverJugadorAlHome = () => {
+    limpiarContextos();
+    navigate("/");
+  };
+
   return (
     <div className="game-div relative w-full h-screen m-0 z-0">
+      <ModalGanaste
+        mostrar={mostrarModalGanador}
+        texto={mensajeGanador}
+        enVolverAlHome={moverJugadorAlHome}
+      />
       <CartasMovimiento />
       <CartasFiguras />
       <Tablero tiles={tiles} />
@@ -91,5 +109,6 @@ export function Game() {
       />
     </div>
   );
+
 }
 export default Game;

@@ -23,21 +23,19 @@ const urlMap = {
 };
 
 export const CartasMovimiento = () => {
-  // const [cartasMovimiento, setCartasMovimiento] = useState([]);
+  const [cartasMovimiento, setCartasMovimiento] = useState([]);
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
-  // const { ultimoEvento } = useContext(EventoContext);
+  const { ultimoEvento } = useContext(EventoContext);
 
-  // useEffect(() => {
-  //   if (ultimoEvento !== null) {
-  //     if (ultimoEvento.key == "GET_MOVEMENT_CARD") {
-  //       setCartasMovimiento(ultimoEvento.payload.movement_card);
-  //     }
-  //   }
-  // }, [ultimoEvento]);
-
-  const cartasMovimiento = [ [1, "L"] , [2, "Line Border" ], [3, "Inverse L" ], ];
+  useEffect(() => {
+    if (ultimoEvento !== null) {
+      if (ultimoEvento.key == "GET_MOVEMENT_CARD") {
+        setCartasMovimiento(ultimoEvento.payload.movement_card);
+      }
+    }
+  }, [ultimoEvento]);
 
   const handleCartaClick = ({carta, index}) => {
     if (datosJugador.is_player_turn) {

@@ -9,7 +9,7 @@ import { EventoContext } from "../../../contexts/EventoContext";
 export const TerminarTurno = () => {
   const { match_id } = useParams();
 
-  const { datosJugador } = useContext(DatosJugadorContext);
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { ultimoEvento } = useContext(EventoContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
@@ -20,14 +20,21 @@ export const TerminarTurno = () => {
 
   useEffect(() => {
     if (ultimoEvento !== null) {
+      console.log("log antes de switch");
       switch (ultimoEvento.key) {
         case "GET_PLAYER_MATCH_INFO":
           if (ultimoEvento.payload.turn_order === 1) {
             setHabilitarBoton(true);
+            console.log("log entre switch y setDatosJugador turn order 1");
+            setTimeout(() => {
+              setDatosJugador({...datosJugador, is_player_turn: true});
+            }, 0);
           } else {
             setHabilitarBoton(false);
+            console.log("log entre switch y setDatosJugador turn order != 1");
+            setDatosJugador({...datosJugador, is_player_turn: false});
           }
-
+          console.log("log fuera de if turn order");
           setMensajeAlerta(
             `Turno de ${ultimoEvento.payload.current_turn_player}.`,
           );
@@ -51,8 +58,10 @@ export const TerminarTurno = () => {
             ultimoEvento.payload.next_player_turn === datosJugador.player_turn
           ) {
             setHabilitarBoton(true);
+            setDatosJugador({...datosJugador, is_player_turn: true});
           } else {
             setHabilitarBoton(false);
+            setDatosJugador({...datosJugador, is_player_turn: false});
           }
 
           setMensajeAlerta(

@@ -1,6 +1,6 @@
-import React from "react";
-import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+
+import { useNavigate, useParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
@@ -14,13 +14,21 @@ import { CartasMovimiento } from "./components/CartasMovimiento";
 import { EventoContext } from "../../contexts/EventoContext";
 import { ServicioPartida } from "../../services/ServicioPartida.js";
 import { flushSync } from "react-dom";
+import { WebsocketEvents } from "../../services/ServicioWebsocket";
+import { JugadorGanoMotivo } from "../../services/ServicioPartida";
+import ModalGanaste from "./components/ModalGanaste.jsx";
+import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
 
 export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
   const [tiles, setTiles] = useState([]);
+  const [mensajeGanador, setMensajeGanador] = useState("");
+  const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
   const [figures, setFigures] = useState([]);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
+  const navigate = useNavigate();
   const { lastMessage, readyState } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => console.log("Websocket - Game: conexión cerrada."),
@@ -61,12 +69,34 @@ export function Game() {
           ...datosJugador,
           player_turn: ultimoEvento.payload.turn_order,
         });
+      } else if (ultimoEvento.key === WebsocketEvents.WINNER) {
+        setMostrarModalGanador(true);
+        if (ultimoEvento.payload.reason === JugadorGanoMotivo.FORFEIT) {
+          setMensajeGanador(
+            "¡Ganaste!, todos los demás jugadores han abandonado la partida.",
+          );
+        }
       }
     }
   }, [ultimoEvento]);
 
+  const limpiarContextos = () => {
+    setDatosJugador({ player_id: null, is_owner: false });
+    setDatosPartida({ max_players: 2 });
+  };
+
+  const moverJugadorAlHome = () => {
+    limpiarContextos();
+    navigate("/");
+  };
+
   return (
-    <div className="game-div relative w-full h-screen m-0">
+    <div className="game-div relative w-full h-screen m-0 z-0">
+      <ModalGanaste
+        mostrar={mostrarModalGanador}
+        texto={mensajeGanador}
+        enVolverAlHome={moverJugadorAlHome}
+      />
       <CartasMovimiento />
       <Tablero 
         initialTiles={tiles}

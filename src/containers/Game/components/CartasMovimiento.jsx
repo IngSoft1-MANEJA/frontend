@@ -33,7 +33,14 @@ export const CartasMovimiento = () => {
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key == "GET_MOVEMENT_CARD") {
-        setCartasMovimiento(ultimoEvento.payload.movement_card);
+
+        const cartasNoUsadas = cartasMovimiento.filter(
+          carta => !usarMovimiento.cartasUsadas.includes(carta)
+        );
+
+        const nuevasCartas = ultimoEvento.payload.movement_card
+
+        setCartasMovimiento([...cartasNoUsadas, ...nuevasCartas]);
       }
     }
   }, [ultimoEvento]);

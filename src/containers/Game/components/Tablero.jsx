@@ -6,17 +6,23 @@ import { Alerts } from "../../../components/Alerts";
 import "./Tablero.css";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 import { DatosJugadorContext } from '../../../contexts/DatosJugadorContext.jsx';
-import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 import { EventoContext } from '../../../contexts/EventoContext.jsx';
+import { ServicioMovimiento } from '../../../services/ServicioMovimiento.js';
+import { ServicioPartida } from "../../../services/ServicioPartida.js";
+import { set } from 'react-hook-form';
 
 export const Tablero = () => {
   const { match_id } = useParams();
-  const { datosJugador } = useContext(DatosJugadorContext);
+  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
   const { ultimoEvento } = useContext(EventoContext);
+
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [tiles, setTiles] = useState([]);
+  const [swapTiles, setSwapTile] = useState([]);
+  const [haValidadoMovimiento, setHaValidadoMovimiento] = useState(false);
+
   const [figures, setFigures] = useState([]);
 
   const Figures = [
@@ -29,8 +35,10 @@ export const Tablero = () => {
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
-        console.log("Llegó el evento GET_PLAYER_MATCH_INFO en tablero");
         setTiles(ultimoEvento.payload.board);
+      }
+      if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
+        ServicioMovimiento.swapFichas(ultimoEvento.payload.swapped_tiles, tiles, setTiles, setUsarMovimiento);
       }
     }
   }, [ultimoEvento]);
@@ -70,15 +78,19 @@ export const Tablero = () => {
   };
 
   useEffect(() => {
-    if (usarMovimiento.fichasSeleccionadas.length === 2) {
+    if (usarMovimiento.fichasSeleccionadas.length === 2 && !haValidadoMovimiento) {
+      setHaValidadoMovimiento(true);
       ServicioMovimiento.llamarServicio(
         match_id, 
         datosJugador.player_id, 
+        tiles,
         usarMovimiento.fichasSeleccionadas, 
         usarMovimiento.cartaSeleccionada, 
         setUsarMovimiento, 
         setMensajeAlerta, 
-        setMostrarAlerta
+        setMostrarAlerta,
+        setTiles,
+        setHaValidadoMovimiento,
       );
     }
   }, [usarMovimiento.fichasSeleccionadas]);

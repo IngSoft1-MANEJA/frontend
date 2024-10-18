@@ -5,7 +5,6 @@ import { Lobby } from "../Lobby/Lobby.jsx";
 import { Game } from "../Game/Game.jsx";
 import { DatosJugadorProvider } from "../../contexts/DatosJugadorContext.jsx";
 import { DatosPartidaProvider } from "../../contexts/DatosPartidaContext.jsx";
-import { UsarMovimientoProvider } from "../../contexts/UsarMovimientoContext";
 import { EventoProvider } from "../../contexts/EventoContext.jsx";
 
 function App() {

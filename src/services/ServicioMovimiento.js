@@ -1,24 +1,28 @@
 import { ServicioPartida } from './ServicioPartida';
 
-const llamarServicio = async (match_id, player_id, newFichasSeleccionadas, cartaSeleccionada, setUsarMovimiento, setMensajeAlerta, setMostrarAlerta) => {
+const llamarServicio = async (match_id, player_id, tiles, newFichasSeleccionadas, cartaSeleccionada, setUsarMovimiento, setMensajeAlerta, setMostrarAlerta, setTiles, setHaValidadoMovimiento) => {
   try {
     const resJson = await ServicioPartida.validarMovimiento(
       match_id,
       player_id,
       newFichasSeleccionadas,
-      cartaSeleccionada[1]
+      cartaSeleccionada[0],
     );
     console.log(resJson);
+
+    swapFichas(newFichasSeleccionadas, tiles, setTiles, setUsarMovimiento);
+    setHaValidadoMovimiento(false);
 
     setTimeout(() => {
       setUsarMovimiento(prev => ({
         ...prev,
         fichasSeleccionadas: [],
         cartaSeleccionada: null,
-        cartasUsadas: [...prev.cartasUsadas, prev.cartaSeleccionada],
+        cartasUsadas: [...prev.cartasUsadas, prev.cartaSeleccionada || ''],
         highlightCarta: { state: false, key: '' },
       }));
     }, 700);
+
   } catch (err) {
     setMensajeAlerta("Error al validar movimiento");
     setMostrarAlerta(true);
@@ -31,6 +35,41 @@ const llamarServicio = async (match_id, player_id, newFichasSeleccionadas, carta
     }, 1000);
     console.log(err);
   }
+};
+
+function swapFichas (fichasSeleccionadas, tiles, setTiles, setUsarMovimiento) {
+  
+  if (fichasSeleccionadas.length === 2) {
+    const [ficha1, ficha2] = fichasSeleccionadas;
+  
+    const { rowIndex: filaFicha1, columnIndex: columnaFicha1 } = ficha1;
+    const { rowIndex: filaFicha2, columnIndex: columnaFicha2 } = ficha2;
+  
+    const ficha1Element = document.getElementById(`ficha-${filaFicha1}-${columnaFicha1}`);
+    const ficha2Element = document.getElementById(`ficha-${filaFicha2}-${columnaFicha2}`);
+  
+    // Aplicar la clase para desvanecer las fichas
+    ficha1Element.classList.add('oculto');
+    ficha2Element.classList.add('oculto');
+  
+    // Esperar a que la animación termine antes de intercambiar
+    setTimeout(() => {
+      // Intercambiar las fichas en el estado
+      const newTiles = tiles.map(row => [...row]);
+  
+      const temp = newTiles[filaFicha1][columnaFicha1];
+      newTiles[filaFicha1][columnaFicha1] = newTiles[filaFicha2][columnaFicha2];
+      newTiles[filaFicha2][columnaFicha2] = temp;
+      
+      setTiles(newTiles);
+
+      // Mostrar las fichas intercambiadas
+      ficha1Element.classList.remove('oculto');
+      ficha2Element.classList.remove('oculto');
+
+    }, 500); // Duración de la animación (0.5s)
+  }
+  return tiles;
 };
 
 const estaHighlighted = (rowIndex, columnIndex, fichasSeleccionadas) => {
@@ -161,5 +200,6 @@ export const ServicioMovimiento = {
   llamarServicio,
   estaHighlighted,
   esMovimientoPosible,
+  swapFichas,
   estaFiguraInicial,
 };

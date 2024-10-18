@@ -6,6 +6,7 @@ import "@testing-library/jest-dom";
 import { TerminarTurno } from "../containers/Game/components/TerminarTurno";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext";
 import { DatosPartidaProvider } from "../contexts/DatosPartidaContext";
+import { UsarMovimientoContext} from "../contexts/UsarMovimientoContext";
 import { EventoContext, EventoProvider } from "../contexts/EventoContext";
 import { ServicioPartida } from "../services/ServicioPartida";
 
@@ -18,6 +19,17 @@ jest.mock("react-router-dom", () => ({
 }));
 
 describe("TerminarTurno Component", () => {
+  const mockUsarMovimiento = {
+    usarMovimiento: {
+      cartaSeleccionada: "test",
+      fichasSeleccionadas: [],
+      cartasUsadas: [],
+      highlightCarta: { state: false, key: '' },
+      movimientosPosibles: []
+    },
+    setUsarMovimiento: jest.fn(),
+  };
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -33,7 +45,9 @@ describe("TerminarTurno Component", () => {
             }}
           >
             <EventoProvider>
-              <TerminarTurno />
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <TerminarTurno />
+              </UsarMovimientoContext.Provider>
             </EventoProvider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
@@ -59,7 +73,9 @@ describe("TerminarTurno Component", () => {
         <DatosPartidaProvider>
           <DatosJugadorContext.Provider value={datosJugadorValue}>
             <EventoContext.Provider value={ultimoEventoValue}>
-              <TerminarTurno />
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <TerminarTurno />
+              </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
@@ -91,7 +107,9 @@ describe("TerminarTurno Component", () => {
         <DatosPartidaProvider>
           <DatosJugadorContext.Provider value={datosJugadorValue}>
             <EventoContext.Provider value={eventoValue}>
-              <TerminarTurno />
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <TerminarTurno />
+              </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
@@ -123,7 +141,9 @@ describe("TerminarTurno Component", () => {
         <DatosPartidaProvider>
           <DatosJugadorContext.Provider value={datosJugadorValue}>
             <EventoContext.Provider value={eventoValue}>
-              <TerminarTurno />
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <TerminarTurno />
+              </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
@@ -156,7 +176,9 @@ describe("TerminarTurno Component", () => {
         <DatosPartidaProvider>
           <DatosJugadorContext.Provider value={datosJugadorValue}>
             <EventoContext.Provider value={eventoValue}>
-              <TerminarTurno />
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <TerminarTurno />
+              </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
@@ -188,7 +210,9 @@ describe("TerminarTurno Component", () => {
             }}
           >
             <EventoContext.Provider value={eventoValue}>
-              <TerminarTurno />
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <TerminarTurno />
+              </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
@@ -220,7 +244,9 @@ describe("TerminarTurno Component", () => {
             }}
           >
             <EventoContext.Provider value={eventoValue}>
-              <TerminarTurno />
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <TerminarTurno />
+              </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
@@ -257,7 +283,9 @@ describe("TerminarTurno Component", () => {
             }}
           >
             <EventoContext.Provider value={eventoValue}>
-              <TerminarTurno />
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <TerminarTurno />
+              </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>

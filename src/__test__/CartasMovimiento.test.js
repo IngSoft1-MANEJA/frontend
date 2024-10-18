@@ -1,8 +1,10 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { useParams } from "react-router-dom";
-import { useWebSocket } from "react-use-websocket";
+import "@testing-library/jest-dom";
+import useWebSocket from "react-use-websocket";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
+import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
 import CartasMovimiento from "../containers/Game/components/CartasMovimiento.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
 
@@ -10,11 +12,21 @@ jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
 }));
 
-jest.mock("react-use-websocket", () => ({
-  useWebSocket: jest.fn(),
-}));
+jest.mock('react-use-websocket');
 
 describe("CartasMovimiento", () => {
+  const mockUsarMovimiento = {
+    usarMovimiento: {
+      cartaHovering: false,
+      fichaHovering: false,
+      cartaSeleccionada: null,
+      fichasSeleccionadas: [],
+      highlightCarta: { state: false, key: '' },
+      cartasUsadas: [] 
+    },
+    setUsarMovimiento: jest.fn(),
+  }
+
   beforeEach(() => {
     useParams.mockReturnValue({ match_id: "1" });
   });
@@ -25,7 +37,7 @@ describe("CartasMovimiento", () => {
 
   test("Debe renderizar correctamente las cartas del jugador cuando recibe el mensaje GET_MOVEMENT_CARD", () => {
     const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
+      datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
 
@@ -43,11 +55,13 @@ describe("CartasMovimiento", () => {
     };
 
     render(
-      <DatosJugadorContext.Provider value={mockDatosJugador}>
-        <EventoContext.Provider value={eventoValue}>
-          <CartasMovimiento />
-        </EventoContext.Provider>
-      </DatosJugadorContext.Provider>,
+      <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+        <DatosJugadorContext.Provider value={mockDatosJugador}>
+            <EventoContext.Provider value={eventoValue}>
+              <CartasMovimiento />
+            </EventoContext.Provider>
+        </DatosJugadorContext.Provider>
+      </UsarMovimientoContext.Provider>,
     );
 
     expect(screen.getByAltText("Diagonal")).toBeInTheDocument();
@@ -61,16 +75,18 @@ describe("CartasMovimiento", () => {
     };
 
     const mockDatosJugador = {
-      datosJugador: { player_id: "123" },
+      datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
 
     render(
-      <DatosJugadorContext.Provider value={mockDatosJugador}>
-        <EventoContext.Provider value={eventoValue}>
-          <CartasMovimiento />
-        </EventoContext.Provider>
-      </DatosJugadorContext.Provider>,
+      <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+        <DatosJugadorContext.Provider value={mockDatosJugador}>
+          <EventoContext.Provider value={eventoValue}>
+            <CartasMovimiento />
+          </EventoContext.Provider>
+        </DatosJugadorContext.Provider>
+      </UsarMovimientoContext.Provider>,
     );
 
     expect(screen.queryByAltText("Diagonal")).not.toBeInTheDocument();

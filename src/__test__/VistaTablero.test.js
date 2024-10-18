@@ -9,6 +9,7 @@ import { Tablero } from "../containers/Game/components/Tablero.jsx";
 import { Tiles } from "../__mocks__/Tablero.mock.js";
 import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
+import { EventoContext } from "../contexts/EventoContext.jsx";
 import { DatosPartidaContext } from "../contexts/DatosPartidaContext.jsx";
 
 jest.mock("react-router-dom", () => ({
@@ -34,27 +35,37 @@ describe('VistaTablero', () => {
     jest.clearAllMocks();
   });
 
-  test('renderiza correctamente el numero de fichas', () => {
-    const mockUsarMovimiento = {
-      usarMovimiento: {
-        cartaSeleccionada: "test",
-        fichasSeleccionadas: [],
-        cartasUsadas: [],
-        highlightCarta: { state: false, key: '' },
-        movimientosPosibles: []
-      },
-      setUsarMovimiento: jest.fn(),
-    };
+  const mockUsarMovimiento = {
+    usarMovimiento: {
+      cartaSeleccionada: "test",
+      fichasSeleccionadas: [],
+      cartasUsadas: [],
+      highlightCarta: { state: false, key: '' },
+      movimientosPosibles: []
+    },
+    setUsarMovimiento: jest.fn(),
+  };
 
-    const mockDatosJugador = {
-      datosJugador: { player_id: 123 },
-      setDatosJugador: jest.fn(),
-    };
+  const mockEventoContext = {
+    ultimoEvento: {
+      key: "GET_PLAYER_MATCH_INFO",
+      payload: { board: tiles },
+    },
+  };
+
+  const mockDatosJugador = {
+    datosJugador: { player_id: 123 },
+    setDatosJugador: jest.fn(),
+  };
+
+  test('renderiza correctamente el numero de fichas', () => {
   
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <Tablero tiles={tiles} />
+          <EventoContext.Provider value ={mockEventoContext}>
+            <Tablero />
+          </EventoContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>
     );
@@ -66,26 +77,13 @@ describe('VistaTablero', () => {
   });
 
   test('renderiza componentes Ficha con los colores correctos', () => {
-    const mockUsarMovimiento = {
-      usarMovimiento: {
-        cartaSeleccionada: "test",
-        fichasSeleccionadas: [],
-        cartasUsadas: [],
-        highlightCarta: { state: false, key: '' },
-        movimientosPosibles: []
-      },
-      setUsarMovimiento: jest.fn(),
-    };
-
-    const mockDatosJugador = {
-      datosJugador: { player_id: 123 },
-      setDatosJugador: jest.fn(),
-    };
   
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <Tablero tiles={tiles} />
+          <EventoContext.Provider value ={mockEventoContext}>
+            <Tablero />
+          </EventoContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>
     );
@@ -99,26 +97,12 @@ describe('VistaTablero', () => {
   });
 
   test('selecciona una ficha al hacer clic', async () => {
-    const mockUsarMovimiento = {
-      usarMovimiento: {
-        cartaSeleccionada: "test",
-        fichasSeleccionadas: [],
-        cartasUsadas: [],
-        highlightCarta: { state: false, key: '' },
-        movimientosPosibles: []
-      },
-      setUsarMovimiento: jest.fn(),
-    };
-
-    const mockDatosJugador = {
-      datosJugador: { player_id: 123 },
-      setDatosJugador: jest.fn(),
-    };
-
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <Tablero tiles={tiles} />
+          <EventoContext.Provider value ={mockEventoContext}>
+            <Tablero />
+          </EventoContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>
     );
@@ -141,26 +125,23 @@ describe('VistaTablero', () => {
   });
 
   test('deselecciona una ficha si ya está seleccionada', () => {
-    const mockUsarMovimiento = {
+    const mockUsarMovimientoConFichaSeleccionada = {
       usarMovimiento: {
         cartaSeleccionada: "test",
         fichasSeleccionadas: [{ rowIndex: 0, columnIndex: 0 }],
         cartasUsadas: [],
         highlightCarta: { state: false, key: '' },
-        movimientosPosibles: []
+        movimientosPosibles: [],
       },
       setUsarMovimiento: jest.fn(),
     };
 
-    const mockDatosJugador = {
-      datosJugador: { player_id: 123 },
-      setDatosJugador: jest.fn(),
-    };
-
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
-        <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <Tablero tiles={tiles} />
+        <UsarMovimientoContext.Provider value={mockUsarMovimientoConFichaSeleccionada}>
+          <EventoContext.Provider value ={mockEventoContext}>
+            <Tablero />
+          </EventoContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>
     );
@@ -168,15 +149,15 @@ describe('VistaTablero', () => {
     const ficha = screen.getByTestId(`ficha-0-0`);
     fireEvent.click(ficha);
 
-    expect(mockUsarMovimiento.setUsarMovimiento).toHaveBeenCalledTimes(1);
+    expect(mockUsarMovimientoConFichaSeleccionada.setUsarMovimiento).toHaveBeenCalledTimes(1);
 
-    expect(typeof mockUsarMovimiento.setUsarMovimiento.mock.calls[0][0]).toBe('function');
+    expect(typeof mockUsarMovimientoConFichaSeleccionada.setUsarMovimiento.mock.calls[0][0]).toBe('function');
 
-    const funcionActualizacion = mockUsarMovimiento.setUsarMovimiento.mock.calls[0][0];
-    const nuevoEstado = funcionActualizacion(mockUsarMovimiento.usarMovimiento);
+    const funcionActualizacion = mockUsarMovimientoConFichaSeleccionada.setUsarMovimiento.mock.calls[0][0];
+    const nuevoEstado = funcionActualizacion(mockUsarMovimientoConFichaSeleccionada.usarMovimiento);
 
     expect(nuevoEstado).toEqual({
-      ...mockUsarMovimiento.usarMovimiento,
+      ...mockUsarMovimientoConFichaSeleccionada.usarMovimiento,
       fichasSeleccionadas: [],
     });
   });

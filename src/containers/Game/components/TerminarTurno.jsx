@@ -22,15 +22,10 @@ export const TerminarTurno = () => {
 
   useEffect(() => {
     if (ultimoEvento !== null) {
-      console.log("log antes de switch");
       switch (ultimoEvento.key) {
         case "GET_PLAYER_MATCH_INFO":
           if (ultimoEvento.payload.turn_order === 1) {
             setHabilitarBoton(true);
-            console.log("log entre switch y setDatosJugador turn order 1");
-            setTimeout(() => {
-              setDatosJugador({...datosJugador, is_player_turn: true});
-            }, 0);
           } else {
             setHabilitarBoton(false);
           }

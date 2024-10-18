@@ -14,12 +14,12 @@ import mov7 from "../../../assets/Movimientos/mov7.svg";
 import "./CartasMovimiento.css";
 
 const urlMap = {
-  "Diagonal": mov1,
+  Diagonal: mov1,
   "Inverse Diagonal": mov4,
-  "Line": mov3,
+  Line: mov3,
   "Line Between": mov2,
   "Line Border": mov7,
-  "L": mov6,
+  L: mov6,
   "Inverse L": mov5,
 };
 
@@ -27,28 +27,31 @@ export const CartasMovimiento = () => {
   const [cartasMovimiento, setCartasMovimiento] = useState([]);
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-  const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
+  const { usarMovimiento, setUsarMovimiento } = useContext(
+    UsarMovimientoContext,
+  );
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key == "GET_MOVEMENT_CARD") {
-
         const cartasNoUsadas = cartasMovimiento.filter(
-          carta => !usarMovimiento.cartasUsadas.includes(carta)
+          (carta) => !usarMovimiento.cartasUsadas.includes(carta),
         );
 
-        const nuevasCartas = ultimoEvento.payload.movement_card
+        const nuevasCartas = ultimoEvento.payload.movement_card;
 
         setCartasMovimiento([...cartasNoUsadas, ...nuevasCartas]);
       }
     }
   }, [ultimoEvento]);
 
-  const handleCartaClick = ({carta, index}) => {
+  const handleCartaClick = ({ carta, index }) => {
     if (datosJugador.is_player_turn) {
       if (!usarMovimiento.cartasUsadas.includes(carta[1])) {
-        const isCartaHighlighted = usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index;
+        const isCartaHighlighted =
+          usarMovimiento.highlightCarta.state &&
+          usarMovimiento.highlightCarta.key === index;
 
         if (isCartaHighlighted) {
           setUsarMovimiento({
@@ -57,34 +60,40 @@ export const CartasMovimiento = () => {
             fichasSeleccionadas: [],
             highlightCarta: { state: false, key: null },
           });
-        }
-        else if (usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index) {
+        } else if (
+          usarMovimiento.highlightCarta.state &&
+          usarMovimiento.highlightCarta.key !== index
+        ) {
           // Actualiza el estado de cartaSeleccionada y recalcula movimientos posibles
           setUsarMovimiento((prev) => {
-            const movimientosCalculados = ServicioMovimiento.calcularMovimientos(
-              prev.fichasSeleccionadas.length ? prev.fichasSeleccionadas[0].rowIndex : null,
-              prev.fichasSeleccionadas.length ? prev.fichasSeleccionadas[0].columnIndex : null,
-              carta[1]
-            );
-            
+            const movimientosCalculados =
+              ServicioMovimiento.calcularMovimientos(
+                prev.fichasSeleccionadas.length
+                  ? prev.fichasSeleccionadas[0].rowIndex
+                  : null,
+                prev.fichasSeleccionadas.length
+                  ? prev.fichasSeleccionadas[0].columnIndex
+                  : null,
+                carta[1],
+              );
+
             return {
               ...prev,
               cartaSeleccionada: carta,
               highlightCarta: { state: true, key: index },
-              movimientosPosibles: movimientosCalculados
+              movimientosPosibles: movimientosCalculados,
             };
           });
           console.log("Carta seleccionada: ", carta[1]);
-        }
-        else {
+        } else {
           setUsarMovimiento({
-            ...usarMovimiento, 
-            cartaSeleccionada: carta, 
-            highlightCarta: { state: true, key: index } 
+            ...usarMovimiento,
+            cartaSeleccionada: carta,
+            highlightCarta: { state: true, key: index },
           });
           console.log("Carta seleccionada: ", carta[1]);
         }
-      };
+      }
     }
   };
 
@@ -92,17 +101,20 @@ export const CartasMovimiento = () => {
     <div>
       <div className="cartas-movimientos-propias">
         {cartasMovimiento.map((carta, index) => (
-          <div 
+          <div
             key={index}
-            onMouseEnter={() => setUsarMovimiento({ ...usarMovimiento, cartaHovering: true })}
-            onMouseLeave={() => setUsarMovimiento({ ...usarMovimiento, cartaHovering: false })}
+            onMouseEnter={() =>
+              setUsarMovimiento({ ...usarMovimiento, cartaHovering: true })
+            }
+            onMouseLeave={() =>
+              setUsarMovimiento({ ...usarMovimiento, cartaHovering: false })
+            }
             className={`carta-movimiento 
-              ${usarMovimiento.cartaHovering && !usarMovimiento.highlightCarta.state ? 'hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105': ''} 
-              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index && !usarMovimiento.cartasUsadas.includes(carta)? 'cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105': ''}
-              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index && !usarMovimiento.cartasUsadas.includes(carta) ? 'opacity-75 hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]': ''}
-              ${usarMovimiento.cartasUsadas.includes(carta) ? 'opacity-25 pointer-events-none greyscale' : ''}`}
-              
-            onClick={() => handleCartaClick({carta, index})}
+              ${usarMovimiento.cartaHovering && !usarMovimiento.highlightCarta.state ? "hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105" : ""} 
+              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index && !usarMovimiento.cartasUsadas.includes(carta) ? "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105" : ""}
+              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index && !usarMovimiento.cartasUsadas.includes(carta) ? "opacity-75 hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" : ""}
+              ${usarMovimiento.cartasUsadas.includes(carta) ? "opacity-25 pointer-events-none greyscale" : ""}`}
+            onClick={() => handleCartaClick({ carta, index })}
           >
             <img className="carta" src={urlMap[carta[1]]} alt={carta[1]} />
           </div>
@@ -111,6 +123,5 @@ export const CartasMovimiento = () => {
     </div>
   );
 };
-
 
 export default CartasMovimiento;

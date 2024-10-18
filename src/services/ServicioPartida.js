@@ -135,12 +135,14 @@ export class ServicioPartida {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ tiles: fichas , movement_card: carta}),
+        body: JSON.stringify({ tiles: fichas, movement_card: carta }),
       },
     );
 
     if (!respuesta.ok) {
-      throw new Error(`Error al validar movimiento - estado: ${respuesta.status}`);
+      throw new Error(
+        `Error al validar movimiento - estado: ${respuesta.status}`,
+      );
     }
 
     const json = await respuesta.json();
@@ -176,7 +178,7 @@ export class ServicioPartida {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (!respuesta.ok) {
@@ -197,12 +199,14 @@ export class ServicioPartida {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ tiles: fichas , movement_card: carta}),
+        body: JSON.stringify({ tiles: fichas, movement_card: carta }),
       },
     );
 
     if (!respuesta.ok) {
-      throw new Error(`Error al validar movimiento - estado: ${respuesta.status}`);
+      throw new Error(
+        `Error al validar movimiento - estado: ${respuesta.status}`,
+      );
     }
 
     const json = await respuesta.json();

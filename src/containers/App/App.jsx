@@ -35,11 +35,11 @@ function App() {
           <Route
             path="/matches/:match_id"
             element={
-                <DatosPartidaProvider>
-                  <DatosJugadorProvider>
-                    <Game />
-                  </DatosJugadorProvider>
-                </DatosPartidaProvider>
+              <DatosPartidaProvider>
+                <DatosJugadorProvider>
+                  <Game />
+                </DatosJugadorProvider>
+              </DatosPartidaProvider>
             }
           />
         </Routes>

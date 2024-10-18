@@ -6,7 +6,7 @@ import "@testing-library/jest-dom";
 import { TerminarTurno } from "../containers/Game/components/TerminarTurno";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext";
 import { DatosPartidaProvider } from "../contexts/DatosPartidaContext";
-import { UsarMovimientoContext} from "../contexts/UsarMovimientoContext";
+import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext";
 import { EventoContext, EventoProvider } from "../contexts/EventoContext";
 import { ServicioPartida } from "../services/ServicioPartida";
 
@@ -24,8 +24,8 @@ describe("TerminarTurno Component", () => {
       cartaSeleccionada: "test",
       fichasSeleccionadas: [],
       cartasUsadas: [],
-      highlightCarta: { state: false, key: '' },
-      movimientosPosibles: []
+      highlightCarta: { state: false, key: "" },
+      movimientosPosibles: [],
     },
     setUsarMovimiento: jest.fn(),
   };

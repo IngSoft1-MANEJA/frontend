@@ -99,7 +99,7 @@ export function Game() {
       />
       <CartasMovimiento />
       <Tablero 
-        initialTiles={tiles}
+        tiles={tiles}
         initialFigures={figures}
       />
       <InformacionTurno player_id={datosJugador.player_id}/>

@@ -7,37 +7,13 @@ import "./Tablero.css";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
-export const Tablero = ({ initialTiles , initialFigures }) => {
+export const Tablero = ({ tiles , initialFigures }) => {
   const { match_id } = useParams();
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
 
   const [tiles, setTiles] = useState(initialTiles);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
-
-  const swapFichas = (fichasSeleccionadas) => {
-
-    if (fichasSeleccionadas.length === 2) {
-      const [ficha1, ficha2] = fichasSeleccionadas;
-
-      const { rowIndex: filaFicha1, columnIndex: columnaFicha1 } = ficha1;
-      const { rowIndex: filaFicha2, columnIndex: columnaFicha2 } = ficha2;
-
-      const newTiles = tiles.map(row => [...row]);
-
-      const temp = newTiles[filaFicha1][columnaFicha1];
-      newTiles[filaFicha1][columnaFicha1] = newTiles[filaFicha2][columnaFicha2];
-      newTiles[filaFicha2][columnaFicha2] = temp;
-
-      setTiles(newTiles);
-
-      setUsarMovimiento(prev => ({
-        ...prev,
-        fichasSeleccionadas: [],
-        cartaSeleccionada: null,
-      }));
-    }
-  };
 
   const estaFiguraInicial = (rowIndex, columnIndex) => {
     return initialFigures.some(figure =>

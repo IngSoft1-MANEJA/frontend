@@ -7,6 +7,7 @@ import "./Tablero.css";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 import { DatosJugadorContext } from '../../../contexts/DatosJugadorContext.jsx';
 import { EventoContext } from '../../../contexts/EventoContext.jsx';
+import { ServicioMovimiento } from '../../../services/ServicioMovimiento.js';
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
 import { set } from 'react-hook-form';
 
@@ -19,6 +20,7 @@ export const Tablero = () => {
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [tiles, setTiles] = useState([]);
+  const [swapTiles, setSwapTile] = useState([]);
   const [haValidadoMovimiento, setHaValidadoMovimiento] = useState(false);
 
   useEffect(() => {
@@ -29,52 +31,10 @@ export const Tablero = () => {
       }
       if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
         console.log("Llegó el evento PLAYER_RECEIVE_NEW_BOARD");
-        setTiles(ultimoEvento.payload.board);
-        
+        ServicioMovimiento.swapFichas(ultimoEvento.payload.swapped_tiles, tiles, setTiles, setUsarMovimiento);
       }
     }
   }, [ultimoEvento]);
-
-
-  const swapFichas = (fichasSeleccionadas) => {
-
-    if (fichasSeleccionadas.length === 2) {
-      const [ficha1, ficha2] = usarMovimiento.fichasSeleccionadas;
-    
-      const { rowIndex: filaFicha1, columnIndex: columnaFicha1 } = ficha1;
-      const { rowIndex: filaFicha2, columnIndex: columnaFicha2 } = ficha2;
-    
-      const ficha1Element = document.getElementById(`ficha-${filaFicha1}-${columnaFicha1}`);
-      const ficha2Element = document.getElementById(`ficha-${filaFicha2}-${columnaFicha2}`);
-    
-      // Aplicar la clase para desvanecer las fichas
-      ficha1Element.classList.add('oculto');
-      ficha2Element.classList.add('oculto');
-    
-      // Esperar a que la animación termine antes de intercambiar
-      setTimeout(() => {
-        // Intercambiar las fichas en el estado
-        const newTiles = tiles.map(row => [...row]);
-    
-        const temp = newTiles[filaFicha1][columnaFicha1];
-        newTiles[filaFicha1][columnaFicha1] = newTiles[filaFicha2][columnaFicha2];
-        newTiles[filaFicha2][columnaFicha2] = temp;
-    
-        setTiles(newTiles);
-    
-        // Mostrar las fichas intercambiadas
-        ficha1Element.classList.remove('oculto');
-        ficha2Element.classList.remove('oculto');
-    
-        // Limpiar la selección de fichas
-        setUsarMovimiento(prev => ({
-          ...prev,
-          fichasSeleccionadas: [],
-          cartaSeleccionada: null,
-        }));
-      }, 500); // Duración de la animación (0.5s)
-    }
-  };
 
   const handleFichaClick = async (rowIndex, columnIndex) => {
     if (usarMovimiento.cartaSeleccionada !== null) {
@@ -116,14 +76,18 @@ export const Tablero = () => {
       ServicioMovimiento.llamarServicio(
         match_id, 
         datosJugador.player_id, 
+        tiles,
         usarMovimiento.fichasSeleccionadas, 
         usarMovimiento.cartaSeleccionada, 
         setUsarMovimiento, 
         setMensajeAlerta, 
-        setMostrarAlerta
+        setMostrarAlerta,
+        setTiles,
+        setHaValidadoMovimiento,
       );
     }
   }, [usarMovimiento.fichasSeleccionadas]);
+
   const gridCell = tiles.map((row, rowIndex) => {
     return row.map((tileColor, columnIndex) => {
       const highlighted = ServicioMovimiento.estaHighlighted(rowIndex, columnIndex, usarMovimiento.fichasSeleccionadas);

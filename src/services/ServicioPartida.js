@@ -168,13 +168,16 @@ export class ServicioPartida {
     return json;
   }
 
-  static async deshacerMovimientoParcial() {
-    const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}/partial-move`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  static async deshacerMovimientoParcial(idPartida, idJugador) {
+    const respuesta = await fetch(
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/partial-move/${idJugador}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!respuesta.ok) {
       throw new Error(

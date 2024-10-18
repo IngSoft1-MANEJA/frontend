@@ -85,8 +85,21 @@ export const Tablero = () => {
         const newFichasSeleccionadas = usarMovimiento.fichasSeleccionadas.filter(ficha => ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex);
         setUsarMovimiento(prev => ({ ...prev, fichasSeleccionadas: newFichasSeleccionadas }));
       } 
-      else if (usarMovimiento.fichasSeleccionadas.length < 2) {
-        // Agregar la ficha seleccionada si el array tiene menos de 2 fichas
+      else if (usarMovimiento.fichasSeleccionadas.length === 0) {
+        // Seleccionar la primera ficha y calcular los movimientos posibles
+        setUsarMovimiento(prev => {
+          const newFichasSeleccionadas = [...prev.fichasSeleccionadas, { rowIndex, columnIndex }];
+          return { ...prev, fichasSeleccionadas: newFichasSeleccionadas };
+        });
+  
+        // Calcular movimientos inmediatamente después de seleccionar la primera ficha
+        const movimientosCalculados = ServicioMovimiento.calcularMovimientos(rowIndex, columnIndex, usarMovimiento.cartaSeleccionada[1]);
+        setTimeout(() => {
+          setUsarMovimiento(prev => ({ ...prev, movimientosPosibles: movimientosCalculados }));
+        }, 0);
+        
+      } else if (usarMovimiento.fichasSeleccionadas.length === 1) {
+        // Seleccionar la segunda ficha
         setUsarMovimiento(prev => {
           const newFichasSeleccionadas = [...prev.fichasSeleccionadas, { rowIndex, columnIndex }];
           return { ...prev, fichasSeleccionadas: newFichasSeleccionadas };
@@ -98,66 +111,45 @@ export const Tablero = () => {
   };
 
   useEffect(() => {
-    console.log('Fichas seleccionadas:', usarMovimiento.fichasSeleccionadas);
     if (usarMovimiento.fichasSeleccionadas.length === 2 && !haValidadoMovimiento) {
-      // Ejecutar swapFichas y limpiar fichas seleccionadas
       setHaValidadoMovimiento(true);
-      llamarServicio(usarMovimiento.fichasSeleccionadas);
+      ServicioMovimiento.llamarServicio(
+        match_id, 
+        datosJugador.player_id, 
+        usarMovimiento.fichasSeleccionadas, 
+        usarMovimiento.cartaSeleccionada, 
+        setUsarMovimiento, 
+        setMensajeAlerta, 
+        setMostrarAlerta
+      );
     }
   }, [usarMovimiento.fichasSeleccionadas]);
-
-  const llamarServicio = async (newFichasSeleccionadas) => {
-    console.log("Entrando al servicio");
-    try {
-      console.log(newFichasSeleccionadas);
-      console.log(usarMovimiento.cartaSeleccionada);
-      const resJson = await ServicioPartida.validarMovimiento(
-        match_id,
-        datosJugador.player_id,
-        newFichasSeleccionadas,
-        usarMovimiento.cartaSeleccionada
-      );
-      console.log(resJson);
-      // Realizar animacion de swap.
-      console.log("Use swapFichas");
-      swapFichas(newFichasSeleccionadas);
-      // Actualizar selecciones
-      setTimeout(() => {
-        setUsarMovimiento({
-          ...usarMovimiento,
-          fichasSeleccionadas: [],
-          cartaSeleccionada: null,
-          cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
-          highlightCarta: { state: false, key: '' },
-        });
-      }, 700);
-      setHaValidadoMovimiento(false);
-    } catch (err) {
-      setMensajeAlerta("Error al validar movimiento");
-      console.log(err);
-    }
-  }
-
-  const estaHighlighted = (rowIndex, columnIndex) => {
-    return usarMovimiento.fichasSeleccionadas.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
-  };
-
   const gridCell = tiles.map((row, rowIndex) => {
     return row.map((tileColor, columnIndex) => {
+      const highlighted = ServicioMovimiento.estaHighlighted(rowIndex, columnIndex, usarMovimiento.fichasSeleccionadas);
+      const movimientoPosible = ServicioMovimiento.esMovimientoPosible(rowIndex, columnIndex, usarMovimiento.movimientosPosibles);
+      const deshabilitado = !highlighted && !movimientoPosible;
       return (
         <Ficha 
           id={`ficha-${rowIndex}-${columnIndex}`}
           key={`${rowIndex}-${columnIndex}`}
           color={tileColor} 
           onClick={() => handleFichaClick(rowIndex, columnIndex)}
-          highlightClass={estaHighlighted(rowIndex, columnIndex)}
+          highlightClass={highlighted}
+          movimientoPosible={movimientoPosible}
+          disabled={deshabilitado}
         />
       );
     });
   });
+
   return (
     <div className="tablero flex w-100 h-screen justify-center items-center">
-      {mostrarAlerta && <Alerts type={'error'} message={mensajeAlerta} />}
+      {mostrarAlerta && (
+        <div className="fixed top-3 right-3 w-2/5 z-50">
+          <Alerts type={"error"} message={mensajeAlerta} />
+        </div>
+      )}
       <div className="tablero-grid grid grid-cols-6 gap-1">
         {gridCell}
       </div>

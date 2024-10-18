@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
+import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { ServicioPartida } from "../../../services/ServicioPartida";
 import { Alerts } from "../../../components/Alerts";
 import { EventoContext } from "../../../contexts/EventoContext";
@@ -10,6 +11,7 @@ export const TerminarTurno = () => {
   const { match_id } = useParams();
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
   const { ultimoEvento } = useContext(EventoContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
@@ -31,10 +33,7 @@ export const TerminarTurno = () => {
             }, 0);
           } else {
             setHabilitarBoton(false);
-            console.log("log entre switch y setDatosJugador turn order != 1");
-            setDatosJugador({...datosJugador, is_player_turn: false});
           }
-          console.log("log fuera de if turn order");
           setMensajeAlerta(
             `Turno de ${ultimoEvento.payload.current_turn_player}.`,
           );
@@ -46,6 +45,15 @@ export const TerminarTurno = () => {
           break;
 
         case "END_PLAYER_TURN":
+          setUsarMovimiento({
+            cartaHovering: false,
+            fichaHovering: false,
+            cartaSeleccionada: null,
+            fichasSeleccionadas: [],
+            highlightCarta: { state: false, key: '' },
+            cartasUsadas: [],
+            movimientosPosibles: [],
+          });
           setMensajeAlerta(
             `${ultimoEvento.payload.current_player_name} ha terminado su turno.`,
           );

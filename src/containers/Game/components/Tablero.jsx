@@ -20,16 +20,15 @@ export const Tablero = () => {
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [tiles, setTiles] = useState([]);
-  const [swapTiles, setSwapTile] = useState([]);
   const [haValidadoMovimiento, setHaValidadoMovimiento] = useState(false);
 
   const [figures, setFigures] = useState([]);
 
-  const Figures = [
+  /*const Figures = [
     [[0, 0], [0, 1], [1, 0], [1, 1]],
     [[2, 4], [3, 4], [4, 4], [4, 5]],
     [[4, 2], [5, 2]],
-  ]
+  ]*/
   // setFigures(Figures);
 
   useEffect(() => {
@@ -39,6 +38,9 @@ export const Tablero = () => {
       }
       if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
         ServicioMovimiento.swapFichas(ultimoEvento.payload.swapped_tiles, tiles, setTiles, setUsarMovimiento);
+      }
+      if (ultimoEvento.key === "ALLOW_FIGURES") {
+        setFigures(ultimoEvento.payload.figures);
       }
     }
   }, [ultimoEvento]);
@@ -95,12 +97,21 @@ export const Tablero = () => {
     }
   }, [usarMovimiento.fichasSeleccionadas]);
 
+  // const tiles = [
+  //   ['red', 'red', 'green', 'yellow', 'red', 'yellow'], 
+  //   ['red', 'red', 'blue', 'yellow', 'green', 'blue'], 
+  //   ['blue', 'yellow', 'green', 'green', 'blue', 'yellow'], 
+  //   ['green', 'blue', 'red', 'yellow', 'blue', 'red'], 
+  //   ['red', 'yellow', 'green', 'yellow', 'blue', 'blue'], 
+  //   ['green', 'blue', 'green', 'yellow', 'green', 'red']
+  // ];
+
   const gridCell = tiles.map((row, rowIndex) => {
     return row.map((tileColor, columnIndex) => {
       const highlighted = ServicioMovimiento.estaHighlighted(rowIndex, columnIndex, usarMovimiento.fichasSeleccionadas);
       const movimientoPosible = ServicioMovimiento.esMovimientoPosible(rowIndex, columnIndex, usarMovimiento.movimientosPosibles);
       const deshabilitado = !highlighted && !movimientoPosible;
-      const isFiguraInicial = ServicioMovimiento.estaFiguraInicial(rowIndex, columnIndex, figures);
+      const isFiguraInicial = ServicioMovimiento.estaFiguraInicial(rowIndex, columnIndex, figures); //cambie aca
       return (
         <Ficha 
           id={`ficha-${rowIndex}-${columnIndex}`}

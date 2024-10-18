@@ -28,7 +28,8 @@ export const Ficha = ({id, color, onClick, highlightClass, movimientoPosible, di
                 ${usarMovimiento.fichaHovering && !highlightClass ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1)] hover:scale-105': ''} 
                 ${disabled && fichaEstaSeleccionada ? 'opacity-40 pointer-events-none' : ''}
                 ${highlightClass ? 'cursor-pointer shadow-[0px_0px_12px_rgba(17,195,22,.8),0px_0px_20px_rgba(31,222,37,1)] scale-105' : ''}
-                ${usarMovimiento.fichaHovering && movimientoPosible ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1),0px_0px_12px_rgba(224,138,44,1)] hover:scale-105' : ''} 
+                ${usarMovimiento.fichaHovering && movimientoPosible ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1),0px_0px_12px_rgba(224,138,44,1)] hover:scale-105' : ''}
+                ${movimientoPosible && fichaEstaSeleccionada ? 'animate-breathing' : ''}  
                 ${highlightFiguraInicial ? 'cursor-pointer border-gray-500 shadow-[0px_0px_10px_rgba(0,0,0,1)] animate-breathing' : ''}
                 ${usarMovimiento.fichaHovering && highlightFiguraInicial ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(192,192,192,.8),0px_0px_20px_rgba(255,255,255,1)] hover:scale-105' : ''} 
                 `} 

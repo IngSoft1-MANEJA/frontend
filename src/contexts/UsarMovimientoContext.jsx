@@ -10,6 +10,7 @@ export const UsarMovimientoProvider = ({ children }) => {
     fichasSeleccionadas: [],
     highlightCarta: { state: false, key: '' },
     cartasUsadas: [],
+    movimientosPosibles: [],
   });
 
   return (

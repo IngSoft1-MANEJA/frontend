@@ -5,21 +5,15 @@ import { Ficha } from './Ficha.jsx';
 import { Alerts } from "../../../components/Alerts";
 import "./Tablero.css";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
-import { ServicioPartida } from "../../../services/ServicioPartida.js";
+import { DatosJugadorContext } from '../../../contexts/DatosJugadorContext.jsx';
+import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 
-export const Tablero = ({ tiles , initialFigures }) => {
+export const Tablero = ({ tiles }) => {
   const { match_id } = useParams();
+  const { datosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
-
-  const [tiles, setTiles] = useState(initialTiles);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
-
-  const estaFiguraInicial = (rowIndex, columnIndex) => {
-    return initialFigures.some(figure =>
-      figure.some(([figRow, figCol]) => figRow === rowIndex && figCol === columnIndex)
-    );
-  };
 
   const handleFichaClick = async (rowIndex, columnIndex) => {
     if (usarMovimiento.cartaSeleccionada !== null) {
@@ -30,8 +24,21 @@ export const Tablero = ({ tiles , initialFigures }) => {
         const newFichasSeleccionadas = usarMovimiento.fichasSeleccionadas.filter(ficha => ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex);
         setUsarMovimiento(prev => ({ ...prev, fichasSeleccionadas: newFichasSeleccionadas }));
       } 
-      else if (usarMovimiento.fichasSeleccionadas.length < 2) {
-        // Agregar la ficha seleccionada si el array tiene menos de 2 fichas
+      else if (usarMovimiento.fichasSeleccionadas.length === 0) {
+        // Seleccionar la primera ficha y calcular los movimientos posibles
+        setUsarMovimiento(prev => {
+          const newFichasSeleccionadas = [...prev.fichasSeleccionadas, { rowIndex, columnIndex }];
+          return { ...prev, fichasSeleccionadas: newFichasSeleccionadas };
+        });
+  
+        // Calcular movimientos inmediatamente después de seleccionar la primera ficha
+        const movimientosCalculados = ServicioMovimiento.calcularMovimientos(rowIndex, columnIndex, usarMovimiento.cartaSeleccionada[1]);
+        setTimeout(() => {
+          setUsarMovimiento(prev => ({ ...prev, movimientosPosibles: movimientosCalculados }));
+        }, 0);
+        
+      } else if (usarMovimiento.fichasSeleccionadas.length === 1) {
+        // Seleccionar la segunda ficha
         setUsarMovimiento(prev => {
           const newFichasSeleccionadas = [...prev.fichasSeleccionadas, { rowIndex, columnIndex }];
           return { ...prev, fichasSeleccionadas: newFichasSeleccionadas };
@@ -43,79 +50,39 @@ export const Tablero = ({ tiles , initialFigures }) => {
   };
 
   useEffect(() => {
-    console.log('Fichas seleccionadas:', usarMovimiento.fichasSeleccionadas);
     if (usarMovimiento.fichasSeleccionadas.length === 2) {
-      // Ejecutar swapFichas y limpiar fichas seleccionadas
-      llamarServicio(usarMovimiento.fichasSeleccionadas);
-      // Actualizar el estado inmediatamente después de llamar a swapFichas
-      setTimeout(() => {
-        setUsarMovimiento({
-          ...usarMovimiento,
-          fichasSeleccionadas: [],
-          cartaSeleccionada: null,
-          cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
-          highlightCarta: { state: false, key: '' },
-        });
-      }, 700);
+      ServicioMovimiento.llamarServicio(
+        match_id, 
+        datosJugador.player_id, 
+        usarMovimiento.fichasSeleccionadas, 
+        usarMovimiento.cartaSeleccionada, 
+        setUsarMovimiento, 
+        setMensajeAlerta, 
+        setMostrarAlerta
+      );
     }
   }, [usarMovimiento.fichasSeleccionadas]);
 
-  const llamarServicio = async (newFichasSeleccionadas) => {
-    try {
-      const resJson = await ServicioPartida.validarMovimiento(
-        match_id,
-        newFichasSeleccionadas,
-        usarMovimiento.cartaSeleccionada
-      );
-      console.log(resJson);
-      if (resJson.isValid) {
-        // Realizar animacion de swap.
-        swapFichas(newFichasSeleccionadas);
-        // Actualizar selecciones
-        setTimeout(() => {
-          setUsarMovimiento({
-            ...usarMovimiento,
-            fichasSeleccionadas: [],
-            cartaSeleccionada: null,
-            cartasUsadas: [...usarMovimiento.cartasUsadas, usarMovimiento.cartaSeleccionada],
-            highlightCarta: { state: false, key: '' },
-          });
-        }, 700);
-      } else {
-        setMensajeAlerta('Movimiento invalido');
-        setMostrarAlerta(true);
-        setUsarMovimiento({
-          ...usarMovimiento,
-          fichasSeleccionadas: [],
-        });
-        setTimeout(() => {
-          setMostrarAlerta(false);
-        },1000);
-        console.log('Movimiento invalido');
-      }
-    } catch (err) {
-      setMensajeAlerta("Error al validar movimiento");
-      console.log(err);
-    }
-  }
-
-  const estaHighlighted = (rowIndex, columnIndex) => {
-    return usarMovimiento.fichasSeleccionadas.some(ficha => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex);
+  const estaFiguraInicial = (rowIndex, columnIndex) => {
+    return initialFigures.some(figure =>
+      figure.some(([figRow, figCol]) => figRow === rowIndex && figCol === columnIndex)
+    );
   };
 
   const gridCell = tiles.map((row, rowIndex) => {
     return row.map((tileColor, columnIndex) => {
-      const isHighlighted = estaHighlighted(rowIndex, columnIndex); // Seleccionadas por el usuario
-      const isFiguraInicial = estaFiguraInicial(rowIndex, columnIndex); // Para las figuras iniciales
-  
+      const highlighted = ServicioMovimiento.estaHighlighted(rowIndex, columnIndex, usarMovimiento.fichasSeleccionadas);
+      const movimientoPosible = ServicioMovimiento.esMovimientoPosible(rowIndex, columnIndex, usarMovimiento.movimientosPosibles);
+      const deshabilitado = !highlighted && !movimientoPosible;
       return (
         <Ficha 
           id={`ficha-${rowIndex}-${columnIndex}`}
           key={`${rowIndex}-${columnIndex}`}
           color={tileColor} 
           onClick={() => handleFichaClick(rowIndex, columnIndex)}
-          highlightClass={isHighlighted} // Fichas seleccionadas
-          highlightFiguraInicial={isFiguraInicial} // Fichas de figuras iniciales con brillo blanco
+          highlightClass={highlighted}
+          movimientoPosible={movimientoPosible}
+          disabled={deshabilitado}
         />
       );
     });
@@ -123,7 +90,11 @@ export const Tablero = ({ tiles , initialFigures }) => {
 
   return (
     <div className="tablero flex w-100 h-screen justify-center items-center">
-      {mostrarAlerta && <Alerts type={'error'} message={mensajeAlerta} />}
+      {mostrarAlerta && (
+        <div className="fixed top-3 right-3 w-2/5 z-50">
+          <Alerts type={"error"} message={mensajeAlerta} />
+        </div>
+      )}
       <div className="tablero-grid grid grid-cols-6 gap-1">
         {gridCell}
       </div>

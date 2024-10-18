@@ -1,19 +1,19 @@
 import React, { useEffect, useState, useContext } from "react";
-
 import { useNavigate, useParams } from "react-router-dom";
+import { flushSync } from "react-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
-import { UsarMovimientoContext } from '../../contexts/UsarMovimientoContext';
+import { UsarMovimientoProvider } from '../../contexts/UsarMovimientoContext';
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
 import { CartasFiguras } from "./components/CartasFiguras";
 import { CartasMovimiento } from "./components/CartasMovimiento";
 import { EventoContext } from "../../contexts/EventoContext";
 import { ServicioPartida } from "../../services/ServicioPartida.js";
-import { flushSync } from "react-dom";
 import { WebsocketEvents } from "../../services/ServicioWebsocket";
 import { JugadorGanoMotivo } from "../../services/ServicioPartida";
 import ModalGanaste from "./components/ModalGanaste.jsx";
@@ -23,6 +23,7 @@ export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
+
   const [tiles, setTiles] = useState([]);
   const [mensajeGanador, setMensajeGanador] = useState("");
   const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
@@ -65,10 +66,19 @@ export function Game() {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setTiles(ultimoEvento.payload.board);
-        setDatosJugador({
-          ...datosJugador,
-          player_turn: ultimoEvento.payload.turn_order,
-        });
+        if (ultimoEvento.payload.turn_order === 1) {
+          setDatosJugador({
+            ...datosJugador,
+            player_turn: ultimoEvento.payload.turn_order,
+            is_player_turn: true,
+          });
+        } else {
+          setDatosJugador({
+            ...datosJugador,
+            player_turn: ultimoEvento.payload.turn_order,
+            is_player_turn: false,
+          });
+        }
       } else if (ultimoEvento.key === WebsocketEvents.WINNER) {
         setMostrarModalGanador(true);
         if (ultimoEvento.payload.reason === JugadorGanoMotivo.FORFEIT) {
@@ -92,24 +102,25 @@ export function Game() {
 
   return (
     <div className="game-div relative w-full h-screen m-0 z-0">
-      <ModalGanaste
-        mostrar={mostrarModalGanador}
-        texto={mensajeGanador}
-        enVolverAlHome={moverJugadorAlHome}
-      />
-      <CartasMovimiento />
-      <Tablero 
-        tiles={tiles}
-        initialFigures={figures}
-      />
-      <InformacionTurno player_id={datosJugador.player_id}/>
-      <TerminarTurno/>
-      <AbandonarPartida
-        estadoPartida="STARTED"
-        esAnfitrion={datosJugador.is_owner}
-        idJugador={datosJugador.player_id}
-        idPartida={match_id}
-      />
+      
+      <UsarMovimientoProvider>
+        <ModalGanaste
+          mostrar={mostrarModalGanador}
+          texto={mensajeGanador}
+          enVolverAlHome={moverJugadorAlHome}
+        />
+        <CartasMovimiento />
+        <CartasFiguras />
+        <Tablero tiles={tiles} />
+        <InformacionTurno player_id={datosJugador.player_id} />
+        <TerminarTurno />
+        <AbandonarPartida
+          estadoPartida="STARTED"
+          esAnfitrion={datosJugador.is_owner}
+          idJugador={datosJugador.player_id}
+          idPartida={match_id}
+        />
+      </UsarMovimientoProvider>
     </div>
   );
 }

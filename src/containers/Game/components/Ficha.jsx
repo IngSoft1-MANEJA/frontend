@@ -13,19 +13,23 @@ const images = {
   blue: BlueTile,
 };
 
-export const Ficha = ({id, color, onClick, highlightClass, highlightFiguraInicial }) => {
+export const Ficha = ({id, color, onClick, highlightClass, movimientoPosible, disabled}) => {
     const tileImage = images[color];
     const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
 
+    const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.length > 0;
+
     return (
-        <div 
-            id = {id}
+        <div
+            id={id}
             onMouseEnter={() => setUsarMovimiento({ ...usarMovimiento, fichaHovering: true })}
             onMouseLeave={() => setUsarMovimiento({ ...usarMovimiento, fichaHovering: false })}
             className={`celda
-                ${usarMovimiento.fichaHovering && !highlightClass ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1)] hover:scale-105': ''}
-                ${highlightFiguraInicial ? 'cursor-pointer border-5 border-red-500 outline outline-2 outline-white' : ''} 
-                ${highlightClass ? 'cursor-pointer shadow-[0px_0px_17px_rgba(100,200,44,0.8),0px_0px_25px_rgba(100,200,44,1)] scale-105' : ''}`}
+                ${usarMovimiento.fichaHovering && !highlightClass ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1)] hover:scale-105': ''} 
+                ${disabled && fichaEstaSeleccionada ? 'opacity-40 pointer-events-none' : ''}
+                ${highlightClass ? 'cursor-pointer shadow-[0px_0px_12px_rgba(17,195,22,.8),0px_0px_20px_rgba(31,222,37,1)] scale-105' : ''}
+                ${usarMovimiento.fichaHovering && movimientoPosible ? 'hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1)] hover:scale-105' : ''}
+                `} 
             onClick={onClick}
         >
             <img className="h-auto max-w-full" src={tileImage} alt={`${color}`} />

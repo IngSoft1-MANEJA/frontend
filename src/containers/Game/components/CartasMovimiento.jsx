@@ -82,7 +82,7 @@ export const CartasMovimiento = () => {
   };
 
   return (
-    <div className="cartas-movimientos">
+    <div>
       <div className="cartas-movimientos-propias">
         {cartasMovimiento.map((carta, index) => (
           <div 

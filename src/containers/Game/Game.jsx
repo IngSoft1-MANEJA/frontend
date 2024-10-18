@@ -18,6 +18,7 @@ import { WebsocketEvents } from "../../services/ServicioWebsocket";
 import { JugadorGanoMotivo } from "../../services/ServicioPartida";
 import ModalGanaste from "./components/ModalGanaste.jsx";
 import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
+import { CancelarUltimoMovimiento } from "./components/CancelarUltimoMovimiento.jsx";
 
 export function Game() {
   const { match_id } = useParams();
@@ -108,7 +109,12 @@ export function Game() {
           texto={mensajeGanador}
           enVolverAlHome={moverJugadorAlHome}
         />
-        <CartasMovimiento />
+        <div className="cartas-movimientos">
+          <div className="-mt-24 pb-5">
+            <CancelarUltimoMovimiento />
+          </div>
+          <CartasMovimiento />
+        </div>
         <CartasFiguras />
         <Tablero tiles={tiles} />
         <InformacionTurno player_id={datosJugador.player_id} />

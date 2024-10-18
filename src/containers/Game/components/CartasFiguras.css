@@ -1,0 +1,23 @@
+.cartas-figuras {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.cartas-figuras-propias {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.cartas-figuras-propias img {
+  width: 75px;
+  height: auto;
+  background-color: rgb(206, 191, 172);
+  padding: 1px;
+  border-radius: 5px;
+}

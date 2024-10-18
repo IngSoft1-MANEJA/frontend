@@ -1,15 +1,33 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
+import { ServicioMovimiento } from "../../../services/ServicioMovimiento";
+import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext";
+import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 
 export const CancelarUltimoMovimiento = () => {
+  const { datosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida } = useContext(DatosPartidaContext);
+  const { setUsarMovimiento } = useContext(UsarMovimientoContext);
+  const [mostrarAlerta, setMostrarAlerta] = useState(false);
 
-    const { datosJugador } = useContext(DatosJugadorContext);
+  const manejarClick = () => {
+    if (datosJugador.is_player_turn) {
+      ServicioMovimiento.deshacerMovimiento(
+        datosPartida.match_id,
+        datosJugador.player_id,
+        setUsarMovimiento,
+        setMostrarAlerta
+      );
+    }
+  };
 
-    const manejarClick = () => {
-        console.log("Cancelar último movimiento.");
-    };
-
-    return (
+  return (
+    <div>
+      {mostrarAlerta && (
+        <div className="fixed top-3 right-3 w-2/5 z-50">
+          <Alerts type={"error"} message={mensajeAlerta} />
+        </div>
+      )}
       <button
         className="btn"
         disabled={datosJugador.is_player_turn ? "" : "disabled"}
@@ -30,12 +48,10 @@ export const CancelarUltimoMovimiento = () => {
           <line x1="18" y1="9" x2="12" y2="15" />{" "}
           <line x1="12" y1="9" x2="18" y2="15" />
         </svg>
-        <span>
-            deshacer movimiento
-        </span>
+        <span>deshacer movimiento</span>
       </button>
-    );
-    
+    </div>
+  );
 };
 
 export default CancelarUltimoMovimiento;

@@ -7,13 +7,33 @@ import "./Tablero.css";
 import { UsarMovimientoContext } from '../../../contexts/UsarMovimientoContext.jsx';
 import { DatosJugadorContext } from '../../../contexts/DatosJugadorContext.jsx';
 import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
+import { EventoContext } from '../../../contexts/EventoContext.jsx';
 
-export const Tablero = ({ tiles }) => {
+export const Tablero = () => {
   const { match_id } = useParams();
   const { datosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
+  const { ultimoEvento } = useContext(EventoContext);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
+  const [tiles, setTiles] = useState([]);
+  const [figures, setFigures] = useState([]);
+
+  const Figures = [
+    [[0, 0], [0, 1], [1, 0], [1, 1]],
+    [[2, 4], [3, 4], [4, 4], [4, 5]],
+    [[4, 2], [5, 2]],
+  ]
+  // setFigures(Figures);
+
+  useEffect(() => {
+    if (ultimoEvento !== null) {
+      if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
+        console.log("Llegó el evento GET_PLAYER_MATCH_INFO en tablero");
+        setTiles(ultimoEvento.payload.board);
+      }
+    }
+  }, [ultimoEvento]);
 
   const handleFichaClick = async (rowIndex, columnIndex) => {
     if (usarMovimiento.cartaSeleccionada !== null) {
@@ -63,17 +83,12 @@ export const Tablero = ({ tiles }) => {
     }
   }, [usarMovimiento.fichasSeleccionadas]);
 
-  const estaFiguraInicial = (rowIndex, columnIndex) => {
-    return initialFigures.some(figure =>
-      figure.some(([figRow, figCol]) => figRow === rowIndex && figCol === columnIndex)
-    );
-  };
-
   const gridCell = tiles.map((row, rowIndex) => {
     return row.map((tileColor, columnIndex) => {
       const highlighted = ServicioMovimiento.estaHighlighted(rowIndex, columnIndex, usarMovimiento.fichasSeleccionadas);
       const movimientoPosible = ServicioMovimiento.esMovimientoPosible(rowIndex, columnIndex, usarMovimiento.movimientosPosibles);
       const deshabilitado = !highlighted && !movimientoPosible;
+      const isFiguraInicial = ServicioMovimiento.estaFiguraInicial(rowIndex, columnIndex, figures);
       return (
         <Ficha 
           id={`ficha-${rowIndex}-${columnIndex}`}
@@ -83,6 +98,7 @@ export const Tablero = ({ tiles }) => {
           highlightClass={highlighted}
           movimientoPosible={movimientoPosible}
           disabled={deshabilitado}
+          highlightFiguraInicial={isFiguraInicial}
         />
       );
     });

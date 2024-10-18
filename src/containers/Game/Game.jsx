@@ -23,11 +23,8 @@ export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
-
-  const [tiles, setTiles] = useState([]);
   const [mensajeGanador, setMensajeGanador] = useState("");
   const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
-  const [figures, setFigures] = useState([]);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
   const navigate = useNavigate();
   const { lastMessage, readyState } = useWebSocket(websocket_url, {
@@ -65,7 +62,6 @@ export function Game() {
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
-        setTiles(ultimoEvento.payload.board);
         if (ultimoEvento.payload.turn_order === 1) {
           setDatosJugador({
             ...datosJugador,
@@ -111,7 +107,7 @@ export function Game() {
         />
         <CartasMovimiento />
         <CartasFiguras />
-        <Tablero tiles={tiles} />
+        <Tablero />
         <InformacionTurno player_id={datosJugador.player_id} />
         <TerminarTurno />
         <AbandonarPartida

@@ -41,6 +41,11 @@ const esMovimientoPosible = (rowIndex, columnIndex, movimientosPosibles) => {
   return movimientosPosibles.some(movimiento => movimiento[0] === rowIndex && movimiento[1] === columnIndex);
 };
 
+const estaFiguraInicial = (rowIndex, columnIndex, initialFigures) => {
+  return initialFigures.some(figure =>
+    figure.some(([figRow, figCol]) => figRow === rowIndex && figCol === columnIndex)
+  );
+};
 
 function calcularMovimientos (rowIndex, columnIndex, carta) {
   const tableroTam = 6;
@@ -155,5 +160,6 @@ export const ServicioMovimiento = {
   calcularMovimientos,
   llamarServicio,
   estaHighlighted,
-  esMovimientoPosible
+  esMovimientoPosible,
+  estaFiguraInicial,
 };

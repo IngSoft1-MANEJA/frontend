@@ -6,7 +6,7 @@ const llamarServicio = async (match_id, player_id, tiles, newFichasSeleccionadas
       match_id,
       player_id,
       newFichasSeleccionadas,
-      cartaSeleccionada[1]
+      cartaSeleccionada[0],
     );
     console.log(resJson);
 

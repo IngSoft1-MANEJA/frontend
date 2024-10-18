@@ -26,11 +26,9 @@ export const Tablero = () => {
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
-        console.log("Llegó el evento GET_PLAYER_MATCH_INFO en tablero");
         setTiles(ultimoEvento.payload.board);
       }
       if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
-        console.log("Llegó el evento PLAYER_RECEIVE_NEW_BOARD");
         ServicioMovimiento.swapFichas(ultimoEvento.payload.swapped_tiles, tiles, setTiles, setUsarMovimiento);
       }
     }

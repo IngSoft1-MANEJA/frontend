@@ -38,7 +38,7 @@ const llamarServicio = async (match_id, player_id, tiles, newFichasSeleccionadas
 };
 
 function swapFichas (fichasSeleccionadas, tiles, setTiles, setUsarMovimiento) {
-  console.log("Entro a SWAP")
+  
   if (fichasSeleccionadas.length === 2) {
     const [ficha1, ficha2] = fichasSeleccionadas;
   

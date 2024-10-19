@@ -120,7 +120,7 @@ const deshacerMovimiento = async (
       ),
     }));
 
-    swapFichas(respuesta.tiles, tiles, setTiles);
+    ServicioMovimiento.swapFichas(respuesta.tiles, tiles, setTiles);
 
   } catch (err) {
     setMensajeAlerta("Error al deshacer movimiento");

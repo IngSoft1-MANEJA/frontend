@@ -1,7 +1,12 @@
 import { ServicioPartida } from "../services/ServicioPartida";
 import { ServicioMovimiento } from "../services/ServicioMovimiento";
+import { waitFor } from "@testing-library/dom";
 
 jest.mock("../services/ServicioPartida");
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("ServicioMovimiento", () => {
   describe("calcularMovimientos", () => {
@@ -153,32 +158,95 @@ describe("ServicioMovimiento", () => {
     });
   });
 
-  it("deberia deshacer el movimiento parcial", () => {
-    // Arrange
-    const idPartida = 1;
-    const idJugador = 2;
-    const setUsarMovimiento = jest.fn().mockImplementation((fn) => {
-      fn({ cartasUsadas: ["diagnoal", "L"] });
-    });
-    const setMostrarAlerta = jest.fn();
-    const setMensajeAlerta = jest.fn();
-    ServicioPartida.mockReturnValue({
-      deshacerMovimientoParcial: jest
-        .fn()
-        .mockResolvedValue({ payload: { movement_card: [1, "diagonal"] } }),
+  describe("deshacerMovimiento", () => {
+    it("deberia deshacer el movimiento parcial", async () => {
+      const idPartida = 1;
+      const idJugador = 2;
+      const setUsarMovimiento = jest.fn();
+      setUsarMovimiento.mockImplementation((fn) => {
+        const nuevasCartas = fn({
+          cartasUsadas: [
+            [1, "diagonal"],
+            [2, "L"],
+          ],
+        });
+        expect(nuevasCartas).toEqual({ cartasUsadas: [[2, "L"]] });
+      });
+      const setMostrarAlerta = jest.fn();
+      const setMensajeAlerta = jest.fn();
+      const tiles = [["red"]];
+      const setTiles = jest.fn();
+
+      const deshacerMovimientoParcial = jest.spyOn(
+        ServicioPartida,
+        "deshacerMovimientoParcial"
+      );
+
+      deshacerMovimientoParcial.mockResolvedValue({
+        movement_card: [1, "diagonal"],
+        tiles: [["green"]],
+      });
+
+      const swapFichas = jest.spyOn(ServicioMovimiento, "swapFichas");
+      swapFichas.mockReturnValue(null);
+
+      ServicioMovimiento.deshacerMovimiento(
+        idPartida,
+        idJugador,
+        setUsarMovimiento,
+        setMostrarAlerta,
+        setMensajeAlerta,
+        tiles,
+        setTiles
+      );
+
+      await waitFor(() => {
+        expect(ServicioPartida.deshacerMovimientoParcial).toHaveBeenCalledWith(
+          idPartida,
+          idJugador
+        );
+        expect(setUsarMovimiento).toHaveBeenCalled();
+        expect(swapFichas).toHaveBeenCalledWith([["green"]], tiles, setTiles);
+        expect(setMostrarAlerta).not.toHaveBeenCalled();
+        expect(setMensajeAlerta).not.toHaveBeenCalled();
+      });
     });
 
-    ServicioMovimiento.deshacerMovimiento(
-      idPartida,
-      idJugador,
-      setUsarMovimiento,
-      setMostrarAlerta,
-      setMensajeAlerta,
-    );
+    it("deberia mostrar una alerta si falla al deshacer el movimiento", async () => {
+      const idPartida = 1;
+      const idJugador = 2;
+      const setUsarMovimiento = jest.fn();
+      const setMostrarAlerta = jest.fn();
+      const setMensajeAlerta = jest.fn();
+      const tiles = [["red"]];
+      const setTiles = jest.fn();
 
-    expect(ServicioPartida.deshacerMovimientoParcial).toHaveBeenCalled();
-    expect(setUsarMovimiento).toHaveBeenCalled();
-    expect(setMostrarAlerta).not.toHaveBeenCalled();
-    expect(setMensajeAlerta).not.toHaveBeenCalled();
+      const deshacerMovimientoParcial = jest.spyOn(
+        ServicioPartida,
+        "deshacerMovimientoParcial"
+      );
+
+      deshacerMovimientoParcial.mockRejectedValue(new Error("Error"));
+
+      ServicioMovimiento.deshacerMovimiento(
+        idPartida,
+        idJugador,
+        setUsarMovimiento,
+        setMensajeAlerta,
+        setMostrarAlerta,
+        tiles,
+        setTiles
+      );
+
+      await waitFor(() => {
+        expect(ServicioPartida.deshacerMovimientoParcial).toHaveBeenCalledWith(
+          idPartida,
+          idJugador
+        );
+        expect(setUsarMovimiento).not.toHaveBeenCalled();
+        expect(setMostrarAlerta).toHaveBeenCalledWith(true);
+        expect(setMensajeAlerta).toHaveBeenCalledWith("Error al deshacer movimiento");
+      });
+    });
   });
 });

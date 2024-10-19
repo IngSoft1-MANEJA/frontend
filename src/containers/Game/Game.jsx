@@ -83,8 +83,6 @@ export function Game() {
             "¡Ganaste!, todos los demás jugadores han abandonado la partida.",
           );
         }
-      } else if (ultimoEvento.key === WebsocketEvents.UNDO_PARTIAL_MOVE) {
-        // TODO: Agregar lógica para inter en el tablero.
       }
     }
   }, [ultimoEvento]);

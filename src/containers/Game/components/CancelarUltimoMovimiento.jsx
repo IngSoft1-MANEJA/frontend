@@ -1,18 +1,30 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { ServicioMovimiento } from "../../../services/ServicioMovimiento";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { TilesContext } from "../../../contexts/tilesContext";
+import { EventoContext } from "../../../contexts/EventoContext";
 import { Alerts } from "../../../components/Alerts";
 import { useParams } from "react-router-dom";
+import { WebsocketEvents } from "../../../services/ServicioWebsocket";
 
 export const CancelarUltimoMovimiento = () => {
   const { match_id } = useParams();
   const { datosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
+  const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("Error");
+
+  useEffect(() => {
+    if (ultimoEvento !== null) {
+      if (ultimoEvento.key === WebsocketEvents.UNDO_PARTIAL_MOVE) {
+        const { tiles: tilesAIntercambiar } = ultimoEvento.payload;
+        ServicioMovimiento.swapFichas(tilesAIntercambiar, tiles, setTiles);
+      }
+    }
+  }, [ultimoEvento]);
 
   const manejarClick = () => {
     if (datosJugador.is_player_turn) {

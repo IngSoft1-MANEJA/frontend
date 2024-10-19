@@ -1,5 +1,4 @@
 import "react-use-websocket";
-import { WEBSOCKET_URL } from "../variablesConfiguracion";
 
 export const WebsocketEvents = Object.freeze({
   WINNER: "WINNER",

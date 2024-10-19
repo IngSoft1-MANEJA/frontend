@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
+import { ModalCancelarPartida } from "./components/ModalCancelarPartida";
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion";
 import Alerts from "../../components/Alerts";
@@ -11,6 +12,7 @@ import "./Lobby.css";
 import IniciarPartida from "./components/IniciarPartida";
 import { useNavigate } from "react-router-dom";
 import { EventoProvider, EventoContext } from "../../contexts/EventoContext";
+import { set } from "react-hook-form";
 
 export function Lobby() {
   const { match_id, player_id } = useParams();
@@ -27,6 +29,8 @@ export function Lobby() {
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [estaShaking, setEstaShaking] = useState(false);
   const [cantPlayersLobby, setCantPlayersLobby] = useState(1);
+  const [abandonaOwner, setAbandonaOwner] = useState(false);
+  const [mensajeCancelacion, setMensajeCancelacion] = useState("");
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
@@ -52,7 +56,10 @@ export function Lobby() {
 
         case "PLAYER_LEFT":
           if (ultimoEvento.payload.is_owner) {
-            navigate("/");
+            setAbandonaOwner(true);
+            setMensajeCancelacion(
+              `El dueño de la sala ha cancelado la partida.`,
+            );
           }
           setCantPlayersLobby(cantPlayersLobby - 1);
           setMostrarAlerta(true);
@@ -76,6 +83,11 @@ export function Lobby() {
     }
   }, [ultimoEvento]);
 
+  const moverJugadorAlHome = () => {
+    limpiarContextos();
+    navigate("/");
+  };
+
   return (
     <div>
       <div className={`${estaShaking ? "animate-shake" : ""}`}>
@@ -92,6 +104,11 @@ export function Lobby() {
         esAnfitrion={datosJugador.is_owner}
         nJugadoresEnLobby={cantPlayersLobby}
         maxJugadores={datosPartida.max_players}
+      />
+      <ModalCancelarPartida
+        mostrar = {abandonaOwner}
+        texto = {mensajeCancelacion}
+        enVolverAlHome = {moverJugadorAlHome}
       />
     </div>
   );

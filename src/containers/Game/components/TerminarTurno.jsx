@@ -92,21 +92,22 @@ export const TerminarTurno = () => {
   };
 
   return (
-    <div className="terminar-turno-div">
+    <div className="terminar-turno-div absolute top-0 left-0 w-full h-full flex z-1000">
       {mostrarAlerta && (
-        <div className="fixed top-3 right-3 w-2/5 z-50">
+        <div className="absolute top-3 right-3 w-1/3">
           <Alerts type={tipoAlerta} message={mensajeAlerta} />
         </div>
       )}
-      <div className="terminar-turno-boton-div absolute right-8 bottom-8">
+      <div className="terminar-turno-boton-div absolute bottom-8 right-8">
         <button
-          className="terminar-turno-boton btn"
+          className="terminar-turno-boton btn text-nowrap"
           onClick={handleTerminarTurno}
           disabled={!habilitarBoton}
         >
           Terminar turno
         </button>
       </div>
+      
     </div>
   );
 };

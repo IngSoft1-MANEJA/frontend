@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useContext, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
+import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
 
 import fig1 from "../../../assets/Figuras/Blancas/fig01.svg";
 import fig2 from "../../../assets/Figuras/Blancas/fig02.svg";
@@ -62,7 +63,9 @@ const urlMap = {
 
 export const CartasFiguras = () => {
   const [cartasFiguras, setCartasFiguras] = useState([]);
+  const [datosPartida, setDatosPartida] = useState(DatosPartidaContext);
   const [miTurno, setMiTurno] = useState(0);
+  const [oponentes, setOponentes] = useState([]);
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
@@ -91,21 +94,50 @@ export const CartasFiguras = () => {
           miTurno,
         );
       }
+
+      setOponentes(ultimoEvento.payload.filter((jugador) => jugador.turn_order !== miTurno));
     }
   }, [ultimoEvento, miTurno]);
+
+  function ordenarOponentes () {
+    const oponentesOrdenados = oponentes.sort((a, b) => {
+      const turnoA = a.turn_order < miTurno ? a.turn_order + datosPartida.max_players : a.turn_order;
+      const turnoB = b.turn_order < miTurno ? b.turn_order + datosPartida.max_players : b.turn_order;
+      return turnoA - turnoB;
+    });
+  
+    return oponentesOrdenados;
+  };
 
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        <div className="mazo-propio">
+        <div className="mazo">
           <img src={backfig} alt="back" />
         </div>
         {cartasFiguras.map((carta, index) => (
-          <div key={index} className="carta-movimiento">
+          <div key={index} className="carta-figura">
             <img src={urlMap[carta[1]]} alt={carta[1]} />
           </div>
         ))}
       </div>
+      {ordenarOponentes().map((oponente, oponenteIndex) => (
+        <div 
+          key={oponenteIndex} 
+          className={`
+            cartas-figuras-oponente-${(oponenteIndex + 1)} 
+            ${oponentes.length > 1 ? 'columnas' : 'filas'
+          }`}>
+          <div className="mazo">
+            <img src={backfig} alt="back" />
+          </div>
+          {oponente.shape_cards.map((carta, index) => (
+            <div key={index} className="carta-figura">
+              <img src={urlMap[carta[1]]} alt={carta[1]} />
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 };

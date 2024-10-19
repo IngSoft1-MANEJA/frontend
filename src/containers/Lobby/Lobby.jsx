@@ -57,20 +57,22 @@ export function Lobby() {
         case "PLAYER_LEFT":
           if (ultimoEvento.payload.is_owner) {
             setAbandonaOwner(true);
+            setMostrarAlerta(false)
             setMensajeCancelacion(
               `El dueño de la sala ha cancelado la partida.`,
             );
-          }
-          setCantPlayersLobby(cantPlayersLobby - 1);
-          setMostrarAlerta(true);
-          setTipoAlerta("info");
-          setMensajeAlerta(
-            `jugador ${ultimoEvento.payload.name} ha abandonado.`,
-          );
-          setEstaShaking(true);
-          setTimeout(() => {
-            setEstaShaking(false), setMostrarAlerta(false);
-          }, 3000);
+          } else {
+            setCantPlayersLobby(cantPlayersLobby - 1);
+            setMostrarAlerta(true);
+            setTipoAlerta("info");
+            setMensajeAlerta(
+              `jugador ${ultimoEvento.payload.name} ha abandonado.`,
+            );
+            setEstaShaking(true);
+            setTimeout(() => {
+              setEstaShaking(false), setMostrarAlerta(false);
+            }, 3000);
+          } 
           break;
 
         case "START_MATCH":
@@ -84,7 +86,6 @@ export function Lobby() {
   }, [ultimoEvento]);
 
   const moverJugadorAlHome = () => {
-    limpiarContextos();
     navigate("/");
   };
 

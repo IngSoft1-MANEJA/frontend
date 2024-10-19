@@ -7,22 +7,21 @@ import "./Tablero.css";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext.jsx";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 import { EventoContext } from "../../../contexts/EventoContext.jsx";
+import { TilesContext } from "../../../contexts/tilesContext.jsx";
 import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
-import { ServicioPartida } from "../../../services/ServicioPartida.js";
-import { set } from "react-hook-form";
 
 export const Tablero = () => {
   const { match_id } = useParams();
-  const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+
+  const { datosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(
     UsarMovimientoContext,
   );
   const { ultimoEvento } = useContext(EventoContext);
+  const { tiles, setTiles } = useContext(TilesContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
-  const [tiles, setTiles] = useState([]);
-  const [swapTiles, setSwapTile] = useState([]);
   const [haValidadoMovimiento, setHaValidadoMovimiento] = useState(false);
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import { Game } from "../Game/Game.jsx";
 import { DatosJugadorProvider } from "../../contexts/DatosJugadorContext.jsx";
 import { DatosPartidaProvider } from "../../contexts/DatosPartidaContext.jsx";
 import { EventoProvider } from "../../contexts/EventoContext.jsx";
+import { TilesProvider } from "../../contexts/tilesContext.jsx";
 
 function App() {
   return (
@@ -37,7 +38,9 @@ function App() {
             element={
               <DatosPartidaProvider>
                 <DatosJugadorProvider>
-                  <Game />
+                  <TilesProvider>
+                    <Game />
+                  </TilesProvider>
                 </DatosJugadorProvider>
               </DatosPartidaProvider>
             }

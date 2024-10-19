@@ -47,7 +47,7 @@ const llamarServicio = async (
   }
 };
 
-function swapFichas(fichasSeleccionadas, tiles, setTiles, setUsarMovimiento) {
+function swapFichas(fichasSeleccionadas, tiles, setTiles) {
   if (fichasSeleccionadas.length === 2) {
     const [ficha1, ficha2] = fichasSeleccionadas;
 
@@ -92,6 +92,8 @@ function swapFichas(fichasSeleccionadas, tiles, setTiles, setUsarMovimiento) {
  * @param {function} setUsarMovimiento - Función para actualizar el estado de usarMovimiento.
  * @param {function} setMensajeAlerta - Función para actualizar el mensaje de alerta.
  * @param {function} setMostrarAlerta - Función para mostrar la alerta en caso de error.
+ * @param {Array<Array<string>>} tiles - Tablero de fichas, matriz de colores.
+ * @param {function} setTiles - Función para actualizar el estado de las fichas.
  */
 const deshacerMovimiento = async (
   match_id,
@@ -99,24 +101,27 @@ const deshacerMovimiento = async (
   setUsarMovimiento,
   setMensajeAlerta,
   setMostrarAlerta,
+  tiles,
+  setTiles,
 ) => {
   try {
-    const resJson = await ServicioPartida.deshacerMovimientoParcial(
+    const respuesta = await ServicioPartida.deshacerMovimientoParcial(
       match_id,
       player_id,
     );
-    console.log(resJson);
+    console.log(respuesta);
 
-    const cartaADeshacer = resJson.payload.movement_card;
+    const cartaADeshacer = respuesta.movement_card;
 
     setUsarMovimiento((prev) => ({
       ...prev,
       cartasUsadas: prev.cartasUsadas.filter(
-        (carta) => carta !== cartaADeshacer[1],
+        (carta) => carta[1] !== cartaADeshacer[1],
       ),
     }));
 
-    // TODO: Agregar lógica para deshacer movimiento parcial en el tablero.
+    swapFichas(respuesta.tiles, tiles, setTiles);
+
   } catch (err) {
     setMensajeAlerta("Error al deshacer movimiento");
     setMostrarAlerta(true);

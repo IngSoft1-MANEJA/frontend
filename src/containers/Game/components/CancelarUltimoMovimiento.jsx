@@ -1,36 +1,49 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { ServicioMovimiento } from "../../../services/ServicioMovimiento";
-import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
+import { TilesContext } from "../../../contexts/tilesContext";
+import { Alerts } from "../../../components/Alerts";
+import { useParams } from "react-router-dom";
 
 export const CancelarUltimoMovimiento = () => {
+  const { match_id } = useParams();
   const { datosJugador } = useContext(DatosJugadorContext);
-  const { datosPartida } = useContext(DatosPartidaContext);
-  const { setUsarMovimiento } = useContext(UsarMovimientoContext);
+  const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
+  const { tiles, setTiles } = useContext(TilesContext);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
+  const [mensajeAlerta, setMensajeAlerta] = useState("Error");
 
   const manejarClick = () => {
     if (datosJugador.is_player_turn) {
       ServicioMovimiento.deshacerMovimiento(
-        datosPartida.match_id,
+        match_id,
         datosJugador.player_id,
         setUsarMovimiento,
+        setMensajeAlerta,
         setMostrarAlerta,
+        tiles,
+        setTiles
       );
     }
   };
 
+
+  const puedeCancelar = useCallback(
+    () => datosJugador.is_player_turn && usarMovimiento.cartasUsadas.length > 0,
+    [datosJugador, usarMovimiento],
+  );
+
   return (
     <div>
       {mostrarAlerta && (
-        <div className="fixed top-3 right-3 w-2/5 z-50">
+        <div className="absolute z-50 animate-bounce">
           <Alerts type={"error"} message={mensajeAlerta} />
         </div>
       )}
       <button
         className="btn"
-        disabled={datosJugador.is_player_turn ? "" : "disabled"}
+        disabled={puedeCancelar() ? "" : "disabled"}
         onClick={manejarClick}
       >
         <svg
@@ -38,7 +51,7 @@ export const CancelarUltimoMovimiento = () => {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeOpacity={datosJugador.is_player_turn ? "1" : "0.25"}
+          strokeOpacity={puedeCancelar() ? "1" : "0.25"}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

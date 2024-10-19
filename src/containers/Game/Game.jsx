@@ -112,7 +112,6 @@ export function Game() {
         <TerminarTurno />
         <AbandonarPartida
           estadoPartida="STARTED"
-          esAnfitrion={datosJugador.is_owner}
           idJugador={datosJugador.player_id}
           idPartida={match_id}
         />

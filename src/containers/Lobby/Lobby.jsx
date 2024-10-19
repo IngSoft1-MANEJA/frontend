@@ -51,6 +51,9 @@ export function Lobby() {
           break;
 
         case "PLAYER_LEFT":
+          if (ultimoEvento.payload.is_owner) {
+            navigate("/");
+          }
           setCantPlayersLobby(cantPlayersLobby - 1);
           setMostrarAlerta(true);
           setTipoAlerta("info");
@@ -80,7 +83,6 @@ export function Lobby() {
       </div>
       <AbandonarPartida
         estadoPartida="WAITING"
-        esAnfitrion={datosJugador.is_owner}
         idJugador={player_id}
         idPartida={match_id}
       />

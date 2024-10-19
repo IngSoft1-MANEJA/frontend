@@ -40,7 +40,7 @@ export const Tablero = () => {
         ServicioMovimiento.swapFichas(ultimoEvento.payload.swapped_tiles, tiles, setTiles, setUsarMovimiento);
       }
       if (ultimoEvento.key === "ALLOW_FIGURES") {
-        setFigures(ultimoEvento.payload.figures);
+        setFigures(ultimoEvento.payload);
       }
     }
   }, [ultimoEvento]);

@@ -42,7 +42,7 @@ export function Game() {
 
   useEffect(() => {
     return () => {
-      setUltimoEvento(null);  // Limpia el último evento al desmontar el componente
+      setUltimoEvento(null); // Limpia el último evento al desmontar el componente
     };
   }, []);
 

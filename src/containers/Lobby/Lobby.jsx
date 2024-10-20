@@ -38,8 +38,8 @@ export function Lobby() {
 
   useEffect(() => {
     return () => {
-      setUltimoEvento(null); 
-      setCantPlayersLobby(1);  
+      setUltimoEvento(null);
+      setCantPlayersLobby(1);
     };
   }, []);
 
@@ -79,7 +79,7 @@ export function Lobby() {
             setTimeout(() => {
               setEstaShaking(false), setMostrarAlerta(false);
             }, 3000);
-          } 
+          }
           break;
 
         case "START_MATCH":
@@ -115,10 +115,10 @@ export function Lobby() {
         maxJugadores={datosPartida.max_players}
       />
       <Modal
-        mostrar = {abandonaOwner}
-        texto = {mensajeCancelacion}
-        funcionDeClick = {moverJugadorAlHome}
-        boton = "Volver al home"
+        mostrar={abandonaOwner}
+        texto={mensajeCancelacion}
+        funcionDeClick={moverJugadorAlHome}
+        boton="Volver al home"
       />
     </div>
   );

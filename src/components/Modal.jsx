@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Modal = ({ mostrar, texto, funcionDeClick, boton}) => {
+export const Modal = ({ mostrar, texto, funcionDeClick, boton }) => {
   if (!mostrar) return null;
 
   return (

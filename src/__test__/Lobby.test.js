@@ -14,7 +14,7 @@ import {
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext";
 import { EventoProvider } from "../contexts/EventoContext";
-import { act } from 'react'; // Importa 'act' para controlar los efectos.
+import { act } from "react"; // Importa 'act' para controlar los efectos.
 import { waitFor } from "@testing-library/react";
 
 jest.mock("react-use-websocket");
@@ -77,9 +77,12 @@ describe("Lobby", () => {
 
   it("debería mostrar el modal cuando el dueño cancela la partida", () => {
     useWebSocket.mockReturnValue({
-      lastJsonMessage: { key: "PLAYER_LEFT", payload: { name: "test", is_owner: true } },
+      lastJsonMessage: {
+        key: "PLAYER_LEFT",
+        payload: { name: "test", is_owner: true },
+      },
     });
-  
+
     render(
       <reactRouterDom.MemoryRouter>
         <DatosPartidaProvider>
@@ -89,10 +92,12 @@ describe("Lobby", () => {
             </EventoProvider>
           </DatosJugadorProvider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
-  
-    const modalTexto = screen.getByText("El dueño de la sala ha cancelado la partida.");
+
+    const modalTexto = screen.getByText(
+      "El dueño de la sala ha cancelado la partida.",
+    );
     expect(modalTexto).toBeInTheDocument();
   });
 });

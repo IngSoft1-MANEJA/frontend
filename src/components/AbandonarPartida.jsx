@@ -4,12 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ServicioPartida } from "../services/ServicioPartida";
 import "./AbandonarPartida.css";
 
-export const AbandonarPartida = ({
-  estadoPartida,
-  idJugador,
-  idPartida,
-}) => {
-  
+export const AbandonarPartida = ({ estadoPartida, idJugador, idPartida }) => {
   const estadosPermitidos = ["STARTED", "WAITING"];
   const navegar = useNavigate();
 

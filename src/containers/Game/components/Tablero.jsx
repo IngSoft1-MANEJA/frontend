@@ -24,13 +24,6 @@ export const Tablero = () => {
 
   const [figures, setFigures] = useState([]);
 
-  /*const Figures = [
-    [[0, 0], [0, 1], [1, 0], [1, 1]],
-    [[2, 4], [3, 4], [4, 4], [4, 5]],
-    [[4, 2], [5, 2]],
-  ]*/
-  // setFigures(Figures);
-
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
@@ -96,15 +89,6 @@ export const Tablero = () => {
       );
     }
   }, [usarMovimiento.fichasSeleccionadas]);
-
-  // const tiles = [
-  //   ['red', 'red', 'green', 'yellow', 'red', 'yellow'], 
-  //   ['red', 'red', 'blue', 'yellow', 'green', 'blue'], 
-  //   ['blue', 'yellow', 'green', 'green', 'blue', 'yellow'], 
-  //   ['green', 'blue', 'red', 'yellow', 'blue', 'red'], 
-  //   ['red', 'yellow', 'green', 'yellow', 'blue', 'blue'], 
-  //   ['green', 'blue', 'green', 'yellow', 'green', 'red']
-  // ];
 
   const gridCell = tiles.map((row, rowIndex) => {
     return row.map((tileColor, columnIndex) => {

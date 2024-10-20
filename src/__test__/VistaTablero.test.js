@@ -11,6 +11,9 @@ import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
 import { DatosPartidaContext } from "../contexts/DatosPartidaContext.jsx";
+import { ServicioMovimiento } from "../services/ServicioMovimiento.js";
+import {ServicioPartida} from '../services/ServicioPartida';
+
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -18,6 +21,7 @@ jest.mock("react-router-dom", () => ({
 }));
 
 jest.mock('../services/ServicioPartida');
+jest.mock('../services/ServicioMovimiento');
 
 jest.mock('../containers/Game/components/Ficha.jsx', () => ({
   Ficha: ({ id, color, onClick }) => (

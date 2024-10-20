@@ -4,6 +4,7 @@ import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { EventoContext } from "../../../contexts/EventoContext";
 import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
+import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext.jsx";
 import mov1 from "../../../assets/Movimientos/mov1.svg";
 import mov2 from "../../../assets/Movimientos/mov2.svg";
 import mov3 from "../../../assets/Movimientos/mov3.svg";
@@ -30,6 +31,7 @@ export const CartasMovimiento = () => {
   const { usarMovimiento, setUsarMovimiento } = useContext(
     UsarMovimientoContext,
   );
+  const { cartaSeleccionada: cartaFiguraSeleccionada } = useContext(CompletarFiguraContext);
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
@@ -47,6 +49,10 @@ export const CartasMovimiento = () => {
   }, [ultimoEvento]);
 
   const handleCartaClick = ({ carta, index }) => {
+    if (cartaFiguraSeleccionada !== null) {
+      return;
+    }
+
     if (datosJugador.is_player_turn) {
       if (!usarMovimiento.cartasUsadas.includes(carta[1])) {
         const isCartaHighlighted =
@@ -113,7 +119,7 @@ export const CartasMovimiento = () => {
               ${usarMovimiento.cartaHovering && !usarMovimiento.highlightCarta.state ? "hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105" : ""} 
               ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index && !usarMovimiento.cartasUsadas.includes(carta) ? "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105" : ""}
               ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index && !usarMovimiento.cartasUsadas.includes(carta) ? "opacity-75 hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" : ""}
-              ${usarMovimiento.cartasUsadas.includes(carta) ? "opacity-25 pointer-events-none greyscale" : ""}`}
+              ${cartaFiguraSeleccionada !== null || usarMovimiento.cartasUsadas.includes(carta) ? "opacity-25 pointer-events-none greyscale" : ""}`}
             onClick={() => handleCartaClick({ carta, index })}
           >
             <img className="carta" src={urlMap[carta[1]]} alt={carta[1]} />

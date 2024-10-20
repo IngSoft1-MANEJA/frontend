@@ -103,29 +103,29 @@ export function Game() {
     <div className="game-div relative w-full h-screen m-0 z-0">
       <FigurasProvider>
         <UsarMovimientoProvider>
-          <ModalGanaste
-            mostrar={mostrarModalGanador}
-            texto={mensajeGanador}
-            enVolverAlHome={moverJugadorAlHome}
-          />
-          <div className="cartas-movimientos">
-            <div className="-mt-24 pb-5">
-              <CancelarUltimoMovimiento />
-            </div>
-            <CartasMovimiento />
-          </div>
           <CompletarFiguraProvider>
+            <ModalGanaste
+              mostrar={mostrarModalGanador}
+              texto={mensajeGanador}
+              enVolverAlHome={moverJugadorAlHome}
+            />
+            <div className="cartas-movimientos">
+              <div className="-mt-24 pb-5">
+                <CancelarUltimoMovimiento />
+              </div>
+              <CartasMovimiento />
+            </div>
             <CartasFiguras />
+            <Tablero />
+            <InformacionTurno player_id={datosJugador.player_id} />
+            <TerminarTurno />
+            <AbandonarPartida
+              estadoPartida="STARTED"
+              esAnfitrion={datosJugador.is_owner}
+              idJugador={datosJugador.player_id}
+              idPartida={match_id}
+            />
           </CompletarFiguraProvider>
-          <Tablero />
-          <InformacionTurno player_id={datosJugador.player_id} />
-          <TerminarTurno />
-          <AbandonarPartida
-            estadoPartida="STARTED"
-            esAnfitrion={datosJugador.is_owner}
-            idJugador={datosJugador.player_id}
-            idPartida={match_id}
-          />
         </UsarMovimientoProvider>
       </FigurasProvider>
     </div>

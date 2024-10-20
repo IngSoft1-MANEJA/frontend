@@ -2,8 +2,6 @@ import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 
-import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext";
-
 import fig1 from "../../../assets/Figuras/Blancas/fig01.svg";
 import fig2 from "../../../assets/Figuras/Blancas/fig02.svg";
 import fig3 from "../../../assets/Figuras/Blancas/fig03.svg";
@@ -33,6 +31,9 @@ import fige7 from "../../../assets/Figuras/Celestes/fige07.svg";
 import backfig from "../../../assets/Figuras/Celestes/back.svg";
 
 import "./CartasFiguras.css";
+import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext";
+import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
+import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 
 const urlMap = {
   1: fig1,
@@ -66,6 +67,8 @@ export const CartasFiguras = () => {
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
   const {cartaSeleccionada, setCartaSeleccionada} = useContext(CompletarFiguraContext);
+  const { usarMovimiento } = useContext(UsarMovimientoContext);
+  const { datosJugador } = useContext(DatosJugadorContext);
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
@@ -108,18 +111,31 @@ export const CartasFiguras = () => {
       " shadow-[0px_0px_20px_rgba(100,200,44,1)]" +
       " scale-105";
     
+    const deshabilidata = "opacity-25 pointer-events-none greyscale"
+
+    if (usarMovimiento.cartaSeleccionada !== null) {
+      return deshabilidata;
+    }
+    
     if (cartaSeleccionada !== null) {
       if (cartaSeleccionada === index) {
         return efectoSeleccionada;
       } else {
-        return "";
+        return deshabilidata;
       }
     }
 
     return efectoHover; 
-  }, [cartaSeleccionada]);
+  }, [cartaSeleccionada, usarMovimiento]);
 
   const seleccionarCarta = (index) => {
+    if (
+      !datosJugador.is_player_turn ||
+      usarMovimiento.cartaSeleccionada !== null
+    ) {
+      return;
+    }
+
     if (cartaSeleccionada !== null) {
       if (cartaSeleccionada === index) {
         setCartaSeleccionada(null);

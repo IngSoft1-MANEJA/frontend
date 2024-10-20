@@ -1,5 +1,5 @@
 import React from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { useParams } from "react-router-dom";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { CartasFiguras } from "../containers/Game/components/CartasFiguras.jsx";
@@ -21,6 +21,7 @@ describe("CartasFiguras", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    cleanup();
   });
 
   const renderComponent = (renderFunc, datosJugador, evento) => {
@@ -125,7 +126,7 @@ describe("CartasFiguras", () => {
     };
 
     const datosJugadorContext = {
-      datosJugador: { turn_order: 1 },
+      datosJugador: { turn_order: 1, is_player_turn: true },
       setDatosJugador: jest.fn(),
     };
     const { rerender } = renderComponent(
@@ -152,6 +153,7 @@ describe("CartasFiguras", () => {
     };
 
     renderComponent(rerender, datosJugadorContext, eventoContext2);
+    return rerender;
   };
 
   const getCard = (index) => screen.getByAltText(index).parentElement;
@@ -193,5 +195,25 @@ describe("CartasFiguras", () => {
     expect(figure1).toHaveClass(hoverClass);
     expect(figure2).toHaveClass(hoverClass);
     expect(figure3).toHaveClass(hoverClass);
+  });
+
+  it("no debe poder seleccionar si no es el turno del jugador", () => {
+    const rerender = preparaComponenteConFiguras();
+    renderComponent(
+      rerender,
+      { datosJugador: { is_player_turn: false } },
+      { ultimoEvento: null }
+    );
+
+    const figure1 = getCard("1");
+    const figure2 = getCard("2");
+    const figure3 = getCard("3");
+    act(() => {figure3.click();})
+    const hoverClass = "hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105";
+    expect(figure1).toHaveClass(hoverClass);
+    expect(figure2).toHaveClass(hoverClass);
+    expect(figure3).toHaveClass(hoverClass);
+    expect(figure3).not.toHaveClass("cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105");
+
   });
 });

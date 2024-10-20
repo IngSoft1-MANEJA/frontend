@@ -10,6 +10,7 @@ import { EventoContext } from "../../../contexts/EventoContext.jsx";
 import { TilesContext } from "../../../contexts/tilesContext.jsx";
 import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 import { FigurasContext } from "../../../contexts/FigurasContext.jsx";
+import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext.jsx";
 
 export const Tablero = () => {
   const { match_id } = useParams();
@@ -21,10 +22,18 @@ export const Tablero = () => {
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
   const { figuras, agregarFiguras } = useContext(FigurasContext);
+  const { cartaSeleccionada: cartaFiguraSeleccionada } = useContext(CompletarFiguraContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [haValidadoMovimiento, setHaValidadoMovimiento] = useState(false);
+
+  useEffect(() => {
+    if (cartaFiguraSeleccionada !== null) {
+      // mostrar todas las figuras formadas y colocar las otras fihas mas opacas
+      // como en seleccionar una ficha despues de seleccionar una carta de movimiento.
+    }
+  }, [cartaFiguraSeleccionada]);
 
   useEffect(() => {
     if (ultimoEvento !== null) {

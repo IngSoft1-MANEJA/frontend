@@ -2,6 +2,8 @@ import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 
+import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext";
+
 import fig1 from "../../../assets/Figuras/Blancas/fig01.svg";
 import fig2 from "../../../assets/Figuras/Blancas/fig02.svg";
 import fig3 from "../../../assets/Figuras/Blancas/fig03.svg";
@@ -63,7 +65,7 @@ const urlMap = {
 export const CartasFiguras = () => {
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
-  const [cartaSeleccionada, setCartaSeleccionada] = useState(null);
+  const {cartaSeleccionada, setCartaSeleccionada} = useContext(CompletarFiguraContext);
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {

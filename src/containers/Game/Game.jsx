@@ -20,6 +20,7 @@ import ModalGanaste from "./components/ModalGanaste.jsx";
 import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
 import { CancelarUltimoMovimiento } from "./components/CancelarUltimoMovimiento.jsx";
 import { FigurasProvider } from "../../contexts/FigurasContext.jsx";
+import { CompletarFiguraProvider } from "../../contexts/CompletarFiguraContext.jsx";
 
 export function Game() {
   const { match_id } = useParams();
@@ -113,7 +114,9 @@ export function Game() {
             </div>
             <CartasMovimiento />
           </div>
-          <CartasFiguras />
+          <CompletarFiguraProvider>
+            <CartasFiguras />
+          </CompletarFiguraProvider>
           <Tablero />
           <InformacionTurno player_id={datosJugador.player_id} />
           <TerminarTurno />

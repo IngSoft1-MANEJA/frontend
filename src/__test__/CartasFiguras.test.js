@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { CartasFiguras } from "../containers/Game/components/CartasFiguras.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
+import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -27,7 +28,9 @@ describe("CartasFiguras", () => {
     return renderFunc(
     <DatosJugadorContext.Provider value={datosJugador}>
       <EventoContext.Provider value={evento}>
-        <CartasFiguras />
+        <CompletarFiguraProvider>
+          <CartasFiguras />
+        </CompletarFiguraProvider>
       </EventoContext.Provider>
     </DatosJugadorContext.Provider>
     );
@@ -67,7 +70,9 @@ describe("CartasFiguras", () => {
     const { rerender } = render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={mockInfoJugador}>
-          <CartasFiguras />
+          <CompletarFiguraProvider>
+            <CartasFiguras />
+          </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
     );
@@ -75,7 +80,9 @@ describe("CartasFiguras", () => {
     rerender(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={mockEvento}>
-          <CartasFiguras />
+          <CompletarFiguraProvider>
+            <CartasFiguras />
+          </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
     );
@@ -96,7 +103,9 @@ describe("CartasFiguras", () => {
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={eventoValue}>
-          <CartasFiguras />
+          <CompletarFiguraProvider>
+            <CartasFiguras />
+          </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
     );

@@ -5,6 +5,7 @@ import { useWebSocket } from "react-use-websocket";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { CartasFiguras } from "../containers/Game/components/CartasFiguras.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
+import { set } from "react-hook-form";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -23,7 +24,20 @@ describe("CartasFiguras", () => {
     jest.clearAllMocks();
   });
 
+  const renderComponent = (datosJugador, evento) => {
+
+    return (
+    <DatosJugadorContext.Provider value={datosJugador}>
+      <EventoContext.Provider value={evento}>
+        <CartasFiguras />
+      </EventoContext.Provider>
+    </DatosJugadorContext.Provider>
+    );
+
+  };
+
   test("Debe renderizar correctamente las cartas del jugador cuando recibe el mensaje PLAYER_RECIEVE_ALL_SHAPES", () => {
+
     const mockDatosJugador = {
       datosJugador: { player_id: "123" },
       setDatosJugador: jest.fn(),
@@ -92,5 +106,31 @@ describe("CartasFiguras", () => {
     expect(screen.queryByAltText("1")).not.toBeInTheDocument();
     expect(screen.queryByAltText("2")).not.toBeInTheDocument();
     expect(screen.queryByAltText("3")).not.toBeInTheDocument();
+  });
+
+  it("debe resaltar solo la figura cliqueada", () => {
+    const eventoContext = {
+      ultimoEvento: { ultimoEvento: null },
+      setUltimoEvento: jest.fn(),
+    };
+
+    const datosJugadorContext = {
+      datosJugador: { turn_order: 1 },
+      setDatosJugador: jest.fn(),
+    };
+    renderComponent(datosJugadorContext, eventoContext);
+    expect(true).toBe(false);
+  });
+
+  it("debe deseleccionar la figura si se cliquea nuevamente", () => {
+    expect(true).toBe(false);
+  });
+
+  it("no debe hacer hover a ninguna figura si ya hay una seleccionada", () => {
+    expect(true).toBe(false);
+  });
+
+  it("debe hacer hover a una figura si no hay ninguna seleccionada", () => {
+    expect(true).toBe(false);
   });
 });

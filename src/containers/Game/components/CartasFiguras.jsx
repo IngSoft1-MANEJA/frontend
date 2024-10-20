@@ -62,7 +62,7 @@ const urlMap = {
 };
 
 export const CartasFiguras = () => {
-  const [cartasFiguras, setCartasFiguras] = useState([[1, 1], [2, 2]]);
+  const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
   const [cartaSeleccionada, setCartaSeleccionada] = useState(null);
   const { ultimoEvento } = useContext(EventoContext);

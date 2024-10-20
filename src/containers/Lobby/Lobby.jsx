@@ -37,6 +37,13 @@ export function Lobby() {
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
+    return () => {
+      setUltimoEvento(null);  // Limpia el último evento al desmontar el componente
+      setCantPlayersLobby(1);  // Resetea el número de jugadores al valor inicial
+    };
+  }, []);
+
+  useEffect(() => {
     setUltimoEvento(lastJsonMessage);
   }, [lastJsonMessage]);
 
@@ -85,10 +92,6 @@ export function Lobby() {
       }
     }
   }, [ultimoEvento]);
-
-  useEffect(() => {
-    console.log(abandonaOwner);
-  }, [abandonaOwner]);
 
   const moverJugadorAlHome = () => {
     setAbandonaOwner(false);

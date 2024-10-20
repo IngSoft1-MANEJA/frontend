@@ -9,6 +9,7 @@ import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 import { EventoContext } from "../../../contexts/EventoContext.jsx";
 import { TilesContext } from "../../../contexts/tilesContext.jsx";
 import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
+import { FigurasContext } from "../../../contexts/FigurasContext.jsx";
 
 export const Tablero = () => {
   const { match_id } = useParams();
@@ -19,6 +20,7 @@ export const Tablero = () => {
   );
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
+  const { figuras, agregarFiguras } = useContext(FigurasContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
@@ -36,6 +38,9 @@ export const Tablero = () => {
           setTiles,
           setUsarMovimiento,
         );
+      }
+      if (ultimoEvento.key === "ALLOW_FIGURES") {
+        agregarFiguras(ultimoEvento.payload);
       }
     }
   }, [ultimoEvento]);
@@ -129,6 +134,11 @@ export const Tablero = () => {
         usarMovimiento.movimientosPosibles,
       );
       const deshabilitado = !highlighted && !movimientoPosible;
+      const isFiguraInicial = ServicioMovimiento.estaFiguraInicial(
+        rowIndex,
+        columnIndex,
+        figuras.figuras_actuales,
+      );
       return (
         <Ficha
           id={`ficha-${rowIndex}-${columnIndex}`}
@@ -138,6 +148,7 @@ export const Tablero = () => {
           highlightClass={highlighted}
           movimientoPosible={movimientoPosible}
           disabled={deshabilitado}
+          highlightFiguraInicial={isFiguraInicial}
         />
       );
     });

@@ -7,6 +7,7 @@ import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
 import { TilesProvider } from "../contexts/tilesContext.jsx";
+import { FigurasContext } from "../contexts/FigurasContext";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -14,6 +15,7 @@ jest.mock("react-router-dom", () => ({
 }));
 
 jest.mock("../services/ServicioPartida");
+jest.mock("../services/ServicioMovimiento");
 
 jest.mock("../containers/Game/components/Ficha.jsx", () => ({
   Ficha: ({ id, color, onClick }) => (
@@ -30,6 +32,15 @@ describe("VistaTablero", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
+  const mockFiguras = {
+    figuras: {
+      historial: [],
+      figuras_actuales: [],
+    },
+    agregarFiguras: jest.fn(),
+    deshacerFiguras: jest.fn(),
+  };
 
   const mockUsarMovimiento = {
     usarMovimiento: {
@@ -58,11 +69,13 @@ describe("VistaTablero", () => {
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <EventoContext.Provider value={mockEventoContext}>
-            <TilesProvider>
-              <Tablero />
-            </TilesProvider>
-          </EventoContext.Provider>
+          <FigurasContext.Provider value={mockFiguras}>
+            <EventoContext.Provider value={mockEventoContext}>
+              <TilesProvider>
+                <Tablero />
+              </TilesProvider>
+            </EventoContext.Provider>
+          </FigurasContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>,
     );
@@ -79,11 +92,13 @@ describe("VistaTablero", () => {
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <EventoContext.Provider value={mockEventoContext}>
-            <TilesProvider>
-              <Tablero />
-            </TilesProvider>
-          </EventoContext.Provider>
+          <FigurasContext.Provider value={mockFiguras}>
+            <EventoContext.Provider value={mockEventoContext}>
+              <TilesProvider>
+                <Tablero />
+              </TilesProvider>
+            </EventoContext.Provider>
+          </FigurasContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>,
     );
@@ -102,11 +117,13 @@ describe("VistaTablero", () => {
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <EventoContext.Provider value={mockEventoContext}>
-            <TilesProvider>
-              <Tablero />
-            </TilesProvider>
-          </EventoContext.Provider>
+          <FigurasContext.Provider value={mockFiguras}>
+            <EventoContext.Provider value={mockEventoContext}>
+              <TilesProvider>
+                <Tablero />
+              </TilesProvider>
+            </EventoContext.Provider>
+          </FigurasContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>,
     );
@@ -148,11 +165,13 @@ describe("VistaTablero", () => {
         <UsarMovimientoContext.Provider
           value={mockUsarMovimientoConFichaSeleccionada}
         >
-          <EventoContext.Provider value={mockEventoContext}>
-            <TilesProvider>
-              <Tablero />
-            </TilesProvider>
-          </EventoContext.Provider>
+          <FigurasContext.Provider value={mockFiguras}>
+            <EventoContext.Provider value={mockEventoContext}>
+              <TilesProvider>
+                <Tablero />
+              </TilesProvider>
+            </EventoContext.Provider>
+          </FigurasContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>,
     );

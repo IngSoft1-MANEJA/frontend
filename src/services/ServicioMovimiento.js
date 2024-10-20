@@ -143,6 +143,14 @@ const esMovimientoPosible = (rowIndex, columnIndex, movimientosPosibles) => {
   );
 };
 
+const estaFiguraInicial = (rowIndex, columnIndex, initialFigures) => {
+  return initialFigures.some((figure) =>
+    figure.some(
+      ([figRow, figCol]) => figRow === rowIndex && figCol === columnIndex,
+    ),
+  );
+};
+
 function calcularMovimientos(rowIndex, columnIndex, carta) {
   const tableroTam = 6;
   const movimientosPosibles = [];
@@ -281,4 +289,5 @@ export const ServicioMovimiento = {
   estaHighlighted,
   esMovimientoPosible,
   swapFichas,
+  estaFiguraInicial,
 };

@@ -249,4 +249,28 @@ describe("CartasFiguras", () => {
     expect(figure3).toHaveClass(disabled);
     expect(figure3).not.toHaveClass("cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105");
   });
+
+  it("debe limpiar la carta seleccionada si se termina su turno", () => {
+    const rerender = preparaComponenteConFiguras();
+
+    const figure1 = getCard("1");
+    const figure2 = getCard("2");
+    const figure3 = getCard("3");
+
+    act(() => {figure3.click();})
+    const disabled = "opacity-25 pointer-events-none greyscale";
+    expect(figure1).toHaveClass(disabled);
+    expect(figure2).toHaveClass(disabled);
+    expect(figure3).toHaveClass("cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105");
+
+    renderComponent(
+      rerender,
+      { datosJugador: { is_player_turn: false } },
+      { ultimoEvento: null }
+    );
+
+    expect(figure1.classList.length).toEqual(0);
+    expect(figure2.classList.length).toEqual(0);
+    expect(figure3.classList.length).toEqual(0);
+  });
 });

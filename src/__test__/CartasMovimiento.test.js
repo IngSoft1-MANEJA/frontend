@@ -12,7 +12,7 @@ jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
 }));
 
-jest.mock('react-use-websocket');
+jest.mock("react-use-websocket");
 
 describe("CartasMovimiento", () => {
   const mockUsarMovimiento = {
@@ -21,11 +21,11 @@ describe("CartasMovimiento", () => {
       fichaHovering: false,
       cartaSeleccionada: null,
       fichasSeleccionadas: [],
-      highlightCarta: { state: false, key: '' },
-      cartasUsadas: [] 
+      highlightCarta: { state: false, key: "" },
+      cartasUsadas: [],
     },
     setUsarMovimiento: jest.fn(),
-  }
+  };
 
   beforeEach(() => {
     useParams.mockReturnValue({ match_id: "1" });
@@ -57,9 +57,9 @@ describe("CartasMovimiento", () => {
     render(
       <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
         <DatosJugadorContext.Provider value={mockDatosJugador}>
-            <EventoContext.Provider value={eventoValue}>
-              <CartasMovimiento />
-            </EventoContext.Provider>
+          <EventoContext.Provider value={eventoValue}>
+            <CartasMovimiento />
+          </EventoContext.Provider>
         </DatosJugadorContext.Provider>
       </UsarMovimientoContext.Provider>,
     );

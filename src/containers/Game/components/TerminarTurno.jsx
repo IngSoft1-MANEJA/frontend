@@ -11,7 +11,9 @@ export const TerminarTurno = () => {
   const { match_id } = useParams();
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-  const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
+  const { usarMovimiento, setUsarMovimiento } = useContext(
+    UsarMovimientoContext,
+  );
   const { ultimoEvento } = useContext(EventoContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
@@ -45,7 +47,7 @@ export const TerminarTurno = () => {
             fichaHovering: false,
             cartaSeleccionada: null,
             fichasSeleccionadas: [],
-            highlightCarta: { state: false, key: '' },
+            highlightCarta: { state: false, key: "" },
             cartasUsadas: [],
             movimientosPosibles: [],
           });
@@ -61,10 +63,10 @@ export const TerminarTurno = () => {
             ultimoEvento.payload.next_player_turn === datosJugador.player_turn
           ) {
             setHabilitarBoton(true);
-            setDatosJugador({...datosJugador, is_player_turn: true});
+            setDatosJugador({ ...datosJugador, is_player_turn: true });
           } else {
             setHabilitarBoton(false);
-            setDatosJugador({...datosJugador, is_player_turn: false});
+            setDatosJugador({ ...datosJugador, is_player_turn: false });
           }
 
           setMensajeAlerta(

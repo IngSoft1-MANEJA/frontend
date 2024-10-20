@@ -6,7 +6,7 @@ import { Tiles } from "../__mocks__/Tablero.mock.js";
 import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
-import { DatosPartidaContext } from "../contexts/DatosPartidaContext.jsx";
+import { TilesProvider } from "../contexts/tilesContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -59,7 +59,9 @@ describe("VistaTablero", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
           <EventoContext.Provider value={mockEventoContext}>
-            <Tablero />
+            <TilesProvider>
+              <Tablero />
+            </TilesProvider>
           </EventoContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -78,7 +80,9 @@ describe("VistaTablero", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
           <EventoContext.Provider value={mockEventoContext}>
-            <Tablero />
+            <TilesProvider>
+              <Tablero />
+            </TilesProvider>
           </EventoContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -99,7 +103,9 @@ describe("VistaTablero", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
           <EventoContext.Provider value={mockEventoContext}>
-            <Tablero />
+            <TilesProvider>
+              <Tablero />
+            </TilesProvider>
           </EventoContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -143,7 +149,9 @@ describe("VistaTablero", () => {
           value={mockUsarMovimientoConFichaSeleccionada}
         >
           <EventoContext.Provider value={mockEventoContext}>
-            <Tablero />
+            <TilesProvider>
+              <Tablero />
+            </TilesProvider>
           </EventoContext.Provider>
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>,

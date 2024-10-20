@@ -5,6 +5,7 @@ import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { CartasFiguras } from "../containers/Game/components/CartasFiguras.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
 import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
+import { UsarMovimientoProvider } from "../contexts/UsarMovimientoContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -30,7 +31,9 @@ describe("CartasFiguras", () => {
     <DatosJugadorContext.Provider value={datosJugador}>
       <EventoContext.Provider value={evento}>
         <CompletarFiguraProvider>
-          <CartasFiguras />
+          <UsarMovimientoProvider>
+            <CartasFiguras />
+          </UsarMovimientoProvider>
         </CompletarFiguraProvider>
       </EventoContext.Provider>
     </DatosJugadorContext.Provider>
@@ -72,7 +75,9 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={mockInfoJugador}>
           <CompletarFiguraProvider>
-            <CartasFiguras />
+            <UsarMovimientoProvider>
+              <CartasFiguras />
+            </UsarMovimientoProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -82,7 +87,9 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={mockEvento}>
           <CompletarFiguraProvider>
-            <CartasFiguras />
+            <UsarMovimientoProvider>
+              <CartasFiguras />
+            </UsarMovimientoProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -105,7 +112,9 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={eventoValue}>
           <CompletarFiguraProvider>
-            <CartasFiguras />
+            <UsarMovimientoProvider>
+              <CartasFiguras />
+            </UsarMovimientoProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,

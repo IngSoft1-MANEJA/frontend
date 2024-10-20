@@ -38,8 +38,8 @@ export function Lobby() {
 
   useEffect(() => {
     return () => {
-      setUltimoEvento(null);  // Limpia el último evento al desmontar el componente
-      setCantPlayersLobby(1);  // Resetea el número de jugadores al valor inicial
+      setUltimoEvento(null); 
+      setCantPlayersLobby(1);  
     };
   }, []);
 

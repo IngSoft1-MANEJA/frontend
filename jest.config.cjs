@@ -12,4 +12,7 @@ module.exports = {
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleFileExtensions: ["js", "jsx"],
+  collectCoverage: true,
+  coverageDirectory: "coverage",
+  coverageReporters: ["html", "text"],
 };

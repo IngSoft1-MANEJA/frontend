@@ -12,10 +12,16 @@ import { EventoContext } from "../contexts/EventoContext";
 import { TilesContext } from "../contexts/tilesContext";
 import { BrowserRouter } from "react-router-dom";
 import { ServicioMovimiento } from "../services/ServicioMovimiento";
+import { FigurasContext } from "../contexts/FigurasContext";
 
 const mockDatosJugador = {
   is_player_turn: true,
   player_id: "123",
+};
+
+const mockFiguras = {
+  historial: [],
+  figuras_actuales: [],
 };
 
 const mockUsarMovimiento = {
@@ -28,6 +34,10 @@ const mockTiles = {
   setTiles: jest.fn(),
 };
 
+const mockDeshacerFiguras = jest.fn();
+
+const mockAgregarFiguras = jest.fn();
+
 afterEach(() => {
   jest.clearAllMocks();
 });
@@ -38,20 +48,27 @@ describe("CancelarUltimoMovimiento", () => {
     usarMovimiento = mockUsarMovimiento,
     ultimoEvento = null,
     tiles = mockTiles,
+    figuras = mockFiguras,
+    agregarFiguras = mockAgregarFiguras,
+    deshacerFiguras = mockDeshacerFiguras,
   ) => {
     return render(
       <BrowserRouter>
-        <DatosJugadorContext.Provider value={{ datosJugador }}>
-          <UsarMovimientoContext.Provider value={{ usarMovimiento }}>
-            <EventoContext.Provider value={{ ultimoEvento }}>
-              <TilesContext.Provider
-                value={{ tiles: tiles.tiles, setTiles: tiles.setTiles }}
-              >
-                <CancelarUltimoMovimiento />
-              </TilesContext.Provider>
-            </EventoContext.Provider>
-          </UsarMovimientoContext.Provider>
-        </DatosJugadorContext.Provider>
+        <FigurasContext.Provider
+          value={{ figuras, agregarFiguras, deshacerFiguras }}
+        >
+          <DatosJugadorContext.Provider value={{ datosJugador }}>
+            <UsarMovimientoContext.Provider value={{ usarMovimiento }}>
+              <EventoContext.Provider value={{ ultimoEvento }}>
+                <TilesContext.Provider
+                  value={{ tiles: tiles.tiles, setTiles: tiles.setTiles }}
+                >
+                  <CancelarUltimoMovimiento />
+                </TilesContext.Provider>
+              </EventoContext.Provider>
+            </UsarMovimientoContext.Provider>
+          </DatosJugadorContext.Provider>
+        </FigurasContext.Provider>
       </BrowserRouter>,
     );
   };

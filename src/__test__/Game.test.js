@@ -18,6 +18,7 @@ import { MemoryRouter } from "react-router-dom";
 import { EventoProvider } from "../contexts/EventoContext";
 import useWebSocket from "react-use-websocket";
 import { TilesProvider } from "../contexts/tilesContext";
+import { FigurasProvider } from "../contexts/FigurasContext";
 
 jest.mock("../containers/Game/components/Ficha.jsx", () => ({
   Ficha: ({ color }) => (
@@ -65,7 +66,9 @@ describe("Game", () => {
           <DatosJugadorProvider>
             <DatosPartidaProvider>
               <TilesProvider>
-                <Game />
+                <FigurasProvider>
+                  <Game />
+                </FigurasProvider>
               </TilesProvider>
             </DatosPartidaProvider>
           </DatosJugadorProvider>
@@ -104,7 +107,9 @@ describe("Game", () => {
           <DatosJugadorProvider>
             <DatosPartidaProvider>
               <TilesProvider>
-                <Game />
+                <FigurasProvider>
+                  <Game />
+                </FigurasProvider>
               </TilesProvider>
             </DatosPartidaProvider>
           </DatosJugadorProvider>
@@ -144,7 +149,9 @@ describe("Game", () => {
           <DatosJugadorProvider>
             <DatosPartidaProvider>
               <TilesProvider>
-                <Game />
+                <FigurasProvider>
+                  <Game />
+                </FigurasProvider>
               </TilesProvider>
             </DatosPartidaProvider>
           </DatosJugadorProvider>
@@ -190,7 +197,9 @@ describe("Game", () => {
               }}
             >
               <TilesProvider>
-                <Game />
+                <FigurasProvider>
+                  <Game />
+                </FigurasProvider>
               </TilesProvider>
             </DatosPartidaContext.Provider>
           </DatosJugadorContext.Provider>

@@ -102,10 +102,11 @@ export function Game() {
   return (
     <div className="game-div relative w-full h-screen m-0 z-0">
       <UsarMovimientoProvider>
-        <ModalGanaste
+        <Modal
           mostrar={mostrarModalGanador}
           texto={mensajeGanador}
-          enVolverAlHome={moverJugadorAlHome}
+          funcionDeClcik={moverJugadorAlHome}
+          boton="Volver al home"
         />
         <div className="cartas-movimientos">
           <div className="-mt-24 pb-5">

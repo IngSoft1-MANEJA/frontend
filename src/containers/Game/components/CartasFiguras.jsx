@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 
@@ -31,6 +31,7 @@ import fige7 from "../../../assets/Figuras/Celestes/fige07.svg";
 import backfig from "../../../assets/Figuras/Celestes/back.svg";
 
 import "./CartasFiguras.css";
+import { set } from "react-hook-form";
 
 const urlMap = {
   1: fig1,
@@ -61,8 +62,9 @@ const urlMap = {
 };
 
 export const CartasFiguras = () => {
-  const [cartasFiguras, setCartasFiguras] = useState([]);
+  const [cartasFiguras, setCartasFiguras] = useState([[1, 1], [2, 2]]);
   const [miTurno, setMiTurno] = useState(0);
+  const [cartaSeleccionada, setCartaSeleccionada] = useState(null);
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
@@ -94,6 +96,38 @@ export const CartasFiguras = () => {
     }
   }, [ultimoEvento, miTurno]);
 
+  const claseCarta = useCallback((index) => {
+    const efectoHover =
+      " hover:cursor-pointer" +
+      " hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" +
+      " hover:scale-105";
+    
+    const efectoSeleccionada =
+      " cursor-pointer" +
+      " shadow-[0px_0px_20px_rgba(100,200,44,1)]" +
+      " scale-105";
+    
+    if (cartaSeleccionada !== null) {
+      if (cartaSeleccionada === index) {
+        return efectoSeleccionada;
+      } else {
+        return "";
+      }
+    }
+
+    return efectoHover; 
+  }, [cartaSeleccionada]);
+
+  const seleccionarCarta = (index) => {
+    if (cartaSeleccionada !== null) {
+      if (cartaSeleccionada === index) {
+        setCartaSeleccionada(null);
+      }
+    } else {
+      setCartaSeleccionada(index);
+    }
+  };
+
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
@@ -101,7 +135,11 @@ export const CartasFiguras = () => {
           <img src={backfig} alt="back" />
         </div>
         {cartasFiguras.map((carta, index) => (
-          <div key={index} className="carta-movimiento">
+          <div
+            key={index}
+            className={claseCarta(index)}
+            onClick={() => seleccionarCarta(index)}
+          >
             <img src={urlMap[carta[1]]} alt={carta[1]} />
           </div>
         ))}

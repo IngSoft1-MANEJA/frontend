@@ -167,10 +167,16 @@ describe("ServicioMovimiento", () => {
         const nuevasCartas = fn({
           cartasUsadas: [
             [1, "diagonal"],
-            [2, "L"],
+            [2, "diagonal"],
+            [3, "L"],
           ],
         });
-        expect(nuevasCartas).toEqual({ cartasUsadas: [[2, "L"]] });
+        expect(nuevasCartas).toEqual({
+          cartasUsadas: [
+            [1, "diagonal"],
+            [3, "L"],
+          ],
+        });
       });
       const setMostrarAlerta = jest.fn();
       const setMensajeAlerta = jest.fn();
@@ -183,7 +189,7 @@ describe("ServicioMovimiento", () => {
       );
 
       deshacerMovimientoParcial.mockResolvedValue({
-        movement_card: [1, "diagonal"],
+        movement_card: [2, "diagonal"],
         tiles: [["green"]],
       });
 

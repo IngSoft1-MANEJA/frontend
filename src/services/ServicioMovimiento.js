@@ -116,7 +116,7 @@ const deshacerMovimiento = async (
     setUsarMovimiento((prev) => ({
       ...prev,
       cartasUsadas: prev.cartasUsadas.filter(
-        (carta) => carta[1] !== cartaADeshacer[1],
+        (carta) => carta[0] !== cartaADeshacer[0],
       ),
     }));
 

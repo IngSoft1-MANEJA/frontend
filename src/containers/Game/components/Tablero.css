@@ -28,14 +28,12 @@
   box-sizing: border-box;
 }
 
-/* Clase para ocultar las fichas */
 .oculto {
-  opacity: 0; /* Hace la ficha completamente transparente */
-  transition: opacity 0.5s ease-in-out; /* Transición suave de 0.5s */
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
-/* Clase para mostrar las fichas (no necesitas definirla, pero puede ser útil) */
 .ficha-visible {
-  opacity: 1; /* Asegúrate de que la ficha sea visible */
-  transition: opacity 0.5s ease-in-out; /* Transición suave de 0.5s */
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
 }

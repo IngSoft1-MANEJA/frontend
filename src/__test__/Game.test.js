@@ -17,6 +17,8 @@ import Game from "../containers/Game/Game";
 import { MemoryRouter } from "react-router-dom";
 import { EventoProvider } from "../contexts/EventoContext";
 import useWebSocket from "react-use-websocket";
+import { TilesProvider } from "../contexts/tilesContext";
+import { FigurasProvider } from "../contexts/FigurasContext";
 
 jest.mock("../containers/Game/components/Ficha.jsx", () => ({
   Ficha: ({ color }) => (
@@ -63,7 +65,11 @@ describe("Game", () => {
         <EventoProvider>
           <DatosJugadorProvider>
             <DatosPartidaProvider>
-              <Game />
+              <TilesProvider>
+                <FigurasProvider>
+                  <Game />
+                </FigurasProvider>
+              </TilesProvider>
             </DatosPartidaProvider>
           </DatosJugadorProvider>
         </EventoProvider>
@@ -100,7 +106,11 @@ describe("Game", () => {
         <EventoProvider>
           <DatosJugadorProvider>
             <DatosPartidaProvider>
-              <Game />
+              <TilesProvider>
+                <FigurasProvider>
+                  <Game />
+                </FigurasProvider>
+              </TilesProvider>
             </DatosPartidaProvider>
           </DatosJugadorProvider>
         </EventoProvider>
@@ -138,7 +148,11 @@ describe("Game", () => {
         <EventoProvider>
           <DatosJugadorProvider>
             <DatosPartidaProvider>
-              <Game />
+              <TilesProvider>
+                <FigurasProvider>
+                  <Game />
+                </FigurasProvider>
+              </TilesProvider>
             </DatosPartidaProvider>
           </DatosJugadorProvider>
         </EventoProvider>
@@ -182,7 +196,11 @@ describe("Game", () => {
                 setDatosPartida: mockSetDatosPartida,
               }}
             >
-              <Game />
+              <TilesProvider>
+                <FigurasProvider>
+                  <Game />
+                </FigurasProvider>
+              </TilesProvider>
             </DatosPartidaContext.Provider>
           </DatosJugadorContext.Provider>
         </EventoProvider>

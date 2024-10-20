@@ -1,9 +1,9 @@
 export const Tiles = [
   ["red", "red", "green", "yellow", "red", "yellow"],
   ["green", "blue", "red", "yellow", "green", "blue"],
-  ["red", "yellow", "green", "blue", "blue", "yellow"],
-  ["green", "blue", "red", "yellow", "green", "blue"],
-  ["red", "yellow", "green", "yellow", "red", "green"],
+  ["green", "yellow", "red", "blue", "blue", "blue"],
+  ["green", "blue", "red", "red", "green", "blue"],
+  ["green", "yellow", "green", "yellow", "red", "green"],
   ["green", "blue", "blue", "yellow", "green", "blue"],
 ];
 

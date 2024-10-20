@@ -5,7 +5,7 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 
 import { WEBSOCKET_URL } from "../../variablesConfiguracion.js";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
-import { UsarMovimientoProvider } from '../../contexts/UsarMovimientoContext';
+import { UsarMovimientoProvider } from "../../contexts/UsarMovimientoContext";
 import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
@@ -18,6 +18,8 @@ import { WebsocketEvents } from "../../services/ServicioWebsocket";
 import { JugadorGanoMotivo } from "../../services/ServicioPartida";
 import ModalGanaste from "./components/ModalGanaste.jsx";
 import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
+import { CancelarUltimoMovimiento } from "./components/CancelarUltimoMovimiento.jsx";
+import { FigurasProvider } from "../../contexts/FigurasContext.jsx";
 
 export function Game() {
   const { match_id } = useParams();
@@ -98,25 +100,31 @@ export function Game() {
 
   return (
     <div className="game-div relative w-full h-screen m-0 z-0">
-      
-      <UsarMovimientoProvider>
-        <ModalGanaste
-          mostrar={mostrarModalGanador}
-          texto={mensajeGanador}
-          enVolverAlHome={moverJugadorAlHome}
-        />
-        <CartasMovimiento />
-        <CartasFiguras />
-        <Tablero />
-        <InformacionTurno player_id={datosJugador.player_id} />
-        <TerminarTurno />
-        <AbandonarPartida
-          estadoPartida="STARTED"
-          esAnfitrion={datosJugador.is_owner}
-          idJugador={datosJugador.player_id}
-          idPartida={match_id}
-        />
-      </UsarMovimientoProvider>
+      <FigurasProvider>
+        <UsarMovimientoProvider>
+          <ModalGanaste
+            mostrar={mostrarModalGanador}
+            texto={mensajeGanador}
+            enVolverAlHome={moverJugadorAlHome}
+          />
+          <div className="cartas-movimientos">
+            <div className="-mt-24 pb-5">
+              <CancelarUltimoMovimiento />
+            </div>
+            <CartasMovimiento />
+          </div>
+          <CartasFiguras />
+          <Tablero />
+          <InformacionTurno player_id={datosJugador.player_id} />
+          <TerminarTurno />
+          <AbandonarPartida
+            estadoPartida="STARTED"
+            esAnfitrion={datosJugador.is_owner}
+            idJugador={datosJugador.player_id}
+            idPartida={match_id}
+          />
+        </UsarMovimientoProvider>
+      </FigurasProvider>
     </div>
   );
 }

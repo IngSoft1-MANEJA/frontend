@@ -8,13 +8,15 @@ export const UsarMovimientoProvider = ({ children }) => {
     fichaHovering: false,
     cartaSeleccionada: null,
     fichasSeleccionadas: [],
-    highlightCarta: { state: false, key: '' },
+    highlightCarta: { state: false, key: "" },
     cartasUsadas: [],
     movimientosPosibles: [],
   });
 
   return (
-    <UsarMovimientoContext.Provider value={{ usarMovimiento, setUsarMovimiento }}>
+    <UsarMovimientoContext.Provider
+      value={{ usarMovimiento, setUsarMovimiento }}
+    >
       {children}
     </UsarMovimientoContext.Provider>
   );

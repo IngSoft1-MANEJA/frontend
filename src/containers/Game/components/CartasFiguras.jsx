@@ -75,8 +75,11 @@ export const CartasFiguras = () => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setMiTurno(ultimoEvento.payload.turn_order);
+      } else if (ultimoEvento.key === "END_PLAYER_TURN") {
+        setCartaSeleccionada(null);
       }
-    }
+    } 
+
   }, [ultimoEvento]);
 
   useEffect(() => {
@@ -113,6 +116,10 @@ export const CartasFiguras = () => {
     
     const deshabilidata = "opacity-25 pointer-events-none greyscale"
 
+    if (!datosJugador.is_player_turn) {
+      return "";
+    }
+
     if (usarMovimiento.cartaSeleccionada !== null) {
       return deshabilidata;
     }
@@ -126,7 +133,7 @@ export const CartasFiguras = () => {
     }
 
     return efectoHover; 
-  }, [cartaSeleccionada, usarMovimiento]);
+  }, [cartaSeleccionada, usarMovimiento, datosJugador]);
 
   const seleccionarCarta = (index) => {
     if (

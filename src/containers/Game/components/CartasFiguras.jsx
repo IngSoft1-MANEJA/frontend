@@ -31,7 +31,6 @@ import fige7 from "../../../assets/Figuras/Celestes/fige07.svg";
 import backfig from "../../../assets/Figuras/Celestes/back.svg";
 
 import "./CartasFiguras.css";
-import { set } from "react-hook-form";
 
 const urlMap = {
   1: fig1,

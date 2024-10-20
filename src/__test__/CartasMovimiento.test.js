@@ -107,7 +107,7 @@ describe("CartasMovimiento", () => {
         },
       },
     };
-    
+
     const mockDatosJugador = {
       datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),
@@ -129,7 +129,7 @@ describe("CartasMovimiento", () => {
     expect(mockUsarMovimiento.setUsarMovimiento).toHaveBeenCalledWith({
       ...mockUsarMovimiento.usarMovimiento,
       cartaSeleccionada: [1, "Diagonal"],
-      highlightCarta: { state: true, key: 0 }
+      highlightCarta: { state: true, key: 0 },
     });
   });
 
@@ -152,12 +152,15 @@ describe("CartasMovimiento", () => {
         fichaHovering: false,
         cartaSeleccionada: null,
         fichasSeleccionadas: [],
-        highlightCarta: { state: false, key: '' },
-        cartasUsadas: [[1, "Diagonal"], [3, "Line"]] 
+        highlightCarta: { state: false, key: "" },
+        cartasUsadas: [
+          [1, "Diagonal"],
+          [3, "Line"],
+        ],
       },
       setUsarMovimiento: jest.fn(),
-    }
-    
+    };
+
     const mockDatosJugador = {
       datosJugador: { player_id: "123", is_player_turn: true },
       setDatosJugador: jest.fn(),

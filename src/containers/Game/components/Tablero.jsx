@@ -15,7 +15,9 @@ export const Tablero = () => {
   const { match_id } = useParams();
 
   const { datosJugador } = useContext(DatosJugadorContext);
-  const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
+  const { usarMovimiento, setUsarMovimiento } = useContext(
+    UsarMovimientoContext,
+  );
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
   const { figuras, agregarFiguras } = useContext(FigurasContext);
@@ -132,7 +134,11 @@ export const Tablero = () => {
         usarMovimiento.movimientosPosibles,
       );
       const deshabilitado = !highlighted && !movimientoPosible;
-      const isFiguraInicial = ServicioMovimiento.estaFiguraInicial(rowIndex, columnIndex, figuras.figuras_actuales);
+      const isFiguraInicial = ServicioMovimiento.estaFiguraInicial(
+        rowIndex,
+        columnIndex,
+        figuras.figuras_actuales,
+      );
       return (
         <Ficha
           id={`ficha-${rowIndex}-${columnIndex}`}

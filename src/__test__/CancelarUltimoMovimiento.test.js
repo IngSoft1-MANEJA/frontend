@@ -54,7 +54,9 @@ describe("CancelarUltimoMovimiento", () => {
   ) => {
     return render(
       <BrowserRouter>
-        <FigurasContext.Provider value={{ figuras, agregarFiguras, deshacerFiguras }}>
+        <FigurasContext.Provider
+          value={{ figuras, agregarFiguras, deshacerFiguras }}
+        >
           <DatosJugadorContext.Provider value={{ datosJugador }}>
             <UsarMovimientoContext.Provider value={{ usarMovimiento }}>
               <EventoContext.Provider value={{ ultimoEvento }}>

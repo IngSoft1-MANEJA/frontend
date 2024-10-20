@@ -18,7 +18,8 @@ export const FigurasProvider = ({ children }) => {
   const deshacerFiguras = () => {
     setFiguras((prevState) => {
       if (prevState.historial.length === 0) return prevState;
-      const ultimasFiguras = prevState.historial[prevState.historial.length - 1];
+      const ultimasFiguras =
+        prevState.historial[prevState.historial.length - 1];
       const nuevaHistoria = prevState.historial.slice(0, -1);
       return {
         historial: nuevaHistoria,
@@ -28,7 +29,9 @@ export const FigurasProvider = ({ children }) => {
   };
 
   return (
-    <FigurasContext.Provider value={{ figuras, agregarFiguras, deshacerFiguras }}>
+    <FigurasContext.Provider
+      value={{ figuras, agregarFiguras, deshacerFiguras }}
+    >
       {children}
     </FigurasContext.Provider>
   );

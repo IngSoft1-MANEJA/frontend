@@ -9,14 +9,13 @@ import { EventoContext } from "../contexts/EventoContext.jsx";
 import { TilesProvider } from "../contexts/tilesContext.jsx";
 import { FigurasContext } from "../contexts/FigurasContext";
 
-
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useParams: () => ({ match_id: 1 }),
 }));
 
 jest.mock("../services/ServicioPartida");
-jest.mock('../services/ServicioMovimiento');
+jest.mock("../services/ServicioMovimiento");
 
 jest.mock("../containers/Game/components/Ficha.jsx", () => ({
   Ficha: ({ id, color, onClick }) => (
@@ -39,8 +38,8 @@ describe("VistaTablero", () => {
       historial: [],
       figuras_actuales: [],
     },
-    agregarFiguras : jest.fn(),
-    deshacerFiguras : jest.fn(),
+    agregarFiguras: jest.fn(),
+    deshacerFiguras: jest.fn(),
   };
 
   const mockUsarMovimiento = {
@@ -70,7 +69,7 @@ describe("VistaTablero", () => {
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <FigurasContext.Provider value={ mockFiguras }>
+          <FigurasContext.Provider value={mockFiguras}>
             <EventoContext.Provider value={mockEventoContext}>
               <TilesProvider>
                 <Tablero />
@@ -93,7 +92,7 @@ describe("VistaTablero", () => {
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <FigurasContext.Provider value={ mockFiguras }>
+          <FigurasContext.Provider value={mockFiguras}>
             <EventoContext.Provider value={mockEventoContext}>
               <TilesProvider>
                 <Tablero />
@@ -118,7 +117,7 @@ describe("VistaTablero", () => {
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-          <FigurasContext.Provider value={ mockFiguras }>
+          <FigurasContext.Provider value={mockFiguras}>
             <EventoContext.Provider value={mockEventoContext}>
               <TilesProvider>
                 <Tablero />
@@ -166,7 +165,7 @@ describe("VistaTablero", () => {
         <UsarMovimientoContext.Provider
           value={mockUsarMovimientoConFichaSeleccionada}
         >
-          <FigurasContext.Provider value={ mockFiguras }>
+          <FigurasContext.Provider value={mockFiguras}>
             <EventoContext.Provider value={mockEventoContext}>
               <TilesProvider>
                 <Tablero />

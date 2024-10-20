@@ -5,7 +5,7 @@ import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { CartasFiguras } from "../containers/Game/components/CartasFiguras.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
 import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
-import { UsarMovimientoProvider } from "../contexts/UsarMovimientoContext.jsx";
+import { UsarMovimientoContext, UsarMovimientoProvider } from "../contexts/UsarMovimientoContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -25,20 +25,23 @@ describe("CartasFiguras", () => {
     cleanup();
   });
 
-  const renderComponent = (renderFunc, datosJugador, evento) => {
-
+  const renderComponent = (
+    renderFunc,
+    datosJugador,
+    evento,
+    usarMovimiento = { usarMovimiento: { cartaSeleccionada: null } }
+  ) => {
     return renderFunc(
-    <DatosJugadorContext.Provider value={datosJugador}>
-      <EventoContext.Provider value={evento}>
-        <CompletarFiguraProvider>
-          <UsarMovimientoProvider>
-            <CartasFiguras />
-          </UsarMovimientoProvider>
-        </CompletarFiguraProvider>
-      </EventoContext.Provider>
-    </DatosJugadorContext.Provider>
+      <DatosJugadorContext.Provider value={datosJugador}>
+        <EventoContext.Provider value={evento}>
+          <CompletarFiguraProvider>
+            <UsarMovimientoContext.Provider value={usarMovimiento}>
+              <CartasFiguras />
+            </UsarMovimientoContext.Provider>
+          </CompletarFiguraProvider>
+        </EventoContext.Provider>
+      </DatosJugadorContext.Provider>
     );
-
   };
 
   test("Debe renderizar correctamente las cartas del jugador cuando recibe el mensaje PLAYER_RECIEVE_ALL_SHAPES", () => {
@@ -224,5 +227,26 @@ describe("CartasFiguras", () => {
     expect(figure3).toHaveClass(hoverClass);
     expect(figure3).not.toHaveClass("cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105");
 
+  });
+
+  it("No debe poder seleccionar si hay una carta de movimiento seleccionada", () => {
+    const rerender = preparaComponenteConFiguras();
+    renderComponent(
+      rerender,
+      { datosJugador: { is_player_turn: true } },
+      { ultimoEvento: null },
+      { usarMovimiento: { cartaSeleccionada: [1, "Diagonal"] } }
+    );
+
+    const figure1 = getCard("1");
+    const figure2 = getCard("2");
+    const figure3 = getCard("3");
+    const disabled = "opacity-25 pointer-events-none greyscale";
+
+    act(() => {figure3.click();})
+    expect(figure1).toHaveClass(disabled);
+    expect(figure2).toHaveClass(disabled);
+    expect(figure3).toHaveClass(disabled);
+    expect(figure3).not.toHaveClass("cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105");
   });
 });

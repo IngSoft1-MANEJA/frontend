@@ -121,7 +121,6 @@ const deshacerMovimiento = async (
     }));
 
     ServicioMovimiento.swapFichas(respuesta.tiles, tiles, setTiles);
-
   } catch (err) {
     setMensajeAlerta("Error al deshacer movimiento");
     setMostrarAlerta(true);

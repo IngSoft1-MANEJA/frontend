@@ -179,7 +179,7 @@ describe("ServicioMovimiento", () => {
 
       const deshacerMovimientoParcial = jest.spyOn(
         ServicioPartida,
-        "deshacerMovimientoParcial"
+        "deshacerMovimientoParcial",
       );
 
       deshacerMovimientoParcial.mockResolvedValue({
@@ -197,13 +197,13 @@ describe("ServicioMovimiento", () => {
         setMostrarAlerta,
         setMensajeAlerta,
         tiles,
-        setTiles
+        setTiles,
       );
 
       await waitFor(() => {
         expect(ServicioPartida.deshacerMovimientoParcial).toHaveBeenCalledWith(
           idPartida,
-          idJugador
+          idJugador,
         );
         expect(setUsarMovimiento).toHaveBeenCalled();
         expect(swapFichas).toHaveBeenCalledWith([["green"]], tiles, setTiles);
@@ -223,7 +223,7 @@ describe("ServicioMovimiento", () => {
 
       const deshacerMovimientoParcial = jest.spyOn(
         ServicioPartida,
-        "deshacerMovimientoParcial"
+        "deshacerMovimientoParcial",
       );
 
       deshacerMovimientoParcial.mockRejectedValue(new Error("Error"));
@@ -235,17 +235,19 @@ describe("ServicioMovimiento", () => {
         setMensajeAlerta,
         setMostrarAlerta,
         tiles,
-        setTiles
+        setTiles,
       );
 
       await waitFor(() => {
         expect(ServicioPartida.deshacerMovimientoParcial).toHaveBeenCalledWith(
           idPartida,
-          idJugador
+          idJugador,
         );
         expect(setUsarMovimiento).not.toHaveBeenCalled();
         expect(setMostrarAlerta).toHaveBeenCalledWith(true);
-        expect(setMensajeAlerta).toHaveBeenCalledWith("Error al deshacer movimiento");
+        expect(setMensajeAlerta).toHaveBeenCalledWith(
+          "Error al deshacer movimiento",
+        );
       });
     });
   });

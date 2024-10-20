@@ -11,7 +11,9 @@ import { WebsocketEvents } from "../../../services/ServicioWebsocket";
 export const CancelarUltimoMovimiento = () => {
   const { match_id } = useParams();
   const { datosJugador } = useContext(DatosJugadorContext);
-  const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
+  const { usarMovimiento, setUsarMovimiento } = useContext(
+    UsarMovimientoContext,
+  );
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
@@ -35,11 +37,10 @@ export const CancelarUltimoMovimiento = () => {
         setMensajeAlerta,
         setMostrarAlerta,
         tiles,
-        setTiles
+        setTiles,
       );
     }
   };
-
 
   const puedeCancelar = useCallback(
     () => datosJugador.is_player_turn && usarMovimiento.cartasUsadas.length > 0,

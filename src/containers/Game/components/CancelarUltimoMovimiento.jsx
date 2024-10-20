@@ -4,6 +4,7 @@ import { ServicioMovimiento } from "../../../services/ServicioMovimiento";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { TilesContext } from "../../../contexts/tilesContext";
 import { EventoContext } from "../../../contexts/EventoContext";
+import { FigurasContext } from "../../../contexts/FigurasContext";
 import { Alerts } from "../../../components/Alerts";
 import { useParams } from "react-router-dom";
 import { WebsocketEvents } from "../../../services/ServicioWebsocket";
@@ -11,11 +12,10 @@ import { WebsocketEvents } from "../../../services/ServicioWebsocket";
 export const CancelarUltimoMovimiento = () => {
   const { match_id } = useParams();
   const { datosJugador } = useContext(DatosJugadorContext);
-  const { usarMovimiento, setUsarMovimiento } = useContext(
-    UsarMovimientoContext,
-  );
+  const { usarMovimiento, setUsarMovimiento } = useContext(UsarMovimientoContext);
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
+  const { deshacerFiguras } = useContext(FigurasContext);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("Error");
 
@@ -24,6 +24,7 @@ export const CancelarUltimoMovimiento = () => {
       if (ultimoEvento.key === WebsocketEvents.UNDO_PARTIAL_MOVE) {
         const { tiles: tilesAIntercambiar } = ultimoEvento.payload;
         ServicioMovimiento.swapFichas(tilesAIntercambiar, tiles, setTiles);
+        deshacerFiguras();
       }
     }
   }, [ultimoEvento]);

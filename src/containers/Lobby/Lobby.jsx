@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
-import { ModalCancelarPartida } from "./components/ModalCancelarPartida";
+import { Modal } from "../../components/Modal.jsx";
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion";
 import Alerts from "../../components/Alerts";
@@ -56,8 +56,9 @@ export function Lobby() {
 
         case "PLAYER_LEFT":
           if (ultimoEvento.payload.is_owner) {
+            console.log(ultimoEvento.payload.is_owner);
             setAbandonaOwner(true);
-            setMostrarAlerta(false)
+            setMostrarAlerta(false);
             setMensajeCancelacion(
               `El dueño de la sala ha cancelado la partida.`,
             );
@@ -85,7 +86,12 @@ export function Lobby() {
     }
   }, [ultimoEvento]);
 
+  useEffect(() => {
+    console.log(abandonaOwner);
+  }, [abandonaOwner]);
+
   const moverJugadorAlHome = () => {
+    setAbandonaOwner(false);
     navigate("/");
   };
 
@@ -106,10 +112,11 @@ export function Lobby() {
         nJugadoresEnLobby={cantPlayersLobby}
         maxJugadores={datosPartida.max_players}
       />
-      <ModalCancelarPartida
+      <Modal
         mostrar = {abandonaOwner}
         texto = {mensajeCancelacion}
-        enVolverAlHome = {moverJugadorAlHome}
+        funcionDeClick = {moverJugadorAlHome}
+        boton = "Volver al home"
       />
     </div>
   );

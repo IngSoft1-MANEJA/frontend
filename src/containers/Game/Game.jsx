@@ -16,7 +16,7 @@ import { EventoContext } from "../../contexts/EventoContext";
 import { ServicioPartida } from "../../services/ServicioPartida.js";
 import { WebsocketEvents } from "../../services/ServicioWebsocket";
 import { JugadorGanoMotivo } from "../../services/ServicioPartida";
-import ModalGanaste from "./components/ModalGanaste.jsx";
+import { Modal } from "../../components/Modal.jsx";
 import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
 
 export function Game() {
@@ -92,6 +92,8 @@ export function Game() {
   };
 
   const moverJugadorAlHome = () => {
+    console.log("Mover jugador al home");
+    setMostrarModalGanador(false);
     limpiarContextos();
     navigate("/");
   };
@@ -100,11 +102,6 @@ export function Game() {
     <div className="game-div relative w-full h-screen m-0 z-0">
       
       <UsarMovimientoProvider>
-        <ModalGanaste
-          mostrar={mostrarModalGanador}
-          texto={mensajeGanador}
-          enVolverAlHome={moverJugadorAlHome}
-        />
         <CartasMovimiento />
         <CartasFiguras />
         <Tablero />
@@ -114,6 +111,12 @@ export function Game() {
           estadoPartida="STARTED"
           idJugador={datosJugador.player_id}
           idPartida={match_id}
+        />
+        <Modal
+          mostrar={mostrarModalGanador}
+          texto={mensajeGanador}
+          funcionDeClcik={moverJugadorAlHome}
+          boton="Volver al home"
         />
       </UsarMovimientoProvider>
     </div>

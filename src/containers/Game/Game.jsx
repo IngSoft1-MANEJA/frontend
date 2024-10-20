@@ -103,7 +103,6 @@ export function Game() {
   };
 
   const moverJugadorAlHome = () => {
-    console.log("Mover jugador al home");
     setMostrarModalGanador(false);
     limpiarContextos();
     navigate("/");

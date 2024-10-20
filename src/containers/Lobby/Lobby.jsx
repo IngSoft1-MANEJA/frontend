@@ -63,7 +63,6 @@ export function Lobby() {
 
         case "PLAYER_LEFT":
           if (ultimoEvento.payload.is_owner) {
-            console.log(ultimoEvento.payload.is_owner);
             setAbandonaOwner(true);
             setMostrarAlerta(false);
             setMensajeCancelacion(

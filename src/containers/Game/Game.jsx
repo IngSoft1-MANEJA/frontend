@@ -27,7 +27,7 @@ export function Game() {
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
-  const [mensaje, setMensa] = useState("");
+  const [mensaje, setMensaje] = useState("");
   const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
   const navigate = useNavigate();
@@ -97,11 +97,11 @@ export function Game() {
         if (ultimoEvento.payload.reason === JugadorGanoMotivo.NORMAL) {
           if (datosJugador.player_id === ultimoEvento.payload.player_id) {
             setMensaje(
-              "¡Ganaste!, felicidades."
+              "¡Ganaste!, has completado todas tus figuras."
             );
           } else {
             setMensaje(
-              "¡Perdiste!, mejor suerte la próxima."
+              "¡Perdiste!, un jugador ha completado todas sus figuras."
             );
           }
         }
@@ -127,7 +127,7 @@ export function Game() {
           <CompletarFiguraProvider>
             <Modal
               mostrar={mostrarModalGanador}
-              texto={mensajeGanador}
+              texto={mensaje}
               funcionDeClick={moverJugadorAlHome}
               boton="Volver al home"
             />

@@ -24,21 +24,22 @@ const llamarServicio = async (
     swapFichas(newFichasSeleccionadas, tiles, setTiles, setUsarMovimiento);
     setHaValidadoMovimiento(false);
 
-    setTimeout(() => {
-      setUsarMovimiento((prev) => ({
-        ...prev,
-        fichasSeleccionadas: [],
-        cartaSeleccionada: null,
-        cartasUsadas: [...prev.cartasUsadas, prev.cartaSeleccionada || ""],
-        highlightCarta: { state: false, key: "" },
-      }));
-    }, 700);
+    setUsarMovimiento((prev) => ({
+      ...prev,
+      fichasSeleccionadas: [],
+      cartaSeleccionada: null,
+      cartasUsadas: [...prev.cartasUsadas, prev.cartaSeleccionada || ""],
+      highlightCarta: { state: false, key: "" },
+    }));
   } catch (err) {
     setMensajeAlerta("Error al validar movimiento");
     setMostrarAlerta(true);
     setUsarMovimiento((prev) => ({
       ...prev,
       fichasSeleccionadas: [],
+      cartaSeleccionada: null,
+      cartasUsadas: [...prev.cartasUsadas, prev.cartaSeleccionada || ""],
+      highlightCarta: { state: false, key: "" },
     }));
     setTimeout(() => {
       setMostrarAlerta(false);

@@ -13,6 +13,13 @@ const images = {
   blue: BlueTile,
 };
 
+const shadowColorClass = {
+  red: "shadow-[0px_0px_8px_1px_rgba(239,68,68,1),0px_0px_8px_1px_rgba(239,68,68,1)]",
+  yellow: "shadow-[0px_0px_8px_1px_rgba(234,179,8,1),0px_0px_8px_1px_rgba(234,179,8,1)]",
+  green: "shadow-[0px_0px_8px_1px_rgba(34,197,94,1),0px_0px_8px_1px_rgba(34,197,94,1)]",
+  blue: "shadow-[0px_0px_8px_1px_rgba(59,130,246,1),0px_0px_8px_1px_rgba(59,130,246,1)]",
+};
+
 export const Ficha = ({
   id,
   color,
@@ -28,6 +35,7 @@ export const Ficha = ({
   );
 
   const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.length > 0;
+  const shadowClass = highlightFiguraInicial ? shadowColorClass[color] : "";
 
   return (
     <div
@@ -44,8 +52,8 @@ export const Ficha = ({
                 ${highlightClass ? "cursor-pointer shadow-[0px_0px_12px_rgba(17,195,22,.8),0px_0px_20px_rgba(31,222,37,1)] scale-105" : ""}
                 ${usarMovimiento.fichaHovering && movimientoPosible ? "hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1),0px_0px_12px_rgba(224,138,44,1)] hover:scale-105" : ""}
                 ${movimientoPosible && fichaEstaSeleccionada ? "animate-breathing" : ""}  
-                ${highlightFiguraInicial ? "cursor-pointer border-gray-500 shadow-[0px_0px_10px_rgba(0,0,0,1)] animate-breathing" : ""}
-                ${usarMovimiento.fichaHovering && highlightFiguraInicial ? "hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(192,192,192,.8),0px_0px_20px_rgba(255,255,255,1)] hover:scale-105" : ""}
+                ${highlightFiguraInicial ? `cursor-pointer border-gray-500 ${shadowClass} animate-breathing` : ""}
+                ${usarMovimiento.fichaHovering && highlightFiguraInicial ? "hover:cursor-pointer hover:shadow-[0px_0px_12px_rgba(224,138,44,1)] hover:scale-105" : ""}
                 `}
       onClick={onClick}
     >
@@ -55,3 +63,5 @@ export const Ficha = ({
 };
 
 export default Ficha;
+
+// shadow-[0px_0px_10px_rgba(0,0,0,1)]

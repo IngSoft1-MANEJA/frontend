@@ -23,11 +23,11 @@
 }
 
 .cartas-figuras-propias img {
-  width: 75px;
+  width: 12vh;
   height: auto;
   background-color: rgb(206, 191, 172);
   padding: 1px;
-  border-radius: 5px;
+  border-radius: 0.6vh;
 }
 
 .cartas-figuras-oponente-1.filas{
@@ -48,11 +48,11 @@
 }
 
 .cartas-figuras-oponente-1 img {
-  width: 75px;
+  width: 12vh;
   height: auto;
   background-color: rgb(206, 191, 172);
   padding: 1px;
-  border-radius: 5px;
+  border-radius: 0.6vh;
 }
 
 .cartas-figuras-oponente-2 {
@@ -63,11 +63,11 @@
   gap: 10px;
 }
 .cartas-figuras-oponente-2 img {
-  width: 75px;
+  width: 12vh;
   height: auto;
   background-color: rgb(206, 191, 172);
   padding: 1px;
-  border-radius: 5px;
+  border-radius: 0.6vh;
 }
 .cartas-figuras-oponente-3 {
   position: absolute;
@@ -77,9 +77,9 @@
   gap: 10px;
 }
 .cartas-figuras-oponente-3 img {
-  width: 75px;
+  width: 12vh;
   height: auto;
   background-color: rgb(206, 191, 172);
   padding: 1px;
-  border-radius: 5px;
+  border-radius: 0.6vh;
 }

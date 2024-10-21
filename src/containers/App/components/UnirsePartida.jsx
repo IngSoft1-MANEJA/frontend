@@ -27,8 +27,11 @@ function UnirsePartida({ idPartida }) {
           player_id: dataPartida.player_id,
         });
 
-        setEstaCargando(false);
-        navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
+        
+        setTimeout(() => {
+          setEstaCargando(false);
+          navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
+        }, 1500);
       } catch (error) {
         console.error(error.message);
         setEstaCargando(false);
@@ -93,7 +96,7 @@ function UnirsePartida({ idPartida }) {
               </label>
               <button className="btn" onClick={manejarUnirse}>
                 Unirse
-                {estaCargando && <span className="loading loading-spinner" />}
+                {estaCargando && <span className="loading loading-spinner infinite" />}
               </button>
             </form>
           </div>

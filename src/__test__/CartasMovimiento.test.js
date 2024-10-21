@@ -2,11 +2,11 @@ import React from "react";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { useParams } from "react-router-dom";
 import "@testing-library/jest-dom";
-import useWebSocket from "react-use-websocket";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
 import CartasMovimiento from "../containers/Game/components/CartasMovimiento.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
+import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -58,7 +58,9 @@ describe("CartasMovimiento", () => {
       <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
         <DatosJugadorContext.Provider value={mockDatosJugador}>
           <EventoContext.Provider value={eventoValue}>
-            <CartasMovimiento />
+            <CompletarFiguraProvider>
+              <CartasMovimiento />
+            </CompletarFiguraProvider>
           </EventoContext.Provider>
         </DatosJugadorContext.Provider>
       </UsarMovimientoContext.Provider>,
@@ -83,7 +85,9 @@ describe("CartasMovimiento", () => {
       <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
         <DatosJugadorContext.Provider value={mockDatosJugador}>
           <EventoContext.Provider value={eventoValue}>
-            <CartasMovimiento />
+            <CompletarFiguraProvider>
+              <CartasMovimiento />
+            </CompletarFiguraProvider>
           </EventoContext.Provider>
         </DatosJugadorContext.Provider>
       </UsarMovimientoContext.Provider>,
@@ -117,7 +121,9 @@ describe("CartasMovimiento", () => {
       <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
         <DatosJugadorContext.Provider value={mockDatosJugador}>
           <EventoContext.Provider value={eventoValue}>
-            <CartasMovimiento />
+            <CompletarFiguraProvider>
+              <CartasMovimiento />
+            </CompletarFiguraProvider>
           </EventoContext.Provider>
         </DatosJugadorContext.Provider>
       </UsarMovimientoContext.Provider>,
@@ -170,7 +176,9 @@ describe("CartasMovimiento", () => {
       <UsarMovimientoContext.Provider value={mockUsarMovimientoUsados}>
         <DatosJugadorContext.Provider value={mockDatosJugador}>
           <EventoContext.Provider value={eventoValueRepuesto}>
-            <CartasMovimiento />
+            <CompletarFiguraProvider>
+              <CartasMovimiento />
+            </CompletarFiguraProvider>
           </EventoContext.Provider>
         </DatosJugadorContext.Provider>
       </UsarMovimientoContext.Provider>,

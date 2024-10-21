@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Ficha } from "./Ficha.jsx";
@@ -10,6 +10,8 @@ import { EventoContext } from "../../../contexts/EventoContext.jsx";
 import { TilesContext } from "../../../contexts/tilesContext.jsx";
 import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 import { FigurasContext } from "../../../contexts/FigurasContext.jsx";
+import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext.jsx";
+import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
 export const Tablero = () => {
   const { match_id } = useParams();
@@ -21,6 +23,10 @@ export const Tablero = () => {
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
   const { figuras, agregarFiguras } = useContext(FigurasContext);
+  const {
+    cartaSeleccionada: cartaFiguraSeleccionada,
+    setCartaSeleccionada: setCartaFiguraSeleccionada,
+  } = useContext(CompletarFiguraContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
@@ -45,7 +51,56 @@ export const Tablero = () => {
     }
   }, [ultimoEvento]);
 
+  const manejarFiguraSeleccionadaEnClick = useCallback(
+    async (rowIndex, columnIndex) => {
+      const figura = ServicioMovimiento.obtenerFiguraDeFicha(
+        rowIndex,
+        columnIndex,
+        figuras.figuras_actuales,
+      );
+
+      if (figura) {
+        try {
+          const respuesta = await ServicioPartida.completarFicha(
+            match_id,
+            datosJugador.player_id,
+            cartaFiguraSeleccionada,
+            figura,
+          );
+
+          setCartaFiguraSeleccionada(null);
+
+          respuesta.movement_cards.forEach((cartaADeshacer) => {
+            setUsarMovimiento((prev) => ({
+              ...prev,
+              cartasUsadas: prev.cartasUsadas.filter(
+                (carta) => carta[0] !== cartaADeshacer[0],
+              ),
+            }));
+          });
+
+          setUsarMovimiento((prev) => ({
+            ...prev,
+            cartasCompletadas:
+              prev.cartasUsadas.length - respuesta.movement_cards.length,
+          }));
+        } catch (err) {
+          console.error(err);
+          setMensajeAlerta("Error al completar figura");
+          setMostrarAlerta(true);
+          setTimeout(() => {
+            setMostrarAlerta(false);
+          }, 1000);
+        }
+      }
+    },
+    [usarMovimiento, figuras, datosJugador, cartaFiguraSeleccionada, match_id],
+  );
+
   const handleFichaClick = async (rowIndex, columnIndex) => {
+    if (cartaFiguraSeleccionada !== null) {
+      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex);
+    }
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(
         (ficha) =>
@@ -157,7 +212,7 @@ export const Tablero = () => {
   return (
     <div className="tablero flex w-100 h-screen justify-center items-center">
       {mostrarAlerta && (
-        <div className="fixed top-3 right-3 w-2/5 z-50">
+        <div className="fixed top-3 right-3 w-1/3 z-50">
           <Alerts type={"error"} message={mensajeAlerta} />
         </div>
       )}

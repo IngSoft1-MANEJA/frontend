@@ -66,6 +66,7 @@ const urlMap = {
 export const CartasFiguras = () => {
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
+  const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
   const {cartaSeleccionada, setCartaSeleccionada} = useContext(CompletarFiguraContext);
   const { usarMovimiento } = useContext(UsarMovimientoContext);
   const { datosJugador } = useContext(DatosJugadorContext);
@@ -77,6 +78,10 @@ export const CartasFiguras = () => {
         setMiTurno(ultimoEvento.payload.turn_order);
       } else if (ultimoEvento.key === "END_PLAYER_TURN") {
         setCartaSeleccionada(null);
+        setCartasFigurasCompletadas([]);
+      } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
+        const cartaId = ultimoEvento.payload.figure_id;
+        setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
       }
     } 
 
@@ -103,52 +108,60 @@ export const CartasFiguras = () => {
     }
   }, [ultimoEvento, miTurno]);
 
-  const claseCarta = useCallback((index) => {
-    const efectoHover =
-      " hover:cursor-pointer" +
-      " hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" +
-      " hover:scale-105";
-    
-    const efectoSeleccionada =
-      " cursor-pointer" +
-      " shadow-[0px_0px_20px_rgba(100,200,44,1)]" +
-      " scale-105";
-    
-    const deshabilidata = "opacity-25 pointer-events-none greyscale"
+  const claseCarta = useCallback(
+    (cartaId) => {
+      const efectoHover =
+        " hover:cursor-pointer" +
+        " hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" +
+        " hover:scale-105";
 
-    if (!datosJugador.is_player_turn) {
-      return "";
-    }
+      const efectoSeleccionada =
+        " cursor-pointer" +
+        " shadow-[0px_0px_20px_rgba(100,200,44,1)]" +
+        " scale-105";
 
-    if (usarMovimiento.cartaSeleccionada !== null) {
-      return deshabilidata;
-    }
-    
-    if (cartaSeleccionada !== null) {
-      if (cartaSeleccionada === index) {
-        return efectoSeleccionada;
-      } else {
-        return deshabilidata;
+      const deshabilitada = "opacity-25 pointer-events-none greyscale";
+
+      if (cartasFigurasCompletadas.includes(cartaId)) {
+        return deshabilitada;
       }
-    }
 
-    return efectoHover; 
-  }, [cartaSeleccionada, usarMovimiento, datosJugador]);
+      if (!datosJugador.is_player_turn) {
+        return "";
+      }
 
-  const seleccionarCarta = (index) => {
+      if (usarMovimiento.cartaSeleccionada !== null) {
+        return deshabilitada;
+      }
+
+      if (cartaSeleccionada !== null) {
+        if (cartaSeleccionada === cartaId) {
+          return efectoSeleccionada;
+        } else {
+          return deshabilitada;
+        }
+      }
+
+      return efectoHover;
+    },
+    [cartaSeleccionada, usarMovimiento, datosJugador, cartasFigurasCompletadas]
+  );
+
+  const seleccionarCarta = (cartaId) => {
     if (
       !datosJugador.is_player_turn ||
-      usarMovimiento.cartaSeleccionada !== null
+      usarMovimiento.cartaSeleccionada !== null ||
+      cartasFigurasCompletadas.includes(cartaId)
     ) {
       return;
     }
 
     if (cartaSeleccionada !== null) {
-      if (cartaSeleccionada === index) {
+      if (cartaSeleccionada === cartaId) {
         setCartaSeleccionada(null);
       }
     } else {
-      setCartaSeleccionada(index);
+      setCartaSeleccionada(cartaId);
     }
   };
 
@@ -161,8 +174,8 @@ export const CartasFiguras = () => {
         {cartasFiguras.map((carta, index) => (
           <div
             key={index}
-            className={claseCarta(index)}
-            onClick={() => seleccionarCarta(index)}
+            className={claseCarta(carta[0])}
+            onClick={() => seleccionarCarta(carta[0])}
           >
             <img src={urlMap[carta[1]]} alt={carta[1]} />
           </div>

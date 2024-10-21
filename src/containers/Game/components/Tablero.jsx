@@ -18,7 +18,7 @@ export const Tablero = () => {
 
   const { datosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(
-    UsarMovimientoContext
+    UsarMovimientoContext,
   );
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
@@ -42,7 +42,7 @@ export const Tablero = () => {
           ultimoEvento.payload.swapped_tiles,
           tiles,
           setTiles,
-          setUsarMovimiento
+          setUsarMovimiento,
         );
       }
       if (ultimoEvento.key === "ALLOW_FIGURES") {
@@ -56,7 +56,7 @@ export const Tablero = () => {
       const figura = ServicioMovimiento.obtenerFiguraDeFicha(
         rowIndex,
         columnIndex,
-        figuras.figuras_actuales
+        figuras.figuras_actuales,
       );
 
       if (figura) {
@@ -65,7 +65,7 @@ export const Tablero = () => {
             match_id,
             datosJugador.player_id,
             cartaFiguraSeleccionada,
-            figura
+            figura,
           );
 
           setCartaFiguraSeleccionada(null);
@@ -74,7 +74,7 @@ export const Tablero = () => {
             setUsarMovimiento((prev) => ({
               ...prev,
               cartasUsadas: prev.cartasUsadas.filter(
-                (carta) => carta[0] !== cartaADeshacer[0]
+                (carta) => carta[0] !== cartaADeshacer[0],
               ),
             }));
           });
@@ -84,7 +84,6 @@ export const Tablero = () => {
             cartasCompletadas:
               prev.cartasUsadas.length - respuesta.movement_cards.length,
           }));
-
         } catch (err) {
           console.error(err);
           setMensajeAlerta("Error al completar figura");
@@ -95,7 +94,7 @@ export const Tablero = () => {
         }
       }
     },
-    [usarMovimiento, figuras, datosJugador, cartaFiguraSeleccionada, match_id]
+    [usarMovimiento, figuras, datosJugador, cartaFiguraSeleccionada, match_id],
   );
 
   const handleFichaClick = async (rowIndex, columnIndex) => {
@@ -105,7 +104,7 @@ export const Tablero = () => {
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(
         (ficha) =>
-          ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex
+          ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex,
       );
 
       if (fichaEstaSeleccionada) {
@@ -113,7 +112,7 @@ export const Tablero = () => {
         const newFichasSeleccionadas =
           usarMovimiento.fichasSeleccionadas.filter(
             (ficha) =>
-              ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex
+              ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex,
           );
         setUsarMovimiento((prev) => ({
           ...prev,
@@ -133,7 +132,7 @@ export const Tablero = () => {
         const movimientosCalculados = ServicioMovimiento.calcularMovimientos(
           rowIndex,
           columnIndex,
-          usarMovimiento.cartaSeleccionada[1]
+          usarMovimiento.cartaSeleccionada[1],
         );
         setTimeout(() => {
           setUsarMovimiento((prev) => ({
@@ -172,7 +171,7 @@ export const Tablero = () => {
         setMensajeAlerta,
         setMostrarAlerta,
         setTiles,
-        setHaValidadoMovimiento
+        setHaValidadoMovimiento,
       );
     }
   }, [usarMovimiento.fichasSeleccionadas]);
@@ -182,18 +181,18 @@ export const Tablero = () => {
       const highlighted = ServicioMovimiento.estaHighlighted(
         rowIndex,
         columnIndex,
-        usarMovimiento.fichasSeleccionadas
+        usarMovimiento.fichasSeleccionadas,
       );
       const movimientoPosible = ServicioMovimiento.esMovimientoPosible(
         rowIndex,
         columnIndex,
-        usarMovimiento.movimientosPosibles
+        usarMovimiento.movimientosPosibles,
       );
       const deshabilitado = !highlighted && !movimientoPosible;
       const isFiguraInicial = ServicioMovimiento.estaFiguraInicial(
         rowIndex,
         columnIndex,
-        figuras.figuras_actuales
+        figuras.figuras_actuales,
       );
       return (
         <Ficha
@@ -213,7 +212,7 @@ export const Tablero = () => {
   return (
     <div className="tablero flex w-100 h-screen justify-center items-center">
       {mostrarAlerta && (
-        <div className="fixed top-3 right-3 w-2/5 z-50">
+        <div className="fixed top-3 right-3 w-1/3 z-50">
           <Alerts type={"error"} message={mensajeAlerta} />
         </div>
       )}

@@ -259,7 +259,6 @@ describe("ServicioMovimiento", () => {
   });
 
   describe("obtenerFiguraDeFicha", () => {
-
     it("deberia devolver la figura a la que pertenece la ficha", () => {
       const figuras = [
         [
@@ -274,7 +273,10 @@ describe("ServicioMovimiento", () => {
 
       const figura = ServicioMovimiento.obtenerFiguraDeFicha(1, 0, figuras);
 
-      expect(figura).toEqual([[1, 0], [1, 1]]);
+      expect(figura).toEqual([
+        [1, 0],
+        [1, 1],
+      ]);
     });
 
     it("deberia devolver undefined si la ficha no pertenece a ninguna figura", () => {
@@ -293,6 +295,5 @@ describe("ServicioMovimiento", () => {
 
       expect(figura).toBeUndefined();
     });
-
   });
 });

@@ -67,7 +67,9 @@ export const CartasFiguras = () => {
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
-  const {cartaSeleccionada, setCartaSeleccionada} = useContext(CompletarFiguraContext);
+  const { cartaSeleccionada, setCartaSeleccionada } = useContext(
+    CompletarFiguraContext,
+  );
   const { usarMovimiento } = useContext(UsarMovimientoContext);
   const { datosJugador } = useContext(DatosJugadorContext);
   const { ultimoEvento } = useContext(EventoContext);
@@ -83,15 +85,14 @@ export const CartasFiguras = () => {
         const cartaId = ultimoEvento.payload.figure_id;
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
       }
-    } 
-
+    }
   }, [ultimoEvento]);
-
 
   useEffect(() => {
     if (
       ultimoEvento &&
-      (ultimoEvento.key === "PLAYER_RECIEVE_ALL_SHAPES" || ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD") &&
+      (ultimoEvento.key === "PLAYER_RECIEVE_ALL_SHAPES" ||
+        ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD") &&
       miTurno !== 0
     ) {
       const jugadorData = ultimoEvento.payload.find(
@@ -106,7 +107,6 @@ export const CartasFiguras = () => {
         const nuevasCartas = jugadorData.shape_cards;
 
         setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
-
       } else {
         console.log(
           "CartasFiguras - No se encontró jugador con turn_order:",
@@ -152,7 +152,7 @@ export const CartasFiguras = () => {
 
       return efectoHover;
     },
-    [cartaSeleccionada, usarMovimiento, datosJugador, cartasFigurasCompletadas]
+    [cartaSeleccionada, usarMovimiento, datosJugador, cartasFigurasCompletadas],
   );
 
   const seleccionarCarta = (cartaId) => {

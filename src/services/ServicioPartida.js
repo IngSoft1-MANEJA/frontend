@@ -215,16 +215,16 @@ export class ServicioPartida {
 
   /**
    * Hace una peticion al back para completar una figura.
-   * 
+   *
    * @param {number} idPartida : Identificador de la partida.
    * @param {number} idJugador : Identificador del jugador.
-   * @param {number} idCartaFigura : Identificador de la carta de figura. 
+   * @param {number} idCartaFigura : Identificador de la carta de figura.
    * @param {Array<Array<number>>} figura : Figura a completar, lista de coordenadas.
    * @returns respuesta : Respuesta de la petición.
    * @throws Error : Error en la petición.
    */
   static async completarFicha(idPartida, idJugador, idCartaFigura, figura) {
-     const respuesta = await fetch(
+    const respuesta = await fetch(
       `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/player/${idJugador}/use-figure`,
       {
         method: "POST",

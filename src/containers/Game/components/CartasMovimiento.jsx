@@ -31,7 +31,9 @@ export const CartasMovimiento = () => {
   const { usarMovimiento, setUsarMovimiento } = useContext(
     UsarMovimientoContext,
   );
-  const { cartaSeleccionada: cartaFiguraSeleccionada } = useContext(CompletarFiguraContext);
+  const { cartaSeleccionada: cartaFiguraSeleccionada } = useContext(
+    CompletarFiguraContext,
+  );
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {

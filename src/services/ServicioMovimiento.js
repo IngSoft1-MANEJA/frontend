@@ -131,9 +131,8 @@ const deshacerMovimiento = async (
   }
 };
 
-
 /**
- * 
+ *
  * @param {number} rowIndex : Fila de la ficha
  * @param {number} columnIndex : Columna de la ficha
  * @param {Array<Array<Array<number>>>} figuras : Figuras formadas por el jugador

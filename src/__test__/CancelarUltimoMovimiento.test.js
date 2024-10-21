@@ -27,6 +27,7 @@ const mockFiguras = {
 
 const mockUsarMovimiento = {
   cartasUsadas: ["A", "B", "C"],
+  cartasCompletadas: 0,
   setUsarMovimiento: jest.fn(),
 };
 

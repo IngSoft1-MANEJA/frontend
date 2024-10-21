@@ -222,9 +222,9 @@ describe("CartasFiguras", () => {
     const figure3 = getCard("3");
     act(() => {figure3.click();})
     const hoverClass = "hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105";
-    expect(figure1).toHaveClass(hoverClass);
-    expect(figure2).toHaveClass(hoverClass);
-    expect(figure3).toHaveClass(hoverClass);
+    expect(figure1).not.toHaveClass(hoverClass);
+    expect(figure2).not.toHaveClass(hoverClass);
+    expect(figure3).not.toHaveClass(hoverClass);
     expect(figure3).not.toHaveClass("cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105");
 
   });

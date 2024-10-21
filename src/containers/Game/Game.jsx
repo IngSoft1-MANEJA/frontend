@@ -96,12 +96,10 @@ export function Game() {
         }
         if (ultimoEvento.payload.reason === JugadorGanoMotivo.NORMAL) {
           if (datosJugador.player_id === ultimoEvento.payload.player_id) {
-            setMensaje(
-              "¡Ganaste!, has completado todas tus figuras."
-            );
+            setMensaje("¡Ganaste!, has completado todas tus figuras.");
           } else {
             setMensaje(
-              "¡Perdiste!, un jugador ha completado todas sus figuras."
+              "¡Perdiste!, un jugador ha completado todas sus figuras.",
             );
           }
         }

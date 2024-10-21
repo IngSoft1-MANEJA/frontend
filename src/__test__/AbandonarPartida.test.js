@@ -35,24 +35,6 @@ describe("AbandonarPartida", () => {
     jest.clearAllMocks();
   });
 
-  test("debe habilitar el boton de abandonar cuando la partida esta en curso", async () => {
-    render(<AbandonarPartida {...Started} />);
-    const boton = await screen.findByText("Abandonar");
-    expect(boton).not.toBeDisabled();
-  });
-
-  test("debe habilitar el botón de abandonar cuando la partida está en espera y el jugador no es anfitrión", async () => {
-    render(<AbandonarPartida {...WaitingNoAnfitrion} />);
-    const boton = await screen.findByText("Abandonar");
-    expect(boton).not.toBeDisabled();
-  });
-
-  test("debe deshabilitar el botón de abandonar cuando la partida está en espera y el jugador es anfitrión", async () => {
-    render(<AbandonarPartida {...WaitingAnfitrion} />);
-    const boton = await screen.findByText("Abandonar");
-    expect(boton).toBeDisabled();
-  });
-
   test("debe fallar cuando el estado de la partida es diferente de WAITING o STARTED", async () => {
     const consoleErrorSpy = jest
       .spyOn(console, "error")

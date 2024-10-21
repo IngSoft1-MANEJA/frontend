@@ -15,9 +15,9 @@ import {
   DatosJugadorProvider,
 } from "../contexts/DatosJugadorContext.jsx";
 import * as reactRouterDom from "react-router-dom";
-import { 
+import {
   DatosPartidaContext,
-  DatosPartidaProvider,  
+  DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext.jsx";
 
 const mockedUsedNavigate = jest.fn();
@@ -45,8 +45,9 @@ describe("ListarPartidas", () => {
       <DatosPartidaProvider>
         <DatosJugadorProvider>
           <ListaPartidas />
-        </DatosJugadorProvider>,
-      </DatosPartidaProvider>
+        </DatosJugadorProvider>
+        ,
+      </DatosPartidaProvider>,
     );
 
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
@@ -67,23 +68,30 @@ describe("ListarPartidas", () => {
     });
   });
 
-  test("debe manejar errores de fetch", async () => {
+  test("debe manejar errores de fetch y registrar el mensaje de error en la consola", async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
     fetch.mockImplementationOnce(() => Promise.reject("API is down"));
+
     render(
       <DatosPartidaProvider>
         <DatosJugadorProvider>
           <ListaPartidas />
-        </DatosJugadorProvider>,
-      </DatosPartidaProvider>
+        </DatosJugadorProvider>
+      </DatosPartidaProvider>,
     );
 
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
 
     await waitFor(() => {
-      expect(
-        screen.getByText("No hay partidas disponibles"),
-      ).toBeInTheDocument();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Error en fetch de partidas: API is down",
+      );
     });
+
+    consoleErrorSpy.mockRestore();
   });
 
   test("debe refrescar las partidas al hacer clic en el botón de refresco", async () => {
@@ -91,8 +99,9 @@ describe("ListarPartidas", () => {
       <DatosPartidaProvider>
         <DatosJugadorProvider>
           <ListaPartidas />
-        </DatosJugadorProvider>,
-      </DatosPartidaProvider>
+        </DatosJugadorProvider>
+        ,
+      </DatosPartidaProvider>,
     );
 
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));

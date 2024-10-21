@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { AbandonarPartida } from "../../components/AbandonarPartida";
+import { Modal } from "../../components/Modal.jsx";
 import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../../variablesConfiguracion";
 import Alerts from "../../components/Alerts";
@@ -10,6 +11,8 @@ import { DatosPartidaContext } from "../../contexts/DatosPartidaContext";
 import "./Lobby.css";
 import IniciarPartida from "./components/IniciarPartida";
 import { useNavigate } from "react-router-dom";
+import { EventoProvider, EventoContext } from "../../contexts/EventoContext";
+import { set } from "react-hook-form";
 
 export function Lobby() {
   const { match_id, player_id } = useParams();
@@ -26,46 +29,73 @@ export function Lobby() {
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [estaShaking, setEstaShaking] = useState(false);
   const [cantPlayersLobby, setCantPlayersLobby] = useState(1);
+  const [abandonaOwner, setAbandonaOwner] = useState(false);
+  const [mensajeCancelacion, setMensajeCancelacion] = useState("");
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
+  const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
-    if (lastJsonMessage !== null) {
-      switch (lastJsonMessage.key) {
+    return () => {
+      setUltimoEvento(null);
+      setCantPlayersLobby(1);
+    };
+  }, []);
 
+  useEffect(() => {
+    setUltimoEvento(lastJsonMessage);
+  }, [lastJsonMessage]);
+
+  useEffect(() => {
+    if (ultimoEvento !== null) {
+      switch (ultimoEvento.key) {
         case "PLAYER_JOIN":
           setCantPlayersLobby(cantPlayersLobby + 1);
           setMostrarAlerta(true);
           setTipoAlerta("info");
-          setMensajeAlerta(
-            `jugador ${lastJsonMessage.payload.name} se ha unido.`,
-          );
+          setMensajeAlerta(`jugador ${ultimoEvento.payload.name} se ha unido.`);
           setEstaShaking(true);
-          setTimeout(() => {setEstaShaking(false), setMostrarAlerta(false)}, 3000);
+          setTimeout(() => {
+            setEstaShaking(false), setMostrarAlerta(false);
+          }, 3000);
           break;
-        
+
         case "PLAYER_LEFT":
-          setCantPlayersLobby(cantPlayersLobby - 1);
-          setMostrarAlerta(true);
-          setTipoAlerta("info");
-          setMensajeAlerta(
-            `jugador ${lastJsonMessage.payload.name} ha abandonado.`,
-          );
-          setEstaShaking(true);
-          setTimeout(() => {setEstaShaking(false), setMostrarAlerta(false)}, 3000);
+          if (ultimoEvento.payload.is_owner) {
+            setAbandonaOwner(true);
+            setMostrarAlerta(false);
+            setMensajeCancelacion(
+              `El dueño de la sala ha cancelado la partida.`,
+            );
+          } else {
+            setCantPlayersLobby(cantPlayersLobby - 1);
+            setMostrarAlerta(true);
+            setTipoAlerta("info");
+            setMensajeAlerta(
+              `jugador ${ultimoEvento.payload.name} ha abandonado.`,
+            );
+            setEstaShaking(true);
+            setTimeout(() => {
+              setEstaShaking(false), setMostrarAlerta(false);
+            }, 3000);
+          }
           break;
-        
+
         case "START_MATCH":
           navigate(`/matches/${match_id}`);
           break;
 
         default:
-          console.error("key incorrecto recibido del websocket");
           break;
       }
     }
-  }, [lastJsonMessage, setMostrarAlerta, setTipoAlerta, setMensajeAlerta, setCantPlayersLobby]);
+  }, [ultimoEvento]);
+
+  const moverJugadorAlHome = () => {
+    setAbandonaOwner(false);
+    navigate("/");
+  };
 
   return (
     <div>
@@ -74,7 +104,6 @@ export function Lobby() {
       </div>
       <AbandonarPartida
         estadoPartida="WAITING"
-        esAnfitrion={datosJugador.is_owner}
         idJugador={player_id}
         idPartida={match_id}
       />
@@ -84,6 +113,12 @@ export function Lobby() {
         esAnfitrion={datosJugador.is_owner}
         nJugadoresEnLobby={cantPlayersLobby}
         maxJugadores={datosPartida.max_players}
+      />
+      <Modal
+        mostrar={abandonaOwner}
+        texto={mensajeCancelacion}
+        funcionDeClick={moverJugadorAlHome}
+        boton="Volver al home"
       />
     </div>
   );

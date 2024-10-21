@@ -131,6 +131,22 @@ const deshacerMovimiento = async (
   }
 };
 
+
+/**
+ * 
+ * @param {number} rowIndex : Fila de la ficha
+ * @param {number} columnIndex : Columna de la ficha
+ * @param {Array<Array<Array<number>>>} figuras : Figuras formadas por el jugador
+ * @returns {Array<Array<number>>} : Figura a la que pertenece la ficha
+ */
+const obtenerFiguraDeFicha = (rowIndex, columnIndex, figuras) => {
+  return figuras.find((figura) =>
+    figura.some(
+      ([figRow, figCol]) => figRow === rowIndex && figCol === columnIndex,
+    ),
+  );
+};
+
 const estaHighlighted = (rowIndex, columnIndex, fichasSeleccionadas) => {
   return fichasSeleccionadas.some(
     (ficha) => ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex,
@@ -286,6 +302,7 @@ export const ServicioMovimiento = {
   calcularMovimientos,
   llamarServicio,
   deshacerMovimiento,
+  obtenerFiguraDeFicha,
   estaHighlighted,
   esMovimientoPosible,
   swapFichas,

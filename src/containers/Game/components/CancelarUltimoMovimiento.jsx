@@ -8,6 +8,7 @@ import { FigurasContext } from "../../../contexts/FigurasContext";
 import { Alerts } from "../../../components/Alerts";
 import { useParams } from "react-router-dom";
 import { WebsocketEvents } from "../../../services/ServicioWebsocket";
+import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext";
 
 export const CancelarUltimoMovimiento = () => {
   const { match_id } = useParams();
@@ -18,6 +19,9 @@ export const CancelarUltimoMovimiento = () => {
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
   const { deshacerFiguras } = useContext(FigurasContext);
+  const { cartaSeleccionada: cartaFiguraSeleccionada } = useContext(
+    CompletarFiguraContext,
+  );
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("Error");
 
@@ -45,10 +49,10 @@ export const CancelarUltimoMovimiento = () => {
     }
   };
 
-  const puedeCancelar = useCallback(
-    () => datosJugador.is_player_turn && usarMovimiento.cartasUsadas.length > 0,
-    [datosJugador, usarMovimiento],
-  );
+  const puedeCancelar =
+    datosJugador.is_player_turn &&
+    !cartaFiguraSeleccionada &&
+    usarMovimiento.cartasUsadas.length - usarMovimiento.cartasCompletadas > 0;
 
   return (
     <div>
@@ -59,7 +63,7 @@ export const CancelarUltimoMovimiento = () => {
       )}
       <button
         className="btn"
-        disabled={puedeCancelar() ? "" : "disabled"}
+        disabled={puedeCancelar ? "" : "disabled"}
         onClick={manejarClick}
       >
         <svg
@@ -67,7 +71,7 @@ export const CancelarUltimoMovimiento = () => {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeOpacity={puedeCancelar() ? "1" : "0.25"}
+          strokeOpacity={puedeCancelar ? "1" : "0.25"}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

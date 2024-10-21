@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 
@@ -31,6 +31,9 @@ import fige7 from "../../../assets/Figuras/Celestes/fige07.svg";
 import backfig from "../../../assets/Figuras/Celestes/back.svg";
 
 import "./CartasFiguras.css";
+import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext";
+import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
+import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 
 const urlMap = {
   1: fig1,
@@ -63,12 +66,24 @@ const urlMap = {
 export const CartasFiguras = () => {
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
+  const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
+  const { cartaSeleccionada, setCartaSeleccionada } = useContext(
+    CompletarFiguraContext,
+  );
+  const { usarMovimiento } = useContext(UsarMovimientoContext);
+  const { datosJugador } = useContext(DatosJugadorContext);
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setMiTurno(ultimoEvento.payload.turn_order);
+      } else if (ultimoEvento.key === "END_PLAYER_TURN") {
+        setCartaSeleccionada(null);
+        setCartasFigurasCompletadas([]);
+      } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
+        const cartaId = ultimoEvento.payload.figure_id;
+        setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
       }
     }
   }, [ultimoEvento]);
@@ -76,7 +91,8 @@ export const CartasFiguras = () => {
   useEffect(() => {
     if (
       ultimoEvento &&
-      ultimoEvento.key === "PLAYER_RECIEVE_ALL_SHAPES" &&
+      (ultimoEvento.key === "PLAYER_RECIEVE_ALL_SHAPES" ||
+        ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD") &&
       miTurno !== 0
     ) {
       const jugadorData = ultimoEvento.payload.find(
@@ -84,7 +100,13 @@ export const CartasFiguras = () => {
       );
 
       if (jugadorData) {
-        setCartasFiguras(jugadorData.shape_cards);
+        const cartasNoUsadas = cartasFiguras.filter(
+          (carta) => !cartasFigurasCompletadas.includes(carta[0]),
+        );
+
+        const nuevasCartas = jugadorData.shape_cards;
+
+        setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
       } else {
         console.log(
           "CartasFiguras - No se encontró jugador con turn_order:",
@@ -94,6 +116,63 @@ export const CartasFiguras = () => {
     }
   }, [ultimoEvento, miTurno]);
 
+  const claseCarta = useCallback(
+    (cartaId) => {
+      const efectoHover =
+        " hover:cursor-pointer" +
+        " hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" +
+        " hover:scale-105";
+
+      const efectoSeleccionada =
+        " cursor-pointer" +
+        " shadow-[0px_0px_20px_rgba(100,200,44,1)]" +
+        " scale-105";
+
+      const deshabilitada = "opacity-25 pointer-events-none greyscale";
+
+      if (cartasFigurasCompletadas.includes(cartaId)) {
+        return deshabilitada;
+      }
+
+      if (!datosJugador.is_player_turn) {
+        return "";
+      }
+
+      if (usarMovimiento.cartaSeleccionada !== null) {
+        return deshabilitada;
+      }
+
+      if (cartaSeleccionada !== null) {
+        if (cartaSeleccionada === cartaId) {
+          return efectoSeleccionada;
+        } else {
+          return deshabilitada;
+        }
+      }
+
+      return efectoHover;
+    },
+    [cartaSeleccionada, usarMovimiento, datosJugador, cartasFigurasCompletadas],
+  );
+
+  const seleccionarCarta = (cartaId) => {
+    if (
+      !datosJugador.is_player_turn ||
+      usarMovimiento.cartaSeleccionada !== null ||
+      cartasFigurasCompletadas.includes(cartaId)
+    ) {
+      return;
+    }
+
+    if (cartaSeleccionada !== null) {
+      if (cartaSeleccionada === cartaId) {
+        setCartaSeleccionada(null);
+      }
+    } else {
+      setCartaSeleccionada(cartaId);
+    }
+  };
+
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
@@ -101,7 +180,11 @@ export const CartasFiguras = () => {
           <img src={backfig} alt="back" />
         </div>
         {cartasFiguras.map((carta, index) => (
-          <div key={index} className="carta-movimiento">
+          <div
+            key={index}
+            className={claseCarta(carta[0])}
+            onClick={() => seleccionarCarta(carta[0])}
+          >
             <img src={urlMap[carta[1]]} alt={carta[1]} />
           </div>
         ))}

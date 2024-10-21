@@ -20,6 +20,7 @@ import { Modal } from "../../components/Modal.jsx";
 import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
 import { CancelarUltimoMovimiento } from "./components/CancelarUltimoMovimiento.jsx";
 import { FigurasProvider } from "../../contexts/FigurasContext.jsx";
+import { CompletarFiguraProvider } from "../../contexts/CompletarFiguraContext.jsx";
 
 export function Game() {
   const { match_id } = useParams();
@@ -116,7 +117,7 @@ export function Game() {
             mostrar={mostrarModalGanador}
             texto={mensajeGanador}
             funcionDeClick={moverJugadorAlHome}
-            boton="Volver al home"
+            boton = "Volver al home"
           />
           <div className="cartas-movimientos">
             <div className="-mt-24 pb-5">

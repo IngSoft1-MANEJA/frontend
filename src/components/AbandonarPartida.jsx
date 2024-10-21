@@ -4,13 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ServicioPartida } from "../services/ServicioPartida";
 import "./AbandonarPartida.css";
 
-export const AbandonarPartida = ({
-  estadoPartida,
-  esAnfitrion,
-  idJugador,
-  idPartida,
-}) => {
-  const [habilitarAbandonar, setHabilitarAbandonar] = useState(false);
+export const AbandonarPartida = ({ estadoPartida, idJugador, idPartida }) => {
   const estadosPermitidos = ["STARTED", "WAITING"];
   const navegar = useNavigate();
 
@@ -19,24 +13,8 @@ export const AbandonarPartida = ({
     return null;
   }
 
-  useEffect(() => {
-    if (
-      estadoPartida === "STARTED" ||
-      (!esAnfitrion && estadoPartida === "WAITING")
-    ) {
-      setHabilitarAbandonar(true);
-    } else {
-      setHabilitarAbandonar(false);
-    }
-  }, [estadoPartida, esAnfitrion]);
-
   const manejarAbandonar = async () => {
     try {
-      if (!habilitarAbandonar) {
-        console.log("Botón deshabilitado, no se puede abandonar la partida");
-        return;
-      }
-
       await ServicioPartida.abandonarPartida(idJugador, idPartida);
       console.log("Abandonar partida");
       navegar("/");
@@ -50,7 +28,6 @@ export const AbandonarPartida = ({
       <button
         className="abandonar-partida-boton btn"
         onClick={manejarAbandonar}
-        disabled={!habilitarAbandonar}
       >
         Abandonar
       </button>

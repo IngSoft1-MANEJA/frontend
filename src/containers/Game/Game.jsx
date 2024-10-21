@@ -113,28 +113,30 @@ export function Game() {
     <div className="game-div relative w-full h-screen m-0 z-0">
       <FigurasProvider>
         <UsarMovimientoProvider>
-          <Modal
-            mostrar={mostrarModalGanador}
-            texto={mensajeGanador}
-            funcionDeClick={moverJugadorAlHome}
-            boton = "Volver al home"
-          />
-          <div className="cartas-movimientos">
-            <div className="-mt-24 pb-5">
-              <CancelarUltimoMovimiento />
+          <CompletarFiguraProvider>
+            <Modal
+              mostrar={mostrarModalGanador}
+              texto={mensajeGanador}
+              funcionDeClick={moverJugadorAlHome}
+              boton = "Volver al home"
+            />
+            <div className="cartas-movimientos">
+              <div className="-mt-24 pb-5">
+                <CancelarUltimoMovimiento />
+              </div>
+              <CartasMovimiento />
             </div>
-            <CartasMovimiento />
-          </div>
-          <CartasFiguras />
-          <Tablero />
-          <InformacionTurno player_id={datosJugador.player_id} />
-          <TerminarTurno />
-          <AbandonarPartida
-            estadoPartida="STARTED"
-            esAnfitrion={datosJugador.is_owner}
-            idJugador={datosJugador.player_id}
-            idPartida={match_id}
-          />
+            <CartasFiguras />
+            <Tablero />
+            <InformacionTurno player_id={datosJugador.player_id} />
+            <TerminarTurno />
+            <AbandonarPartida
+              estadoPartida="STARTED"
+              esAnfitrion={datosJugador.is_owner}
+              idJugador={datosJugador.player_id}
+              idPartida={match_id}
+            />
+          </CompletarFiguraProvider>
         </UsarMovimientoProvider>
       </FigurasProvider>
     </div>

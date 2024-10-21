@@ -118,7 +118,7 @@ export function Game() {
               mostrar={mostrarModalGanador}
               texto={mensajeGanador}
               funcionDeClick={moverJugadorAlHome}
-              boton = "Volver al home"
+              boton="Volver al home"
             />
             <div className="cartas-movimientos">
               <div className="-mt-24 pb-5">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Ficha } from "./Ficha.jsx";
@@ -11,29 +11,26 @@ import { TilesContext } from "../../../contexts/tilesContext.jsx";
 import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 import { FigurasContext } from "../../../contexts/FigurasContext.jsx";
 import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext.jsx";
+import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
 export const Tablero = () => {
   const { match_id } = useParams();
 
   const { datosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(
-    UsarMovimientoContext,
+    UsarMovimientoContext
   );
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
   const { figuras, agregarFiguras } = useContext(FigurasContext);
-  const { cartaSeleccionada: cartaFiguraSeleccionada } = useContext(CompletarFiguraContext);
+  const {
+    cartaSeleccionada: cartaFiguraSeleccionada,
+    setCartaSeleccionada: setCartaFiguraSeleccionada,
+  } = useContext(CompletarFiguraContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
   const [haValidadoMovimiento, setHaValidadoMovimiento] = useState(false);
-
-  useEffect(() => {
-    if (cartaFiguraSeleccionada !== null) {
-      // mostrar todas las figuras formadas y colocar las otras fihas mas opacas
-      // como en seleccionar una ficha despues de seleccionar una carta de movimiento.
-    }
-  }, [cartaFiguraSeleccionada]);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
@@ -45,7 +42,7 @@ export const Tablero = () => {
           ultimoEvento.payload.swapped_tiles,
           tiles,
           setTiles,
-          setUsarMovimiento,
+          setUsarMovimiento
         );
       }
       if (ultimoEvento.key === "ALLOW_FIGURES") {
@@ -54,11 +51,61 @@ export const Tablero = () => {
     }
   }, [ultimoEvento]);
 
+  const manejarFiguraSeleccionadaEnClick = useCallback(
+    async (rowIndex, columnIndex) => {
+      const figura = ServicioMovimiento.obtenerFiguraDeFicha(
+        rowIndex,
+        columnIndex,
+        figuras.figuras_actuales
+      );
+
+      if (figura) {
+        try {
+          const respuesta = await ServicioPartida.completarFicha(
+            match_id,
+            datosJugador.player_id,
+            cartaFiguraSeleccionada,
+            figura
+          );
+
+          setCartaFiguraSeleccionada(null);
+
+          respuesta.movement_cards.forEach((cartaADeshacer) => {
+            setUsarMovimiento((prev) => ({
+              ...prev,
+              cartasUsadas: prev.cartasUsadas.filter(
+                (carta) => carta[0] !== cartaADeshacer[0]
+              ),
+            }));
+          });
+
+          setUsarMovimiento((prev) => ({
+            ...prev,
+            cartasCompletadas:
+              prev.cartasUsadas.length - respuesta.movement_cards.length,
+          }));
+
+        } catch (err) {
+          console.error(err);
+          setMensajeAlerta("Error al completar figura");
+          setMostrarAlerta(true);
+          setTimeout(() => {
+            setMostrarAlerta(false);
+          }, 1000);
+        }
+      }
+    },
+    [usarMovimiento, figuras, datosJugador, cartaFiguraSeleccionada, match_id]
+  );
+
   const handleFichaClick = async (rowIndex, columnIndex) => {
+    if (cartaFiguraSeleccionada !== null) {
+      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex);
+    }
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(
         (ficha) =>
-          ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex,
+          ficha.rowIndex === rowIndex && ficha.columnIndex === columnIndex
       );
 
       if (fichaEstaSeleccionada) {
@@ -66,7 +113,7 @@ export const Tablero = () => {
         const newFichasSeleccionadas =
           usarMovimiento.fichasSeleccionadas.filter(
             (ficha) =>
-              ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex,
+              ficha.rowIndex !== rowIndex || ficha.columnIndex !== columnIndex
           );
         setUsarMovimiento((prev) => ({
           ...prev,
@@ -86,7 +133,7 @@ export const Tablero = () => {
         const movimientosCalculados = ServicioMovimiento.calcularMovimientos(
           rowIndex,
           columnIndex,
-          usarMovimiento.cartaSeleccionada[1],
+          usarMovimiento.cartaSeleccionada[1]
         );
         setTimeout(() => {
           setUsarMovimiento((prev) => ({
@@ -125,7 +172,7 @@ export const Tablero = () => {
         setMensajeAlerta,
         setMostrarAlerta,
         setTiles,
-        setHaValidadoMovimiento,
+        setHaValidadoMovimiento
       );
     }
   }, [usarMovimiento.fichasSeleccionadas]);
@@ -135,18 +182,18 @@ export const Tablero = () => {
       const highlighted = ServicioMovimiento.estaHighlighted(
         rowIndex,
         columnIndex,
-        usarMovimiento.fichasSeleccionadas,
+        usarMovimiento.fichasSeleccionadas
       );
       const movimientoPosible = ServicioMovimiento.esMovimientoPosible(
         rowIndex,
         columnIndex,
-        usarMovimiento.movimientosPosibles,
+        usarMovimiento.movimientosPosibles
       );
       const deshabilitado = !highlighted && !movimientoPosible;
       const isFiguraInicial = ServicioMovimiento.estaFiguraInicial(
         rowIndex,
         columnIndex,
-        figuras.figuras_actuales,
+        figuras.figuras_actuales
       );
       return (
         <Ficha

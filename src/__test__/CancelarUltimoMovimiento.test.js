@@ -13,6 +13,7 @@ import { TilesContext } from "../contexts/tilesContext";
 import { BrowserRouter } from "react-router-dom";
 import { ServicioMovimiento } from "../services/ServicioMovimiento";
 import { FigurasContext } from "../contexts/FigurasContext";
+import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext";
 
 const mockDatosJugador = {
   is_player_turn: true,
@@ -26,6 +27,7 @@ const mockFiguras = {
 
 const mockUsarMovimiento = {
   cartasUsadas: ["A", "B", "C"],
+  cartasCompletadas: 0,
   setUsarMovimiento: jest.fn(),
 };
 
@@ -63,7 +65,9 @@ describe("CancelarUltimoMovimiento", () => {
                 <TilesContext.Provider
                   value={{ tiles: tiles.tiles, setTiles: tiles.setTiles }}
                 >
-                  <CancelarUltimoMovimiento />
+                  <CompletarFiguraProvider>
+                    <CancelarUltimoMovimiento />
+                  </CompletarFiguraProvider>
                 </TilesContext.Provider>
               </EventoContext.Provider>
             </UsarMovimientoContext.Provider>

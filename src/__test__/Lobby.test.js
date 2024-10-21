@@ -14,8 +14,12 @@ import {
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext";
 import { EventoProvider } from "../contexts/EventoContext";
+import { act } from "react"; // Importa 'act' para controlar los efectos.
+import { waitFor } from "@testing-library/react";
 
 jest.mock("react-use-websocket");
+
+jest.spyOn(reactRouterDom, "useNavigate").mockReturnValue(jest.fn());
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -71,27 +75,29 @@ describe("Lobby", () => {
     expect(container.getElementsByClassName("animate-shake").length).toBe(1);
   });
 
-  it("deberia mostrar el boton abandonar si el contexto is_owner es true", () => {
-    useWebSocket.mockReturnValue({ lastJsonMessage: null });
+  it("debería mostrar el modal cuando el dueño cancela la partida", () => {
+    useWebSocket.mockReturnValue({
+      lastJsonMessage: {
+        key: "PLAYER_LEFT",
+        payload: { name: "test", is_owner: true },
+      },
+    });
 
-    // Mock de useContext para DatosJugadorContext con is_owner = true
     render(
       <reactRouterDom.MemoryRouter>
         <DatosPartidaProvider>
-          <DatosJugadorContext.Provider
-            value={{
-              datosJugador: { is_owner: true },
-              setDatosJugador: jest.fn(),
-            }}
-          >
+          <DatosJugadorProvider>
             <EventoProvider>
               <Lobby />
             </EventoProvider>
-          </DatosJugadorContext.Provider>
+          </DatosJugadorProvider>
         </DatosPartidaProvider>
       </reactRouterDom.MemoryRouter>,
     );
-    const boton = screen.getByText("Abandonar");
-    expect(boton).toBeDisabled();
+
+    const modalTexto = screen.getByText(
+      "El dueño de la sala ha cancelado la partida.",
+    );
+    expect(modalTexto).toBeInTheDocument();
   });
 });

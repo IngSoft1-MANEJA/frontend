@@ -257,4 +257,43 @@ describe("ServicioMovimiento", () => {
       });
     });
   });
+
+  describe("obtenerFiguraDeFicha", () => {
+    it("deberia devolver la figura a la que pertenece la ficha", () => {
+      const figuras = [
+        [
+          [0, 0],
+          [0, 1],
+        ],
+        [
+          [1, 0],
+          [1, 1],
+        ],
+      ];
+
+      const figura = ServicioMovimiento.obtenerFiguraDeFicha(1, 0, figuras);
+
+      expect(figura).toEqual([
+        [1, 0],
+        [1, 1],
+      ]);
+    });
+
+    it("deberia devolver undefined si la ficha no pertenece a ninguna figura", () => {
+      const figuras = [
+        [
+          [0, 0],
+          [0, 1],
+        ],
+        [
+          [1, 0],
+          [1, 1],
+        ],
+      ];
+
+      const figura = ServicioMovimiento.obtenerFiguraDeFicha(2, 2, figuras);
+
+      expect(figura).toBeUndefined();
+    });
+  });
 });

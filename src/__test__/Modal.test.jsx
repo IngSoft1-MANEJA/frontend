@@ -1,4 +1,4 @@
-import ModalGanaste from "../containers/Game/components/ModalGanaste";
+import { Modal } from "../components/Modal.jsx";
 import { cleanup, render, screen } from "@testing-library/react";
 
 afterEach(() => {
@@ -9,10 +9,11 @@ afterEach(() => {
 describe("ModalGanaste", () => {
   it("deberia mostrar el modal si mostrar es true", () => {
     render(
-      <ModalGanaste
+      <Modal
         mostrar={true}
         texto={"modal test"}
-        enVolverAlHome={() => {}}
+        funcionDeClick={() => {}}
+        boton={"boton test"}
       />,
     );
     const modal = screen.getByText("modal test");
@@ -21,26 +22,28 @@ describe("ModalGanaste", () => {
 
   it("no deberia mostrar el modal si mostrar es false", () => {
     render(
-      <ModalGanaste
+      <Modal
         mostrar={false}
         texto={"modal test"}
-        enVolverAlHome={() => {}}
+        funcionDeClick={() => {}}
+        boton={"boton test"}
       />,
     );
     const modal = screen.queryByText("modal test");
     expect(modal).not.toBeInTheDocument();
   });
 
-  it("deberia llamar a la funcion enVolverAlHome al hacer click en el boton", () => {
+  it("deberia llamar a la funcion funcionDeClick al hacer click en el boton", () => {
     const enVolverAlHome = jest.fn();
     render(
-      <ModalGanaste
+      <Modal
         mostrar={true}
         texto={"modal test"}
-        enVolverAlHome={enVolverAlHome}
+        funcionDeClick={enVolverAlHome}
+        boton={"boton test"}
       />,
     );
-    const boton = screen.getByText("Volver al home");
+    const boton = screen.getByText("boton test");
     boton.click();
     expect(enVolverAlHome).toHaveBeenCalled();
   });

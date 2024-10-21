@@ -36,7 +36,8 @@ export const ListaPartidas = () => {
   }
 
   return (
-    <>
+    <div>
+      <h1 className="poiret-one-regular text-8xl pb-5">EL SWITCHER</h1>
       <div className="Partidas">
         <div className="table-container">
           <table className="table-xs">
@@ -111,7 +112,7 @@ export const ListaPartidas = () => {
           <UnirsePartida idPartida={selectedPartida?.id} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

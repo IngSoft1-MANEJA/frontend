@@ -16,26 +16,36 @@ import { EventoContext } from "../../contexts/EventoContext";
 import { ServicioPartida } from "../../services/ServicioPartida.js";
 import { WebsocketEvents } from "../../services/ServicioWebsocket";
 import { JugadorGanoMotivo } from "../../services/ServicioPartida";
-import ModalGanaste from "./components/ModalGanaste.jsx";
+import { Modal } from "../../components/Modal.jsx";
 import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
 import { CancelarUltimoMovimiento } from "./components/CancelarUltimoMovimiento.jsx";
 import { FigurasProvider } from "../../contexts/FigurasContext.jsx";
+import { CompletarFiguraProvider } from "../../contexts/CompletarFiguraContext.jsx";
 
 export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
-  const [mensaje, setMensaje] = useState("");
+  const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
+  const [mensaje, setMensa] = useState("");
   const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
   const navigate = useNavigate();
   const { lastMessage, readyState } = useWebSocket(websocket_url, {
     share: true,
-    onClose: () => console.log("Websocket - Game: conexión cerrada."),
+    onClose: () => {
+      console.log("Websocket - Game: conexión cerrada.");
+      setUltimoEvento(null);
+    },
     onError: (event) => console.error("Websocket - Game: error: ", event),
     onOpen: () => console.log("Websocket - Game: conexión abierta."),
   });
-  const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
+
+  useEffect(() => {
+    return () => {
+      setUltimoEvento(null); // Limpia el último evento al desmontar el componente
+    };
+  }, []);
 
   useEffect(() => {
     flushSync(() => {
@@ -105,6 +115,7 @@ export function Game() {
   };
 
   const moverJugadorAlHome = () => {
+    setMostrarModalGanador(false);
     limpiarContextos();
     navigate("/");
   };
@@ -113,27 +124,30 @@ export function Game() {
     <div className="game-div relative w-full h-screen m-0 z-0">
       <FigurasProvider>
         <UsarMovimientoProvider>
-          <ModalGanaste
-            mostrar={mostrarModalGanador}
-            texto={mensaje}
-            enVolverAlHome={moverJugadorAlHome}
-          />
-          <div className="cartas-movimientos">
-            <div className="-mt-24 pb-5">
-              <CancelarUltimoMovimiento />
+          <CompletarFiguraProvider>
+            <Modal
+              mostrar={mostrarModalGanador}
+              texto={mensajeGanador}
+              funcionDeClick={moverJugadorAlHome}
+              boton="Volver al home"
+            />
+            <div className="cartas-movimientos">
+              <div className="-mt-24 pb-5">
+                <CancelarUltimoMovimiento />
+              </div>
+              <CartasMovimiento />
             </div>
-            <CartasMovimiento />
-          </div>
-          <CartasFiguras />
-          <Tablero />
-          <InformacionTurno player_id={datosJugador.player_id} />
-          <TerminarTurno />
-          <AbandonarPartida
-            estadoPartida="STARTED"
-            esAnfitrion={datosJugador.is_owner}
-            idJugador={datosJugador.player_id}
-            idPartida={match_id}
-          />
+            <CartasFiguras />
+            <Tablero />
+            <InformacionTurno player_id={datosJugador.player_id} />
+            <TerminarTurno />
+            <AbandonarPartida
+              estadoPartida="STARTED"
+              esAnfitrion={datosJugador.is_owner}
+              idJugador={datosJugador.player_id}
+              idPartida={match_id}
+            />
+          </CompletarFiguraProvider>
         </UsarMovimientoProvider>
       </FigurasProvider>
     </div>

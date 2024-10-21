@@ -8,6 +8,7 @@ import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
 import { TilesProvider } from "../contexts/tilesContext.jsx";
 import { FigurasContext } from "../contexts/FigurasContext";
+import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -72,7 +73,9 @@ describe("VistaTablero", () => {
           <FigurasContext.Provider value={mockFiguras}>
             <EventoContext.Provider value={mockEventoContext}>
               <TilesProvider>
-                <Tablero />
+                <CompletarFiguraProvider>
+                  <Tablero />
+                </CompletarFiguraProvider>
               </TilesProvider>
             </EventoContext.Provider>
           </FigurasContext.Provider>
@@ -95,7 +98,9 @@ describe("VistaTablero", () => {
           <FigurasContext.Provider value={mockFiguras}>
             <EventoContext.Provider value={mockEventoContext}>
               <TilesProvider>
-                <Tablero />
+                <CompletarFiguraProvider>
+                  <Tablero />
+                </CompletarFiguraProvider>
               </TilesProvider>
             </EventoContext.Provider>
           </FigurasContext.Provider>
@@ -120,7 +125,9 @@ describe("VistaTablero", () => {
           <FigurasContext.Provider value={mockFiguras}>
             <EventoContext.Provider value={mockEventoContext}>
               <TilesProvider>
-                <Tablero />
+                <CompletarFiguraProvider>
+                  <Tablero />
+                </CompletarFiguraProvider>
               </TilesProvider>
             </EventoContext.Provider>
           </FigurasContext.Provider>
@@ -168,7 +175,9 @@ describe("VistaTablero", () => {
           <FigurasContext.Provider value={mockFiguras}>
             <EventoContext.Provider value={mockEventoContext}>
               <TilesProvider>
-                <Tablero />
+                <CompletarFiguraProvider>
+                  <Tablero />
+                </CompletarFiguraProvider>
               </TilesProvider>
             </EventoContext.Provider>
           </FigurasContext.Provider>

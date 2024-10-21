@@ -25,7 +25,7 @@ export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
-  const [mensajeGanador, setMensajeGanador] = useState("");
+  const [mensaje, setMensaje] = useState("");
   const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
   const navigate = useNavigate();
@@ -80,9 +80,20 @@ export function Game() {
       } else if (ultimoEvento.key === WebsocketEvents.WINNER) {
         setMostrarModalGanador(true);
         if (ultimoEvento.payload.reason === JugadorGanoMotivo.FORFEIT) {
-          setMensajeGanador(
+          setMensaje(
             "¡Ganaste!, todos los demás jugadores han abandonado la partida.",
           );
+        }
+        if (ultimoEvento.payload.reason === JugadorGanoMotivo.NORMAL) {
+          if (datosJugador.player_id === ultimoEvento.payload.player_id) {
+            setMensaje(
+              "¡Ganaste!, felicidades."
+            );
+          } else {
+            setMensaje(
+              "¡Perdiste!, mejor suerte la próxima."
+            );
+          }
         }
       }
     }
@@ -104,7 +115,7 @@ export function Game() {
         <UsarMovimientoProvider>
           <ModalGanaste
             mostrar={mostrarModalGanador}
-            texto={mensajeGanador}
+            texto={mensaje}
             enVolverAlHome={moverJugadorAlHome}
           />
           <div className="cartas-movimientos">

@@ -47,6 +47,7 @@ export const TerminarTurno = () => {
             fichaHovering: false,
             cartaSeleccionada: null,
             fichasSeleccionadas: [],
+            cartasCompletadas: 0,
             highlightCarta: { state: false, key: "" },
             cartasUsadas: [],
             movimientosPosibles: [],

@@ -87,10 +87,11 @@ export const CartasFiguras = () => {
 
   }, [ultimoEvento]);
 
+
   useEffect(() => {
     if (
       ultimoEvento &&
-      ultimoEvento.key === "PLAYER_RECIEVE_ALL_SHAPES" &&
+      (ultimoEvento.key === "PLAYER_RECIEVE_ALL_SHAPES" || ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD") &&
       miTurno !== 0
     ) {
       const jugadorData = ultimoEvento.payload.find(
@@ -98,7 +99,14 @@ export const CartasFiguras = () => {
       );
 
       if (jugadorData) {
-        setCartasFiguras(jugadorData.shape_cards);
+        const cartasNoUsadas = cartasFiguras.filter(
+          (carta) => !cartasFigurasCompletadas.includes(carta[0]),
+        );
+
+        const nuevasCartas = jugadorData.shape_cards;
+
+        setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
+
       } else {
         console.log(
           "CartasFiguras - No se encontró jugador con turn_order:",

@@ -8,6 +8,7 @@ export const UsarMovimientoProvider = ({ children }) => {
     fichaHovering: false,
     cartaSeleccionada: null,
     fichasSeleccionadas: [],
+    cartasCompletadas: 0,
     highlightCarta: { state: false, key: "" },
     cartasUsadas: [],
     movimientosPosibles: [],

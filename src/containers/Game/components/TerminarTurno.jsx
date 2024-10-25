@@ -47,6 +47,7 @@ export const TerminarTurno = () => {
             fichaHovering: false,
             cartaSeleccionada: null,
             fichasSeleccionadas: [],
+            cartasCompletadas: 0,
             highlightCarta: { state: false, key: "" },
             cartasUsadas: [],
             movimientosPosibles: [],
@@ -96,7 +97,7 @@ export const TerminarTurno = () => {
   return (
     <div className="terminar-turno-div absolute top-0 left-0 w-full h-full flex z-1000">
       {mostrarAlerta && (
-        <div className="absolute top-3 right-3 w-1/3">
+        <div className="fixed top-3 right-3 w-1/3 z-50">
           <Alerts type={tipoAlerta} message={mensajeAlerta} />
         </div>
       )}

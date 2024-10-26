@@ -35,6 +35,7 @@ import "./CartasFiguras.css";
 import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
+import { ServicioFigura } from "../../../services/ServicioFigura.js";
 
 const urlMap = {
   1: fig1,
@@ -81,6 +82,7 @@ export const CartasFiguras = () => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setMiTurno(ultimoEvento.payload.turn_order);
+        setOponentes(ultimoEvento.payload.opponents);
       } else if (ultimoEvento.key === "END_PLAYER_TURN") {
         setCartaSeleccionada(null);
         setCartasFigurasCompletadas([]);
@@ -98,6 +100,7 @@ export const CartasFiguras = () => {
         ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD") &&
       miTurno !== 0
     ) {
+      //Setea cartas de figuras del jugador
       const jugadorData = ultimoEvento.payload.find(
         (jugador) => jugador.turn_order === miTurno,
       );
@@ -117,76 +120,35 @@ export const CartasFiguras = () => {
         );
       }
 
-      setOponentes(ultimoEvento.payload.filter((jugador) => jugador.turn_order !== miTurno));
+      //Setea cartas de figuras de los oponentes
+      const oponentesActualizados = oponentes.map((oponenteExistente) => {
+        const nuevo = ultimoEvento.payload.find(
+          (oponente) => oponente.turn_order === oponenteExistente.turn_order
+        );
+  
+        if (nuevo && nuevo.shape_cards?.length > 0) {
+          const cartasNoUsadasOponente = (oponenteExistente.shape_cards || []).filter(
+            (carta) => !cartasFigurasCompletadas.includes(carta[0])
+          );
+  
+          const nuevasCartasOponente = nuevo.shape_cards.filter(
+            (carta) => !cartasNoUsadasOponente.some((c) => c[0] === carta[0])
+          );
+  
+          return {
+            ...oponenteExistente,
+            shape_cards: [...cartasNoUsadasOponente, ...nuevasCartasOponente],
+          };
+        }
+  
+        return oponenteExistente;
+      });
+
+      setOponentes(oponentesActualizados);
     }
   }, [ultimoEvento, miTurno]);
 
-  function ordenarOponentes () {
-    const oponentesOrdenados = oponentes.sort((a, b) => {
-      const turnoA = a.turn_order < miTurno ? a.turn_order + datosPartida.max_players : a.turn_order;
-      const turnoB = b.turn_order < miTurno ? b.turn_order + datosPartida.max_players : b.turn_order;
-      return turnoA - turnoB;
-    });
-  
-    return oponentesOrdenados;
-  };
-
-  const claseCarta = useCallback(
-    (cartaId) => {
-      const efectoHover =
-        " hover:cursor-pointer" +
-        " hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" +
-        " hover:scale-105";
-
-      const efectoSeleccionada =
-        " cursor-pointer" +
-        " shadow-[0px_0px_20px_rgba(100,200,44,1)]" +
-        " scale-105";
-
-      const deshabilitada = "opacity-25 pointer-events-none greyscale";
-
-      if (cartasFigurasCompletadas.includes(cartaId)) {
-        return deshabilitada;
-      }
-
-      if (!datosJugador.is_player_turn) {
-        return "";
-      }
-
-      if (usarMovimiento.cartaSeleccionada !== null) {
-        return deshabilitada;
-      }
-
-      if (cartaSeleccionada !== null) {
-        if (cartaSeleccionada === cartaId) {
-          return efectoSeleccionada;
-        } else {
-          return deshabilitada;
-        }
-      }
-
-      return efectoHover;
-    },
-    [cartaSeleccionada, usarMovimiento, datosJugador, cartasFigurasCompletadas],
-  );
-
-  const seleccionarCarta = (cartaId) => {
-    if (
-      !datosJugador.is_player_turn ||
-      usarMovimiento.cartaSeleccionada !== null ||
-      cartasFigurasCompletadas.includes(cartaId)
-    ) {
-      return;
-    }
-
-    if (cartaSeleccionada !== null) {
-      if (cartaSeleccionada === cartaId) {
-        setCartaSeleccionada(null);
-      }
-    } else {
-      setCartaSeleccionada(cartaId);
-    }
-  };
+  const oponentesOrdenados = ServicioFigura.ordenarOponentes(oponentes, datosPartida.max_players, miTurno);
 
   return (
     <div className="cartas-figuras">
@@ -197,14 +159,14 @@ export const CartasFiguras = () => {
         {cartasFiguras.map((carta, index) => (
           <div
             key={index}
-            className={claseCarta(carta[0])}
-            onClick={() => seleccionarCarta(carta[0])}
+            className={ServicioFigura.claseCarta(carta[0], cartaSeleccionada, usarMovimiento.cartaSeleccionada, datosJugador.is_player_turn, cartasFigurasCompletadas)}
+            onClick={() => ServicioFigura.seleccionarCarta(carta[0], datosJugador.is_player_turn, usarMovimiento.cartaSeleccionada, cartaSeleccionada, setCartaSeleccionada, cartasFigurasCompletadas)}
           >
             <img src={urlMap[carta[1]]} alt={carta[1]} />
           </div>
         ))}
       </div>
-      {ordenarOponentes().map((oponente, oponenteIndex) => (
+      {oponentesOrdenados.map((oponente, oponenteIndex) => (
         <div 
           key={oponenteIndex} 
           className={`
@@ -214,7 +176,7 @@ export const CartasFiguras = () => {
           <div className="mazo">
             <img src={backfig} alt="back" />
           </div>
-          {oponente.shape_cards.map((carta, index) => (
+          {(oponente.shape_cards || []).map((carta, index) => (
             <div key={index} className="carta-figura">
               <img src={urlMap[carta[1]]} alt={carta[1]} />
             </div>

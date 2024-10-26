@@ -28,7 +28,7 @@ export const InformacionTurno = ({ player_id }) => {
   }, [ultimoEvento]);
 
   return (
-    <div className="informacion-div absolute left-6 top-6 w-fit max-w-md h-fit p-1">
+    <div className="informacion-div absolute left-5 top-5 w-fit max-w-md h-fit p-1">
       <table className="table table-xs overflow-hidden break-words text-balance rounded-none">
         <thead>
           <tr className="bg-base-100 text-center">

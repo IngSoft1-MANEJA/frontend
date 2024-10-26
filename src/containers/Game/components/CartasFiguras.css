@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: center;
   /* flex-direction: row; */
-  z-index: 600;
+  z-index: 40;
 }
 
 .cartas-figuras-propias {

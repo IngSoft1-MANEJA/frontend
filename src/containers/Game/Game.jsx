@@ -8,6 +8,7 @@ import { AbandonarPartida } from "../../components/AbandonarPartida";
 import { UsarMovimientoProvider } from "../../contexts/UsarMovimientoContext";
 import { Tablero } from "./components/Tablero";
 import { TerminarTurno } from "./components/TerminarTurno";
+import { Registro } from "./components/Registro";
 import { DatosJugadorContext } from "../../contexts/DatosJugadorContext";
 import { InformacionTurno } from "./components/InformacionTurno.jsx";
 import { CartasFiguras } from "./components/CartasFiguras";
@@ -138,6 +139,7 @@ export function Game() {
             <CartasFiguras />
             <Tablero />
             <InformacionTurno player_id={datosJugador.player_id} />
+            <Registro />
             <TerminarTurno />
             <AbandonarPartida
               estadoPartida="STARTED"

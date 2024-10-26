@@ -95,13 +95,13 @@ export const TerminarTurno = () => {
   };
 
   return (
-    <div className="terminar-turno-div absolute top-0 left-0 w-full h-full flex z-1000">
+    <div className="terminar-turno-div absolute top-0 left-0 w-full h-full flex z-10">
       {mostrarAlerta && (
         <div className="fixed top-3 right-3 w-1/3 z-50">
           <Alerts type={tipoAlerta} message={mensajeAlerta} />
         </div>
       )}
-      <div className="terminar-turno-boton-div absolute bottom-8 right-8">
+      <div className="terminar-turno-boton-div absolute bottom-5 right-5 z-50">
         <button
           className="terminar-turno-boton btn text-nowrap"
           onClick={handleTerminarTurno}

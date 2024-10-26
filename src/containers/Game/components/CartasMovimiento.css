@@ -1,12 +1,12 @@
 .cartas-movimientos {
   position: absolute;
-  right: 2vw;
+  right: 1vw;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items:center;
-  z-index: 700;
+  z-index: 50;
 }
 
 .cartas-movimientos-propias {

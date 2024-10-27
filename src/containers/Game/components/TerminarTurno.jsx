@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
+import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { ServicioPartida } from "../../../services/ServicioPartida";
 import { Alerts } from "../../../components/Alerts";
@@ -11,6 +12,7 @@ export const TerminarTurno = () => {
   const { match_id } = useParams();
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(
     UsarMovimientoContext,
   );
@@ -59,6 +61,11 @@ export const TerminarTurno = () => {
           setTimeout(() => {
             setMostrarAlerta(false);
           }, 1500);
+
+          setDatosPartida({
+            ...datosPartida,
+            current_turn: ultimoEvento.payload.next_player_turn,
+          });
 
           if (
             ultimoEvento.payload.next_player_turn === datosJugador.player_turn

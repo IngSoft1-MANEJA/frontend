@@ -1,3 +1,60 @@
+function cartaStringName (carta) {
+  switch (carta) {
+    case 1:
+      return "T_90";
+    case 2:
+      return "INVERSE_SNAKE";
+    case 3:
+      return "SNAKE";
+    case 4:
+      return "STAIRS";
+    case 5:
+      return "LINE";
+    case 6:
+      return "L";
+    case 7:
+      return "INVERSE_L_90";
+    case 8:
+      return "L_90";
+    case 9:
+      return "TOILET";
+    case 10:
+      return "Z_90";
+    case 11:
+      return "INVERSE_TOILET";
+    case 12:
+      return "S_90";
+    case 13:
+      return "BATON";
+    case 14:
+      return "INVERSE_BATON";
+    case 15:
+      return "TURTLE";
+    case 16:
+      return "U";
+    case 17:
+      return "PLUS";
+    case 18:
+      return "DOG";
+    case 19:
+      return "MINI_SNAKE";
+    case 20:
+      return "SQUARE";
+    case 21:
+      return "INVERSE_MINI_SNAKE";
+    case 22:
+      return "TRIANGLE";
+    case 23:
+      return "INVERSE_MINI_L";
+    case 24:
+      return "MINI_LINE";
+    case 25:
+      return "MINI_L_90";
+    default:
+      return "Figura no encontrada.";
+      break;
+  }
+};
 
 function ordenarOponentes (oponentes, maxPlayers, miTurno) {
   const oponentesOrdenados = oponentes.sort((a, b) => {
@@ -69,4 +126,4 @@ const seleccionarCarta = (cartaId, isPlayerTurn, cartaMovSeleccionada, cartaSele
   }
 };
 
-export const ServicioFigura = {ordenarOponentes, claseCarta, seleccionarCarta};
+export const ServicioFigura = {cartaStringName, ordenarOponentes, claseCarta, seleccionarCarta};

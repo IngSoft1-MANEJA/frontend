@@ -127,7 +127,7 @@ export const Registro = () => {
         if (message.tipo === "evento") {
             return (
                 <div key={index} className="registro-message">
-                    <p className="chat-divider flex flex-col-reverse text-sm mb-2 pt-1 pb-1 pl-4 text-left bg-base-300">{message.mensaje}</p>
+                    <p className="chat-divider text-sm mb-2 pt-1 pb-1 pl-4 text-left bg-base-300">{message.mensaje}</p>
                 </div>
             )
         }
@@ -136,10 +136,9 @@ export const Registro = () => {
     return (
         <div className="registro-container absolute h-4/6 -translate-y-1/2 left-5 top-1/2 z-50 w-60 p-1 justify-center">
             <div className="registro-container-inner relative bg-base-200 flex flex-col h-full w-full items-center">
-                <div className="chatbox overflow-auto h-5/6 w-full flex flex-col-reverse">
+                <div className="chatbox overflow-auto w-full flex flex-col-reverse">
                     {registroMessage}
                 </div>
-                <textarea className="textarea absolute bottom-0 w-full h-1/6 resize-none mt-2" placeholder="Comenta" onSubmit={handleSubmit}></textarea>
             </div>
         </div>
     )

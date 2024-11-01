@@ -5,220 +5,217 @@ import { EventoContext, EventoProvider } from "../contexts/EventoContext.jsx";
 import { WebsocketEvents } from "../services/ServicioWebsocket.js";
 
 describe("Temporizador", () => {
-    beforeAll(() => {
-      jest.useFakeTimers();
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+  it("deberia renderizar el componente con timer en 2 min", () => {
+    render(
+      <EventoProvider>
+        <Temporizador />
+      </EventoProvider>,
+    );
+
+    const minutos = screen.queryByText("min");
+    const segundos = screen.queryByText("seg");
+
+    expect(minutos).toBeInTheDocument();
+    expect(segundos).toBeInTheDocument();
+
+    const minutosTexto = minutos.firstChild.firstChild;
+    const segundosTexto = segundos.firstChild.firstChild;
+
+    expect(minutosTexto).toHaveStyle("--value: 2");
+    expect(segundosTexto).toHaveStyle("--value: 0");
+  });
+
+  it("deberia renderizar componente con timer en 1 min 35 seg", () => {
+    render(
+      <EventoProvider>
+        <Temporizador duracion={95} />
+      </EventoProvider>,
+    );
+
+    const minutos = screen.queryByText("min");
+    const segundos = screen.queryByText("seg");
+
+    expect(minutos).toBeInTheDocument();
+    expect(segundos).toBeInTheDocument();
+
+    const minutosTexto = minutos.firstChild.firstChild;
+    const segundosTexto = segundos.firstChild.firstChild;
+
+    expect(minutosTexto).toHaveStyle("--value: 1");
+    expect(segundosTexto).toHaveStyle("--value: 35");
+  });
+
+  it("deberia decrementar el tiempo en 1 seg", async () => {
+    jest.spyOn(global, "setInterval");
+    render(
+      <EventoProvider>
+        <Temporizador />
+      </EventoProvider>,
+    );
+
+    await waitFor(() => {
+      expect(setInterval).toHaveBeenCalledTimes(1);
+      expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+    });
+  });
+
+  it("deberia decrementar el tiempo en 1 seg despues de 1 seg", () => {
+    render(
+      <EventoProvider>
+        <Temporizador duracion={2} />
+      </EventoProvider>,
+    );
+
+    const minutos = screen.queryByText("min");
+    const segundos = screen.queryByText("seg");
+
+    expect(minutos).toBeInTheDocument();
+    expect(segundos).toBeInTheDocument();
+
+    const minutosTexto = minutos.firstChild.firstChild;
+    const segundosTexto = segundos.firstChild.firstChild;
+
+    expect(minutosTexto).toHaveStyle("--value: 0");
+    expect(segundosTexto).toHaveStyle("--value: 2");
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
     });
 
-    afterAll(() => {
-        jest.useRealTimers();
-    });
-    it("deberia renderizar el componente con timer en 2 min", () => {
-        render(
-          <EventoProvider>
-            <Temporizador />
-          </EventoProvider>
-      );
+    expect(minutosTexto).toHaveStyle("--value: 0");
+    expect(segundosTexto).toHaveStyle("--value: 1");
+  });
 
-        const minutos = screen.queryByText("min");
-        const segundos = screen.queryByText("seg");
+  it("deberia detener el timer en 0 seg", () => {
+    render(
+      <EventoProvider>
+        <Temporizador duracion={1} />
+      </EventoProvider>,
+    );
 
-        expect(minutos).toBeInTheDocument();
-        expect(segundos).toBeInTheDocument();
+    const minutos = screen.queryByText("min");
+    const segundos = screen.queryByText("seg");
 
-        const minutosTexto = minutos.firstChild.firstChild;
-        const segundosTexto = segundos.firstChild.firstChild;
+    expect(minutos).toBeInTheDocument();
+    expect(segundos).toBeInTheDocument();
 
-        expect(minutosTexto).toHaveStyle("--value: 2");
-        expect(segundosTexto).toHaveStyle("--value: 0");
-    });
+    const minutosTexto = minutos.firstChild.firstChild;
+    const segundosTexto = segundos.firstChild.firstChild;
 
-    it("deberia renderizar componente con timer en 1 min 35 seg", () => {
-        render(
-          <EventoProvider>
-            <Temporizador duracion={95}/>
-          </EventoProvider>
-      );
+    expect(minutosTexto).toHaveStyle("--value: 0");
+    expect(segundosTexto).toHaveStyle("--value: 1");
 
-        const minutos = screen.queryByText("min");
-        const segundos = screen.queryByText("seg");
-
-        expect(minutos).toBeInTheDocument();
-        expect(segundos).toBeInTheDocument();
-
-        const minutosTexto = minutos.firstChild.firstChild;
-        const segundosTexto = segundos.firstChild.firstChild;
-
-        expect(minutosTexto).toHaveStyle("--value: 1");
-        expect(segundosTexto).toHaveStyle("--value: 35");
+    act(() => {
+      jest.advanceTimersByTime(1000);
     });
 
-    it("deberia decrementar el tiempo en 1 seg", async () => {
-      jest.spyOn(global, "setInterval");
-      render(
-        <EventoProvider>
-          <Temporizador />
-        </EventoProvider>
-      );
-        
-      await waitFor(() => {
-        expect(setInterval).toHaveBeenCalledTimes(1);
-        expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
-      });
+    expect(minutosTexto).toHaveStyle("--value: 0");
+    expect(segundosTexto).toHaveStyle("--value: 0");
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
     });
 
-    it("deberia decrementar el tiempo en 1 seg despues de 1 seg", () => {
-      render(
-        <EventoProvider>
-          <Temporizador duracion={2} />
-        </EventoProvider>
-      );
+    expect(minutosTexto).toHaveStyle("--value: 0");
+    expect(segundosTexto).toHaveStyle("--value: 0");
+  });
 
-      const minutos = screen.queryByText("min");
-      const segundos = screen.queryByText("seg");
+  it("deberia re renderizar donde quedo en el ultimo render", () => {
+    const { rerender } = render(
+      <EventoProvider>
+        <Temporizador />
+      </EventoProvider>,
+    );
 
-      expect(minutos).toBeInTheDocument();
-      expect(segundos).toBeInTheDocument();
+    const minutos = screen.queryByText("min");
+    const segundos = screen.queryByText("seg");
 
-      const minutosTexto = minutos.firstChild.firstChild;
-      const segundosTexto = segundos.firstChild.firstChild;
+    expect(minutos).toBeInTheDocument();
+    expect(segundos).toBeInTheDocument();
 
-      expect(minutosTexto).toHaveStyle("--value: 0");
-      expect(segundosTexto).toHaveStyle("--value: 2");
+    const minutosTexto = minutos.firstChild.firstChild;
+    const segundosTexto = segundos.firstChild.firstChild;
 
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
+    expect(minutosTexto).toHaveStyle("--value: 2");
+    expect(segundosTexto).toHaveStyle("--value: 0");
 
-      expect(minutosTexto).toHaveStyle("--value: 0");
-      expect(segundosTexto).toHaveStyle("--value: 1");
+    act(() => {
+      jest.advanceTimersByTime(10000);
     });
 
-    it("deberia detener el timer en 0 seg", () => {
-      render(
-        <EventoProvider>
-          <Temporizador duracion={1} />
-        </EventoProvider>
-      );
+    expect(minutosTexto).toHaveStyle("--value: 1");
+    expect(segundosTexto).toHaveStyle("--value: 50");
 
-      const minutos = screen.queryByText("min");
-      const segundos = screen.queryByText("seg");
+    rerender(
+      <EventoProvider>
+        <Temporizador />
+      </EventoProvider>,
+    );
 
-      expect(minutos).toBeInTheDocument();
-      expect(segundos).toBeInTheDocument();
-
-      const minutosTexto = minutos.firstChild.firstChild;
-      const segundosTexto = segundos.firstChild.firstChild;
-
-      expect(minutosTexto).toHaveStyle("--value: 0");
-      expect(segundosTexto).toHaveStyle("--value: 1");
-
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
-
-      expect(minutosTexto).toHaveStyle("--value: 0");
-      expect(segundosTexto).toHaveStyle("--value: 0");
-
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
-
-      expect(minutosTexto).toHaveStyle("--value: 0");
-      expect(segundosTexto).toHaveStyle("--value: 0");
+    act(() => {
+      jest.advanceTimersByTime(10000);
     });
 
-    it("deberia re renderizar donde quedo en el ultimo render", () => {
-      const {rerender} = render(
-        <EventoProvider>
-          <Temporizador />
-        </EventoProvider>
-      );
+    const nuevoMinutos = screen.queryByText("min");
+    const nuevoSegundos = screen.queryByText("seg");
+    const nuevoMinutosTexto = nuevoMinutos.firstChild.firstChild;
+    const nuevoSegundosTexto = nuevoSegundos.firstChild.firstChild;
 
-      const minutos = screen.queryByText("min");
-      const segundos = screen.queryByText("seg");
+    expect(nuevoMinutosTexto).toHaveStyle("--value: 1");
+    expect(nuevoSegundosTexto).toHaveStyle("--value: 40");
+  });
 
-      expect(minutos).toBeInTheDocument();
-      expect(segundos).toBeInTheDocument();
+  it("deberia reiniciar el timer cuando se recibe evento de fin de turno", () => {
+    const mockEndOfTurn = {
+      ultimoEvento: {
+        key: WebsocketEvents.END_PLAYER_TURN,
+        payload: {},
+      },
+    };
+    const { rerender } = render(
+      <EventoProvider>
+        <Temporizador />
+      </EventoProvider>,
+    );
 
-      const minutosTexto = minutos.firstChild.firstChild;
-      const segundosTexto = segundos.firstChild.firstChild;
+    const minutos = screen.queryByText("min");
+    const segundos = screen.queryByText("seg");
 
-      expect(minutosTexto).toHaveStyle("--value: 2");
-      expect(segundosTexto).toHaveStyle("--value: 0");
+    expect(minutos).toBeInTheDocument();
+    expect(segundos).toBeInTheDocument();
 
-      act(() => {
-        jest.advanceTimersByTime(10000);
-      });
+    const minutosTexto = minutos.firstChild.firstChild;
+    const segundosTexto = segundos.firstChild.firstChild;
 
-      expect(minutosTexto).toHaveStyle("--value: 1");
-      expect(segundosTexto).toHaveStyle("--value: 50");
+    expect(minutosTexto).toHaveStyle("--value: 2");
+    expect(segundosTexto).toHaveStyle("--value: 0");
 
-      rerender(
-        <EventoProvider>
-          <Temporizador/>
-        </EventoProvider>
-      );
-
-      act(() => {
-        jest.advanceTimersByTime(10000);
-      });
-
-      const nuevoMinutos = screen.queryByText("min");
-      const nuevoSegundos = screen.queryByText("seg");
-      const nuevoMinutosTexto = nuevoMinutos.firstChild.firstChild;
-      const nuevoSegundosTexto = nuevoSegundos.firstChild.firstChild;
-
-      expect(nuevoMinutosTexto).toHaveStyle("--value: 1");
-      expect(nuevoSegundosTexto).toHaveStyle("--value: 40");
-
+    act(() => {
+      jest.advanceTimersByTime(10000);
     });
 
-    it("deberia reiniciar el timer cuando se recibe evento de fin de turno", () => {
-      const mockEndOfTurn = {
-        ultimoEvento: {
-          key: WebsocketEvents.END_PLAYER_TURN,
-          payload: {}
-        },
-      };
-      const {rerender} = render(
-        <EventoProvider>
-          <Temporizador />
-        </EventoProvider>
-      );
+    expect(minutosTexto).toHaveStyle("--value: 1");
+    expect(segundosTexto).toHaveStyle("--value: 50");
 
-      const minutos = screen.queryByText("min");
-      const segundos = screen.queryByText("seg");
+    rerender(
+      <EventoContext.Provider value={mockEndOfTurn}>
+        <Temporizador />
+      </EventoContext.Provider>,
+    );
 
-      expect(minutos).toBeInTheDocument();
-      expect(segundos).toBeInTheDocument();
+    const nuevoMinutos = screen.queryByText("min");
+    const nuevoSegundos = screen.queryByText("seg");
+    const nuevoMinutosTexto = nuevoMinutos.firstChild.firstChild;
+    const nuevoSegundosTexto = nuevoSegundos.firstChild.firstChild;
 
-      const minutosTexto = minutos.firstChild.firstChild;
-      const segundosTexto = segundos.firstChild.firstChild;
-
-      expect(minutosTexto).toHaveStyle("--value: 2");
-      expect(segundosTexto).toHaveStyle("--value: 0");
-
-      act(() => {
-        jest.advanceTimersByTime(10000);
-      });
-
-      expect(minutosTexto).toHaveStyle("--value: 1");
-      expect(segundosTexto).toHaveStyle("--value: 50");
-
-      rerender(
-        <EventoContext.Provider value={mockEndOfTurn}>
-          <Temporizador/>
-        </EventoContext.Provider>
-      );
-
-      const nuevoMinutos = screen.queryByText("min");
-      const nuevoSegundos = screen.queryByText("seg");
-      const nuevoMinutosTexto = nuevoMinutos.firstChild.firstChild;
-      const nuevoSegundosTexto = nuevoSegundos.firstChild.firstChild;
-
-      expect(nuevoMinutosTexto).toHaveStyle("--value: 2");
-      expect(nuevoSegundosTexto).toHaveStyle("--value: 0");
-
-    });
-
+    expect(nuevoMinutosTexto).toHaveStyle("--value: 2");
+    expect(nuevoSegundosTexto).toHaveStyle("--value: 0");
+  });
 });

@@ -46,12 +46,7 @@ function App() {
               </DatosPartidaProvider>
             }
           />
-          <Route
-            path="/test-area"
-            element={
-              <Temporizador />
-            }
-          />
+          <Route path="/test-area" element={<Temporizador />} />
         </Routes>
       </EventoProvider>
     </div>

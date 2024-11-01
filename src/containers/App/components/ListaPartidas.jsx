@@ -9,10 +9,11 @@ export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
   const [selectedPartida, setSelectedPartida] = useState(null);
   const [mensaje, setMensaje] = useState("");
+  const [buscarTermino, setBuscarTermino] = useState("");
 
-  const fetchPartidas = async () => {
+  const fetchPartidas = async (Termino = "") => {
     try {
-      const data = await ServicioPartida.listarPartidas();
+      const data = await ServicioPartida.listarPartidas(Termino);
       setPartidas(data);
 
       if (data.length === 0) {
@@ -28,16 +29,28 @@ export const ListaPartidas = () => {
   }, []);
 
   function refreshPartidas() {
-    fetchPartidas();
+    fetchPartidas(event.target.value);
   }
 
   function handleSelectPartida(partida) {
     setSelectedPartida(partida);
   }
 
+  function handleSearchChange(event) {
+    setBuscarTermino(event.target.value);
+    fetchPartidas(event.target.value); // Filtramos las partidas con cada cambio en el campo de búsqueda
+  }
+
   return (
     <div>
       <h1 className="poiret-one-regular text-8xl pb-5">EL SWITCHER</h1>
+      <input
+        type="text"
+        placeholder="Buscar partida por nombre..."
+        value={buscarTermino}
+        onChange={handleSearchChange}
+        className="search-input" 
+      />
       <div className="Partidas">
         <div className="table-container">
           <table className="table-xs">

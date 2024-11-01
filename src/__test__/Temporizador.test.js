@@ -1,7 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { Temporizador } from "../containers/Game/components/Temporizador.jsx";
 import { act } from "react";
-import { EventoProvider } from "../contexts/EventoContext.jsx";
+import { EventoContext, EventoProvider } from "../contexts/EventoContext.jsx";
+import { WebsocketEvents } from "../services/ServicioWebsocket.js";
 
 describe("Temporizador", () => {
     beforeAll(() => {
@@ -124,6 +125,100 @@ describe("Temporizador", () => {
 
       expect(minutosTexto).toHaveStyle("--value: 0");
       expect(segundosTexto).toHaveStyle("--value: 0");
+    });
+
+    it("deberia re renderizar donde quedo en el ultimo render", () => {
+      const {rerender} = render(
+        <EventoProvider>
+          <Temporizador />
+        </EventoProvider>
+      );
+
+      const minutos = screen.queryByText("min");
+      const segundos = screen.queryByText("seg");
+
+      expect(minutos).toBeInTheDocument();
+      expect(segundos).toBeInTheDocument();
+
+      const minutosTexto = minutos.firstChild.firstChild;
+      const segundosTexto = segundos.firstChild.firstChild;
+
+      expect(minutosTexto).toHaveStyle("--value: 2");
+      expect(segundosTexto).toHaveStyle("--value: 0");
+
+      act(() => {
+        jest.advanceTimersByTime(10000);
+      });
+
+      expect(minutosTexto).toHaveStyle("--value: 1");
+      expect(segundosTexto).toHaveStyle("--value: 50");
+
+      rerender(
+        <EventoProvider>
+          <Temporizador/>
+        </EventoProvider>
+      );
+
+      act(() => {
+        jest.advanceTimersByTime(10000);
+      });
+
+      const nuevoMinutos = screen.queryByText("min");
+      const nuevoSegundos = screen.queryByText("seg");
+      const nuevoMinutosTexto = nuevoMinutos.firstChild.firstChild;
+      const nuevoSegundosTexto = nuevoSegundos.firstChild.firstChild;
+
+      expect(nuevoMinutosTexto).toHaveStyle("--value: 1");
+      expect(nuevoSegundosTexto).toHaveStyle("--value: 40");
+
+    });
+
+    it("deberia reiniciar el timer cuando se recibe evento de fin de turno", () => {
+      const mockEndOfTurn = {
+        ultimoEvento: {
+          key: WebsocketEvents.END_PLAYER_TURN,
+          payload: {}
+        },
+      };
+      const {rerender} = render(
+        <EventoProvider>
+          <Temporizador />
+        </EventoProvider>
+      );
+
+      const minutos = screen.queryByText("min");
+      const segundos = screen.queryByText("seg");
+
+      expect(minutos).toBeInTheDocument();
+      expect(segundos).toBeInTheDocument();
+
+      const minutosTexto = minutos.firstChild.firstChild;
+      const segundosTexto = segundos.firstChild.firstChild;
+
+      expect(minutosTexto).toHaveStyle("--value: 2");
+      expect(segundosTexto).toHaveStyle("--value: 0");
+
+      act(() => {
+        jest.advanceTimersByTime(10000);
+      });
+
+      expect(minutosTexto).toHaveStyle("--value: 1");
+      expect(segundosTexto).toHaveStyle("--value: 50");
+
+      rerender(
+        <EventoContext.Provider value={mockEndOfTurn}>
+          <Temporizador/>
+        </EventoContext.Provider>
+      );
+
+      const nuevoMinutos = screen.queryByText("min");
+      const nuevoSegundos = screen.queryByText("seg");
+      const nuevoMinutosTexto = nuevoMinutos.firstChild.firstChild;
+      const nuevoSegundosTexto = nuevoSegundos.firstChild.firstChild;
+
+      expect(nuevoMinutosTexto).toHaveStyle("--value: 2");
+      expect(nuevoSegundosTexto).toHaveStyle("--value: 0");
+
     });
 
 });

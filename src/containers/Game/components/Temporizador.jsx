@@ -10,9 +10,7 @@ export const Temporizador = ({duracion = TIEMPO_DE_TURNO}) => {
     const { ultimoEvento } = useContext(EventoContext);
 
     useEffect(() => {
-      console.log("Evento", ultimoEvento);
         if (ultimoEvento?.key === WebsocketEvents.END_PLAYER_TURN) {
-          console.log("Reiniciando temporizador");
           setReiniciarCon({tiempo: TIEMPO_DE_TURNO});
         }
     }, [ultimoEvento]);

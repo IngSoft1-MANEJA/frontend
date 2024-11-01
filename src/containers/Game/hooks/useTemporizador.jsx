@@ -30,8 +30,6 @@ export const useTemporizador = (duracion) => {
         timerId.current = null;
       }
 
-      console.log("creando intervalo")
-
       const temporizador = setInterval(() => {
         setCuenta((prevTiempo) => {
           const nuevoTiempo = prevTiempo - 1;

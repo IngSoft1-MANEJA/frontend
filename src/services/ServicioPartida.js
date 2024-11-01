@@ -30,19 +30,26 @@ export class ServicioPartida {
     return json;
   }
 
-  static async listarPartidas() {
-    const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}`);
-
+  static async listarPartidas(buscarTermino = "") {
+  
+    const params = new URLSearchParams();
+    if (buscarTermino) {
+      params.append("s", buscarTermino); 
+    }
+  
+    const url = `${BACKEND_URL}/${this.GRUPO_ENDPOINT}?${params}`;
+  
+    const respuesta = await fetch(url);
+  
     if (!respuesta.ok) {
       throw new Error(`Error al listar partidas - estado: ${respuesta.status}`);
     }
-
+  
     const json = await respuesta.json();
-    const jsonMap = json.map((partida) => {
-      partida.match_id = partida.id;
+    return json.map((partida) => {
+      partida.match_id = partida.id; // Asigna el match_id
       return partida;
     });
-    return jsonMap;
   }
 
   static async crearPartida(nombreSala, nombreJugador, cantidadJugadores) {

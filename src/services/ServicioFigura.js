@@ -57,6 +57,9 @@ function cartaStringName (carta) {
 };
 
 function ordenarOponentes (oponentes, maxPlayers, miTurno) {
+  if (!Array.isArray(oponentes)) {
+    return [];
+  }
   const oponentesOrdenados = oponentes.sort((a, b) => {
     const turnoA = a.turn_order < miTurno ? a.turn_order + maxPlayers : a.turn_order;
     const turnoB = b.turn_order < miTurno ? b.turn_order + maxPlayers : b.turn_order;

@@ -114,8 +114,6 @@ export const Registro = () => {
         }
       }, [ultimoEvento]);
 
-    const handleSubmit = (e) => {};
-
     const registroMessage = registro.slice(0).reverse(0).map((message, index) => {
         if (message.tipo === "chat") {
             return (

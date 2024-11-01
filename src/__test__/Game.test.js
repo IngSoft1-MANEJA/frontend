@@ -192,7 +192,7 @@ describe("Game", () => {
           >
             <DatosPartidaContext.Provider
               value={{
-                datosPartida: { max_players: 3 },
+                datosPartida: { current_turn: "name", max_players: 3 },
                 setDatosPartida: mockSetDatosPartida,
               }}
             >
@@ -218,6 +218,6 @@ describe("Game", () => {
       player_id: null,
       is_owner: false,
     });
-    expect(mockSetDatosPartida).toHaveBeenCalledWith({ max_players: 2 });
+    expect(mockSetDatosPartida).toHaveBeenCalledWith({ current_turn: "", max_players: 2 });
   });
 });

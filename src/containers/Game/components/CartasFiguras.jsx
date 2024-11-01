@@ -121,7 +121,7 @@ export const CartasFiguras = () => {
       }
 
       //Setea cartas de figuras de los oponentes
-      const oponentesActualizados = oponentes.map((oponenteExistente) => {
+      const oponentesActualizados = (oponentes || []).map((oponenteExistente) => {
         const nuevo = ultimoEvento.payload.find(
           (oponente) => oponente.turn_order === oponenteExistente.turn_order
         );

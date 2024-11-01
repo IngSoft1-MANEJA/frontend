@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
+import { Temporizador } from "./Temporizador";
 import "./InformacionTurno.css";
 
 export const InformacionTurno = ({ player_id }) => {
@@ -42,6 +43,12 @@ export const InformacionTurno = ({ player_id }) => {
             <th className="w-10 text-left">Jugador:</th>
             <td className="min-w-20 max-w-44 text-right">
               {turnos.current_turn}
+            </td>
+          </tr>
+          <tr className="bg-base-200 h-8">
+            <th className="w-10 text-left">Tiempo:</th>
+            <td className="min-w-20 max-w-44 text-right">
+              <Temporizador />
             </td>
           </tr>
         </tbody>

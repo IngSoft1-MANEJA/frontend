@@ -1,46 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { EventoContext } from '../../../contexts/EventoContext';
+import { WebsocketEvents } from '../../../services/ServicioWebsocket';
+import { useTemporizador } from '../hooks/useTemporizador';
 
 const TIEMPO = 120; // 2 minutos
 
-const calcularTiempo = (tiempo) => {
-
-    const minutos = Math.floor((tiempo / 60) % 60);
-    const segundos = Math.floor(tiempo % 60);
-
-    return [minutos, segundos]
-};
-
 export const Temporizador = ({duracion = TIEMPO}) => {
-    const [cuenta, setCuenta] = useState(duracion);
-    const [tiempoMinutos, tiempoSegundos] = calcularTiempo(duracion);
-    const [minutos, setMinutos] = useState(tiempoMinutos);
-    const [segundos, setSegundos] = useState(tiempoSegundos);
-    const timerId = React.useRef(null);
+    const {minutos, segundos, setCuenta} = useTemporizador(duracion);
+    const { evento } = useContext(EventoContext);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCuenta(prevTiempo => {
-                const nuevoTiempo = prevTiempo - 1;
-
-                const [minutosNuevos, segundosNuevos] =
-                  calcularTiempo(nuevoTiempo);
-                setMinutos(minutosNuevos);
-                setSegundos(segundosNuevos);
-
-                return nuevoTiempo;
-            });
-        }, 1000);
-
-        timerId.current = timer;
-
-        return () => clearInterval(timer);
-    }, [duracion]);
-
-    useEffect(() => {
-        if (cuenta <= 0) {
-            clearInterval(timerId.current);
+        if (evento?.key === WebsocketEvents.END_PLAYER_TURN) {
+            setCuenta(duracion);
         }
-    }, [cuenta]);
+    }, [evento]);
 
     return (
       <div className="flex gap-5">

@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { Temporizador } from "../containers/Game/components/Temporizador.jsx";
 import { act } from "react";
+import { EventoProvider } from "../contexts/EventoContext.jsx";
 
 describe("Temporizador", () => {
     beforeAll(() => {
@@ -11,7 +12,11 @@ describe("Temporizador", () => {
         jest.useRealTimers();
     });
     it("deberia renderizar el componente con timer en 2 min", () => {
-        render(<Temporizador />);
+        render(
+          <EventoProvider>
+            <Temporizador />
+          </EventoProvider>
+      );
 
         const minutos = screen.queryByText("min");
         const segundos = screen.queryByText("seg");
@@ -27,7 +32,11 @@ describe("Temporizador", () => {
     });
 
     it("deberia renderizar componente con timer en 1 min 35 seg", () => {
-        render(<Temporizador duracion={95}/>);
+        render(
+          <EventoProvider>
+            <Temporizador duracion={95}/>
+          </EventoProvider>
+      );
 
         const minutos = screen.queryByText("min");
         const segundos = screen.queryByText("seg");
@@ -44,7 +53,11 @@ describe("Temporizador", () => {
 
     it("deberia decrementar el tiempo en 1 seg", async () => {
       jest.spyOn(global, "setInterval");
-      render(<Temporizador />);
+      render(
+        <EventoProvider>
+          <Temporizador />
+        </EventoProvider>
+      );
         
       await waitFor(() => {
         expect(setInterval).toHaveBeenCalledTimes(1);
@@ -53,7 +66,11 @@ describe("Temporizador", () => {
     });
 
     it("deberia decrementar el tiempo en 1 seg despues de 1 seg", () => {
-      render(<Temporizador duracion={2} />);
+      render(
+        <EventoProvider>
+          <Temporizador duracion={2} />
+        </EventoProvider>
+      );
 
       const minutos = screen.queryByText("min");
       const segundos = screen.queryByText("seg");
@@ -76,7 +93,11 @@ describe("Temporizador", () => {
     });
 
     it("deberia detener el timer en 0 seg", () => {
-      render(<Temporizador duracion={1} />);
+      render(
+        <EventoProvider>
+          <Temporizador duracion={1} />
+        </EventoProvider>
+      );
 
       const minutos = screen.queryByText("min");
       const segundos = screen.queryByText("seg");

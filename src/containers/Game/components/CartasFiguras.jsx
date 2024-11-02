@@ -70,6 +70,7 @@ export const CartasFiguras = () => {
   const [datosPartida, setDatosPartida] = useState(DatosPartidaContext);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
+  const [cartasMazo, setCartasMazo] = useState(0);
   const { cartaSeleccionada, setCartaSeleccionada } = useContext(
     CompletarFiguraContext,
   );
@@ -83,7 +84,13 @@ export const CartasFiguras = () => {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setMiTurno(ultimoEvento.payload.turn_order);
         setOponentes(ultimoEvento.payload.opponents);
+        setCartasMazo(ultimoEvento.payload.deck_size);
+        console.log("deck_size", ultimoEvento.payload.deck_size);
       } else if (ultimoEvento.key === "END_PLAYER_TURN") {
+        if (ultimoEvento.payload.next_player_turn !== miTurno) {
+          setCartasMazo(cartasMazo - cartasFigurasCompletadas.length);
+          console.log("new_deck_size", cartasMazo);
+        }
         setCartaSeleccionada(null);
         setCartasFigurasCompletadas([]);
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
@@ -126,7 +133,7 @@ export const CartasFiguras = () => {
           (oponente) => oponente.turn_order === oponenteExistente.turn_order
         );
   
-        if (nuevo && nuevo.shape_cards?.length > 0) {
+        if (nuevo) {
           const cartasNoUsadasOponente = (oponenteExistente.shape_cards || []).filter(
             (carta) => !cartasFigurasCompletadas.includes(carta[0])
           );
@@ -153,9 +160,9 @@ export const CartasFiguras = () => {
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        <div className="mazo">
+        {cartasMazo > 3 && <div className="mazo" data-tooltip={`Cartas: ${cartasMazo-3}`}>
           <img src={backfig} alt="back" />
-        </div>
+        </div>}
         {cartasFiguras.map((carta, index) => (
           <div
             key={index}
@@ -173,9 +180,9 @@ export const CartasFiguras = () => {
             cartas-figuras-oponente-${(oponenteIndex + 1)} 
             ${oponentes.length > 1 ? 'columnas' : 'filas'
           }`}>
-          <div className="mazo">
+          {(oponente.shape_cards || []).length > 2 && <div className="mazo">
             <img src={backfig} alt="back" />
-          </div>
+          </div>}
           {(oponente.shape_cards || []).map((carta, index) => (
             <div key={index} className="carta-figura">
               <img src={urlMap[carta[1]]} alt={carta[1]} />

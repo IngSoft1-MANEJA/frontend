@@ -64,7 +64,7 @@ export const TerminarTurno = () => {
 
           setDatosPartida({
             ...datosPartida,
-            current_turn: ultimoEvento.payload.next_player_turn,
+            current_player_name: ultimoEvento.payload.next_player_name,
           });
 
           if (

@@ -83,3 +83,37 @@
   padding: 1px;
   border-radius: 0.6vh;
 }
+
+.mazo img {
+  border: 0.8vh solid rgb(143, 120, 120);
+  border-radius: 0.6vh;
+  width: 12vh;
+  height: auto;
+  background-color: rgb(206, 191, 172);
+  padding: 1px;
+}
+
+.mazo {
+  position: relative;
+  display: inline-block;
+}
+
+.mazo[data-tooltip]:hover::after {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0.9;
+  width: 12vh;
+  height: 12vh;
+}

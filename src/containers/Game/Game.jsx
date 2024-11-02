@@ -77,7 +77,7 @@ export function Game() {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setDatosPartida({
           ...datosPartida,
-          current_turn: ultimoEvento.payload.current_turn_player,
+          current_player_name: ultimoEvento.payload.current_turn_player,
         });
         if (ultimoEvento.payload.turn_order === 1) {
           setDatosJugador({

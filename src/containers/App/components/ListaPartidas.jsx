@@ -29,7 +29,7 @@ export const ListaPartidas = () => {
   }, []);
 
   function refreshPartidas() {
-    fetchPartidas(event.target.value);
+    fetchPartidas(buscarTermino);
   }
 
   function handleSelectPartida(partida) {

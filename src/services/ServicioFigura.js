@@ -56,6 +56,54 @@ function cartaStringName (carta) {
   }
 };
 
+function repartirCartasFigura (ultimoEvento, miTurno, cartasFiguras, setCartasFiguras, oponentes, setOponentes, cartasFigurasCompletadas) {
+  //Setea cartas de figuras del jugador
+  const jugadorData = ultimoEvento.payload.find(
+    (jugador) => jugador.turn_order === miTurno,
+  );
+
+  if (jugadorData) {
+    const cartasNoUsadas = cartasFiguras.filter(
+      (carta) => !cartasFigurasCompletadas.includes(carta[0]),
+    );
+
+    const nuevasCartas = jugadorData.shape_cards;
+
+    setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
+  } else {
+    console.log(
+      "CartasFiguras - No se encontró jugador con turn_order:",
+      miTurno,
+    );
+  }
+
+  //Setea cartas de figuras de los oponentes
+  const oponentesActualizados = (oponentes || []).map((oponenteExistente) => {
+    const nuevo = ultimoEvento.payload.find(
+      (oponente) => oponente.turn_order === oponenteExistente.turn_order
+    );
+
+    if (nuevo) {
+      const cartasNoUsadasOponente = (oponenteExistente.shape_cards || []).filter(
+        (carta) => !cartasFigurasCompletadas.includes(carta[0])
+      );
+
+      const nuevasCartasOponente = nuevo.shape_cards.filter(
+        (carta) => !cartasNoUsadasOponente.some((c) => c[0] === carta[0])
+      );
+
+      return {
+        ...oponenteExistente,
+        shape_cards: [...cartasNoUsadasOponente, ...nuevasCartasOponente],
+      };
+    }
+
+    return oponenteExistente;
+  });
+
+  setOponentes(oponentesActualizados);
+}
+
 function ordenarOponentes (oponentes, maxPlayers, miTurno) {
   if (!Array.isArray(oponentes)) {
     return [];
@@ -129,4 +177,4 @@ const seleccionarCarta = (cartaId, isPlayerTurn, cartaMovSeleccionada, cartaSele
   }
 };
 
-export const ServicioFigura = {cartaStringName, ordenarOponentes, claseCarta, seleccionarCarta};
+export const ServicioFigura = {cartaStringName, ordenarOponentes, claseCarta, seleccionarCarta, repartirCartasFigura};

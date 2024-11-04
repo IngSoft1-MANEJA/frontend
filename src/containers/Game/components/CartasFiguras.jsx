@@ -85,11 +85,9 @@ export const CartasFiguras = () => {
         setMiTurno(ultimoEvento.payload.turn_order);
         setOponentes(ultimoEvento.payload.opponents);
         setCartasMazo(ultimoEvento.payload.deck_size);
-        console.log("deck_size", ultimoEvento.payload.deck_size);
       } else if (ultimoEvento.key === "END_PLAYER_TURN") {
         if (ultimoEvento.payload.next_player_turn !== miTurno) {
           setCartasMazo(cartasMazo - cartasFigurasCompletadas.length);
-          console.log("new_deck_size", cartasMazo);
         }
         setCartaSeleccionada(null);
         setCartasFigurasCompletadas([]);
@@ -107,51 +105,7 @@ export const CartasFiguras = () => {
         ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD") &&
       miTurno !== 0
     ) {
-      //Setea cartas de figuras del jugador
-      const jugadorData = ultimoEvento.payload.find(
-        (jugador) => jugador.turn_order === miTurno,
-      );
-
-      if (jugadorData) {
-        const cartasNoUsadas = cartasFiguras.filter(
-          (carta) => !cartasFigurasCompletadas.includes(carta[0]),
-        );
-
-        const nuevasCartas = jugadorData.shape_cards;
-
-        setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
-      } else {
-        console.log(
-          "CartasFiguras - No se encontró jugador con turn_order:",
-          miTurno,
-        );
-      }
-
-      //Setea cartas de figuras de los oponentes
-      const oponentesActualizados = (oponentes || []).map((oponenteExistente) => {
-        const nuevo = ultimoEvento.payload.find(
-          (oponente) => oponente.turn_order === oponenteExistente.turn_order
-        );
-  
-        if (nuevo) {
-          const cartasNoUsadasOponente = (oponenteExistente.shape_cards || []).filter(
-            (carta) => !cartasFigurasCompletadas.includes(carta[0])
-          );
-  
-          const nuevasCartasOponente = nuevo.shape_cards.filter(
-            (carta) => !cartasNoUsadasOponente.some((c) => c[0] === carta[0])
-          );
-  
-          return {
-            ...oponenteExistente,
-            shape_cards: [...cartasNoUsadasOponente, ...nuevasCartasOponente],
-          };
-        }
-  
-        return oponenteExistente;
-      });
-
-      setOponentes(oponentesActualizados);
+      ServicioFigura.repartirCartasFigura(ultimoEvento, miTurno, cartasFiguras, setCartasFiguras, oponentes, setOponentes, cartasFigurasCompletadas);
     }
   }, [ultimoEvento, miTurno]);
 
@@ -180,7 +134,7 @@ export const CartasFiguras = () => {
             cartas-figuras-oponente-${(oponenteIndex + 1)} 
             ${oponentes.length > 1 ? 'columnas' : 'filas'
           }`}>
-          {(oponente.shape_cards || []).length > 2 && <div className="mazo">
+          {(oponente.shape_cards || []).length > 2 && <div className="mazo" data-tooltip={`Nombre: ${oponente.player_name}`}>
             <img src={backfig} alt="back" />
           </div>}
           {(oponente.shape_cards || []).map((carta, index) => (

@@ -84,7 +84,7 @@ export const Registro = () => {
                         break;
                     case WebsocketEvents.UNDO_PARTIAL_MOVE:
                         setRegistro(prevRegistro => [...prevRegistro, {
-                            mensaje: `El jugador "${datosPartida.current_player_name}" ha deshecho el movimiento.`,
+                            mensaje: `El jugador "${datosPartida.current_player_name}" ha deshecho un movimiento.`,
                             tipo: "evento",
                         }]);
                         break;

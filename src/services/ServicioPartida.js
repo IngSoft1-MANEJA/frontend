@@ -30,8 +30,16 @@ export class ServicioPartida {
     return json;
   }
 
-  static async listarPartidas() {
-    const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}`);
+  static async listarPartidas(maximoJugadores = null) {
+    const params = new URLSearchParams({});
+
+    if (maximoJugadores !== null) {
+      params.append("max_players", maximoJugadores);
+    }
+
+    console.log(params.toString());
+
+    const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}?${params}`);
 
     if (!respuesta.ok) {
       throw new Error(`Error al listar partidas - estado: ${respuesta.status}`);

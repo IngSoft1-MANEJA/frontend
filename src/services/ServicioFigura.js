@@ -52,7 +52,6 @@ function cartaStringName (carta) {
       return "MINI_L_90";
     default:
       return "Figura no encontrada.";
-      break;
   }
 };
 

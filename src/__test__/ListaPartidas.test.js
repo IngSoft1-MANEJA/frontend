@@ -6,12 +6,12 @@ import {
   waitFor,
   cleanup,
   fireEvent,
+  act,
 } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { ListaPartidas } from "../containers/App/components/ListaPartidas.jsx";
 import { ListarPartidasMock } from "../__mocks__/ListarPartidas.mock.js";
 import {
-  DatosJugadorContext,
   DatosJugadorProvider,
 } from "../contexts/DatosJugadorContext.jsx";
 import * as reactRouterDom from "react-router-dom";
@@ -19,6 +19,7 @@ import {
   DatosPartidaContext,
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext.jsx";
+import { BACKEND_URL } from "../variablesConfiguracion.js";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -71,7 +72,7 @@ describe("ListarPartidas", () => {
   test("debe manejar errores de fetch y registrar el mensaje de error en la consola", async () => {
     const consoleErrorSpy = jest
       .spyOn(console, "error")
-      .mockImplementation(() => {});
+      .mockImplementation(() => { });
 
     fetch.mockImplementationOnce(() => Promise.reject("API is down"));
 
@@ -124,5 +125,65 @@ describe("ListarPartidas", () => {
         ).toBeInTheDocument();
       });
     });
+  });
+
+  test("debe enviar un request a la API para listar partidas por cantidad de jugadores", () => {
+    const fetchSpy = jest.spyOn(global, "fetch");
+    const mockLista = [
+      {
+        id: 1,
+        match_id: 1,
+        max_players: 3,
+        current_players: 2,
+        match_name: "Partida filtrada 1",
+      },
+      {
+        id: 2,
+        match_id: 2,
+        max_players: 4,
+        current_players: 2,
+        match_name: "Partida filtrada 2",
+      },
+    ];
+    fetchSpy.mockResolvedValue(mockLista);
+
+    render(
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <ListaPartidas />
+        </DatosJugadorProvider>
+      </DatosPartidaProvider>
+    );
+
+    const botonDropdown = screen.getByText(/Filtrar/i);
+
+    act(() => {
+      fireEvent.click(botonDropdown);
+    });
+
+    const dropdown = screen.getByText(/Máximo de Jugadores/).parentNode.parentNode;
+    const filtroJugadores = dropdown.querySelector("input");
+    const botonFiltrar = dropdown.querySelector("button");
+
+    act(() => {
+      fireEvent.change(filtroJugadores, { target: { value: "2" } });
+      fireEvent.click(botonFiltrar);
+    });
+
+    expect(fetchSpy).toHaveBeenCalledWith(`${BACKEND_URL}/matches?max_players=2`);
+
+    mockLista.forEach((partida) => {
+      expect(
+        screen.getByText(partida.match_id.toString()),
+      ).toBeInTheDocument();
+      expect(screen.getByText(partida.match_name)).toBeInTheDocument();
+      expect(
+        screen.getByText(partida.current_players.toString()),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(partida.max_players.toString()),
+      ).toBeInTheDocument();
+    });
+
   });
 });

@@ -4,6 +4,7 @@ import "./ListaPartidas.css";
 import CrearPartida from "./CrearPartida.jsx";
 import UnirsePartida from "./UnirsePartida.jsx";
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
+import FiltrosDeBusqueda from "./FiltrosDeBusqueda.jsx";
 
 export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
@@ -38,6 +39,9 @@ export const ListaPartidas = () => {
   return (
     <div>
       <h1 className="poiret-one-regular text-8xl pb-5">EL SWITCHER</h1>
+      <div className="m-auto">
+        <FiltrosDeBusqueda setPartidas={setPartidas} />
+      </div>
       <div className="Partidas">
         <div className="table-container">
           <table className="table-xs">

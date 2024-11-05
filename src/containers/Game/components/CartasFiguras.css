@@ -30,7 +30,7 @@
   border-radius: 0.6vh;
 }
 
-.cartas-figuras-oponente-1.filas{
+.cartas-figuras-oponente-1.filas {
   position: absolute;
   top: 15px;
   display: flex;
@@ -38,7 +38,7 @@
   gap: 10px;
   z-index: 0;
 }
-.cartas-figuras-oponente-1.columnas{
+.cartas-figuras-oponente-1.columnas {
   position: absolute;
   right: 15px;
   display: flex;

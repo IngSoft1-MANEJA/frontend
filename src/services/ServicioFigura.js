@@ -1,4 +1,4 @@
-function cartaStringName (carta) {
+function cartaStringName(carta) {
   switch (carta) {
     case 1:
       return "T_90";
@@ -53,9 +53,17 @@ function cartaStringName (carta) {
     default:
       return "Figura no encontrada.";
   }
-};
+}
 
-function repartirCartasFigura (ultimoEvento, miTurno, cartasFiguras, setCartasFiguras, oponentes, setOponentes, cartasFigurasCompletadas) {
+function repartirCartasFigura(
+  ultimoEvento,
+  miTurno,
+  cartasFiguras,
+  setCartasFiguras,
+  oponentes,
+  setOponentes,
+  cartasFigurasCompletadas,
+) {
   //Setea cartas de figuras del jugador
   const jugadorData = ultimoEvento.payload.find(
     (jugador) => jugador.turn_order === miTurno,
@@ -79,16 +87,16 @@ function repartirCartasFigura (ultimoEvento, miTurno, cartasFiguras, setCartasFi
   //Setea cartas de figuras de los oponentes
   const oponentesActualizados = (oponentes || []).map((oponenteExistente) => {
     const nuevo = ultimoEvento.payload.find(
-      (oponente) => oponente.turn_order === oponenteExistente.turn_order
+      (oponente) => oponente.turn_order === oponenteExistente.turn_order,
     );
 
     if (nuevo) {
-      const cartasNoUsadasOponente = (oponenteExistente.shape_cards || []).filter(
-        (carta) => !cartasFigurasCompletadas.includes(carta[0])
-      );
+      const cartasNoUsadasOponente = (
+        oponenteExistente.shape_cards || []
+      ).filter((carta) => !cartasFigurasCompletadas.includes(carta[0]));
 
       const nuevasCartasOponente = nuevo.shape_cards.filter(
-        (carta) => !cartasNoUsadasOponente.some((c) => c[0] === carta[0])
+        (carta) => !cartasNoUsadasOponente.some((c) => c[0] === carta[0]),
       );
 
       return {
@@ -103,25 +111,27 @@ function repartirCartasFigura (ultimoEvento, miTurno, cartasFiguras, setCartasFi
   setOponentes(oponentesActualizados);
 }
 
-function ordenarOponentes (oponentes, maxPlayers, miTurno) {
+function ordenarOponentes(oponentes, maxPlayers, miTurno) {
   if (!Array.isArray(oponentes)) {
     return [];
   }
   const oponentesOrdenados = oponentes.sort((a, b) => {
-    const turnoA = a.turn_order < miTurno ? a.turn_order + maxPlayers : a.turn_order;
-    const turnoB = b.turn_order < miTurno ? b.turn_order + maxPlayers : b.turn_order;
+    const turnoA =
+      a.turn_order < miTurno ? a.turn_order + maxPlayers : a.turn_order;
+    const turnoB =
+      b.turn_order < miTurno ? b.turn_order + maxPlayers : b.turn_order;
     return turnoA - turnoB;
   });
 
   return oponentesOrdenados;
-};
+}
 
 const claseCarta = (
   cartaId,
   cartaSeleccionada,
   cartaMovSeleccionada,
   isPlayerTurn,
-  cartasFigurasCompletadas
+  cartasFigurasCompletadas,
 ) => {
   const efectoHover =
     " hover:cursor-pointer" +
@@ -158,7 +168,14 @@ const claseCarta = (
   return efectoHover;
 };
 
-const seleccionarCarta = (cartaId, isPlayerTurn, cartaMovSeleccionada, cartaSeleccionada, setCartaSeleccionada, cartasFigurasCompletadas) => {
+const seleccionarCarta = (
+  cartaId,
+  isPlayerTurn,
+  cartaMovSeleccionada,
+  cartaSeleccionada,
+  setCartaSeleccionada,
+  cartasFigurasCompletadas,
+) => {
   if (
     !isPlayerTurn ||
     cartaMovSeleccionada !== null ||
@@ -176,4 +193,10 @@ const seleccionarCarta = (cartaId, isPlayerTurn, cartaMovSeleccionada, cartaSele
   }
 };
 
-export const ServicioFigura = {cartaStringName, ordenarOponentes, claseCarta, seleccionarCarta, repartirCartasFigura};
+export const ServicioFigura = {
+  cartaStringName,
+  ordenarOponentes,
+  claseCarta,
+  seleccionarCarta,
+  repartirCartasFigura,
+};

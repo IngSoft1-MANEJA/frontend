@@ -218,6 +218,9 @@ describe("Game", () => {
       player_id: null,
       is_owner: false,
     });
-    expect(mockSetDatosPartida).toHaveBeenCalledWith({ current_turn: "", max_players: 2 });
+    expect(mockSetDatosPartida).toHaveBeenCalledWith({
+      current_turn: "",
+      max_players: 2,
+    });
   });
 });

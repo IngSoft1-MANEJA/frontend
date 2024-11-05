@@ -105,38 +105,72 @@ export const CartasFiguras = () => {
         ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD") &&
       miTurno !== 0
     ) {
-      ServicioFigura.repartirCartasFigura(ultimoEvento, miTurno, cartasFiguras, setCartasFiguras, oponentes, setOponentes, cartasFigurasCompletadas);
+      ServicioFigura.repartirCartasFigura(
+        ultimoEvento,
+        miTurno,
+        cartasFiguras,
+        setCartasFiguras,
+        oponentes,
+        setOponentes,
+        cartasFigurasCompletadas,
+      );
     }
   }, [ultimoEvento, miTurno]);
 
-  const oponentesOrdenados = ServicioFigura.ordenarOponentes(oponentes, datosPartida.max_players, miTurno);
+  const oponentesOrdenados = ServicioFigura.ordenarOponentes(
+    oponentes,
+    datosPartida.max_players,
+    miTurno,
+  );
 
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        {cartasMazo > 3 && <div className="mazo" data-tooltip={`Cartas: ${cartasMazo-3}`}>
-          <img src={backfig} alt="back" />
-        </div>}
+        {cartasMazo > 3 && (
+          <div className="mazo" data-tooltip={`Cartas: ${cartasMazo - 3}`}>
+            <img src={backfig} alt="back" />
+          </div>
+        )}
         {cartasFiguras.map((carta, index) => (
           <div
             key={index}
-            className={ServicioFigura.claseCarta(carta[0], cartaSeleccionada, usarMovimiento.cartaSeleccionada, datosJugador.is_player_turn, cartasFigurasCompletadas)}
-            onClick={() => ServicioFigura.seleccionarCarta(carta[0], datosJugador.is_player_turn, usarMovimiento.cartaSeleccionada, cartaSeleccionada, setCartaSeleccionada, cartasFigurasCompletadas)}
+            className={ServicioFigura.claseCarta(
+              carta[0],
+              cartaSeleccionada,
+              usarMovimiento.cartaSeleccionada,
+              datosJugador.is_player_turn,
+              cartasFigurasCompletadas,
+            )}
+            onClick={() =>
+              ServicioFigura.seleccionarCarta(
+                carta[0],
+                datosJugador.is_player_turn,
+                usarMovimiento.cartaSeleccionada,
+                cartaSeleccionada,
+                setCartaSeleccionada,
+                cartasFigurasCompletadas,
+              )
+            }
           >
             <img src={urlMap[carta[1]]} alt={carta[1]} />
           </div>
         ))}
       </div>
       {oponentesOrdenados.map((oponente, oponenteIndex) => (
-        <div 
-          key={oponenteIndex} 
+        <div
+          key={oponenteIndex}
           className={`
-            cartas-figuras-oponente-${(oponenteIndex + 1)} 
-            ${oponentes.length > 1 ? 'columnas' : 'filas'
-          }`}>
-          {(oponente.shape_cards || []).length > 2 && <div className="mazo" data-tooltip={`Nombre: ${oponente.player_name}`}>
-            <img src={backfig} alt="back" />
-          </div>}
+            cartas-figuras-oponente-${oponenteIndex + 1} 
+            ${oponentes.length > 1 ? "columnas" : "filas"}`}
+        >
+          {(oponente.shape_cards || []).length > 2 && (
+            <div
+              className="mazo"
+              data-tooltip={`Nombre: ${oponente.player_name}`}
+            >
+              <img src={backfig} alt="back" />
+            </div>
+          )}
           {(oponente.shape_cards || []).map((carta, index) => (
             <div key={index} className="carta-figura">
               <img src={urlMap[carta[1]]} alt={carta[1]} />

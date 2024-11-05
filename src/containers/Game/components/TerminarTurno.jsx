@@ -117,7 +117,6 @@ export const TerminarTurno = () => {
           Terminar turno
         </button>
       </div>
-      
     </div>
   );
 };

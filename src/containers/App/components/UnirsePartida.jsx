@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ServicioPartida } from "../../../services/ServicioPartida";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
@@ -8,31 +8,45 @@ function UnirsePartida({ idPartida }) {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [mensajeError, setMensajeError] = useState("");
   const [estaCargando, setEstaCargando] = useState(false);
+  const [shouldFetch, setShouldFetch] = useState(true);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const navigate = useNavigate();
 
+  const shouldFetchRef = useRef(shouldFetch);
+
+  useEffect(() => {
+    shouldFetchRef.current = shouldFetch;
+  }, [shouldFetch]);
+
   const manejarUnirse = async (e) => {
     e.preventDefault();
+
     if (nombreUsuario) {
-      try {
-        setEstaCargando(true);
-        const dataPartida = await ServicioPartida.unirsePartida(
-          idPartida,
-          nombreUsuario,
-        );
+      setShouldFetch(true);
+      setEstaCargando(true);
 
-        setDatosJugador({
-          ...datosJugador,
-          is_owner: false,
-          player_id: dataPartida.player_id,
-        });
+      setTimeout(async () => {
+        if (!shouldFetchRef.current) return;
 
-        setEstaCargando(false);
-        navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
-      } catch (error) {
-        console.error(error.message);
-        setEstaCargando(false);
-      }
+        try {
+          const dataPartida = await ServicioPartida.unirsePartida(
+            idPartida,
+            nombreUsuario,
+          );
+
+          setDatosJugador({
+            ...datosJugador,
+            is_owner: false,
+            player_id: dataPartida.player_id,
+          });
+
+          navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
+          setEstaCargando(false);
+        } catch (error) {
+          console.error(error.message);
+          setEstaCargando(false);
+        }
+      }, 1000);
     } else {
       setMensajeError("Por favor, ingrese un nombre de usuario");
     }
@@ -40,9 +54,11 @@ function UnirsePartida({ idPartida }) {
 
   const cerrarModal = (e) => {
     e.stopPropagation();
+    setShouldFetch(false);
     document.getElementById("modal-unirse-partida").close();
     setMensajeError("");
     setNombreUsuario("");
+    setEstaCargando(false);
   };
 
   return (

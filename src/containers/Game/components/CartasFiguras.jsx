@@ -70,13 +70,13 @@ export const CartasFiguras = () => {
   const [datosPartida, setDatosPartida] = useState(DatosPartidaContext);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
-  const [cartasMazo, setCartasMazo] = useState(0);
+  const [cartasMazo, setCartasMazo] = useState([]);
+  const [oponentes, setOponentes] = useState([]);
   const { cartaSeleccionada, setCartaSeleccionada } = useContext(
     CompletarFiguraContext,
   );
   const { usarMovimiento } = useContext(UsarMovimientoContext);
   const { datosJugador } = useContext(DatosJugadorContext);
-  const [oponentes, setOponentes] = useState([]);
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
@@ -84,11 +84,17 @@ export const CartasFiguras = () => {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setMiTurno(ultimoEvento.payload.turn_order);
         setOponentes(ultimoEvento.payload.opponents);
-        setCartasMazo(ultimoEvento.payload.deck_size);
+        setCartasMazo(Array(ultimoEvento.payload.opponents.length+1).fill(ultimoEvento.payload.deck_size));
+
       } else if (ultimoEvento.key === "END_PLAYER_TURN") {
-        if (ultimoEvento.payload.next_player_turn !== miTurno) {
-          setCartasMazo(cartasMazo - cartasFigurasCompletadas.length);
-        }
+        setCartasMazo(prevCartasMazo => {
+          const nuevasCartasMazo = [...prevCartasMazo];
+          const indice = ultimoEvento.payload.current_player_turn - 1;
+          if (nuevasCartasMazo[indice] !== undefined) {
+            nuevasCartasMazo[indice] -= cartasFigurasCompletadas.length;
+          }
+          return nuevasCartasMazo;
+        });
         setCartaSeleccionada(null);
         setCartasFigurasCompletadas([]);
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
@@ -126,8 +132,8 @@ export const CartasFiguras = () => {
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        {cartasMazo > 3 && (
-          <div className="mazo" data-tooltip={`Cartas: ${cartasMazo - 3}`}>
+        {cartasMazo[miTurno-1] > 3 && (
+          <div className="mazo" data-tooltip={`Cartas: ${cartasMazo[miTurno-1] - 3}`}>
             <img src={backfig} alt="back" />
           </div>
         )}
@@ -163,7 +169,7 @@ export const CartasFiguras = () => {
             cartas-figuras-oponente-${oponenteIndex + 1} 
             ${oponentes.length > 1 ? "columnas" : "filas"}`}
         >
-          {(oponente.shape_cards || []).length > 2 && (
+          {cartasMazo[oponente.turn_order-1] > 3 && (
             <div
               className="mazo"
               data-tooltip={`Nombre: ${oponente.player_name}`}

@@ -16,6 +16,8 @@ describe("Registro Component", () => {
   const datosJugadorMock = { player_id: "1", is_owner: true };
   const datosPartidaMock = { current_player_name: "Player1" };
   const setRegistroMock = jest.fn();
+  jest.useFakeTimers();
+  jest.spyOn(global, 'setInterval');
 
   const renderRegistro = (ultimoEventoMock) => {
     return render(

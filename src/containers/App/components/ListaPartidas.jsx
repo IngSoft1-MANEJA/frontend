@@ -1,35 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Alerts } from "../../../components/Alerts.jsx";
 import "./ListaPartidas.css";
 import CrearPartida from "./CrearPartida.jsx";
 import UnirsePartida from "./UnirsePartida.jsx";
-import { ServicioPartida } from "../../../services/ServicioPartida.js";
+import useWebSocket from "react-use-websocket";
+import { WebsocketEvents } from "../../../services/ServicioWebsocket.js";
+import { WEBSOCKET_URL } from "../../../variablesConfiguracion.js";
 
 export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
   const [selectedPartida, setSelectedPartida] = useState(null);
   const [mensaje, setMensaje] = useState("");
 
-  const fetchPartidas = async () => {
-    try {
-      const data = await ServicioPartida.listarPartidas();
-      setPartidas(data);
-
-      if (data.length === 0) {
-        setMensaje("No se encuentran partidas disponibles");
-      }
-    } catch (error) {
-      console.error(`Error en fetch de partidas: ${error}`);
-    }
-  };
+  const { lastJsonMessage } = useWebSocket(`${WEBSOCKET_URL}/matches/ws`);
 
   useEffect(() => {
-    fetchPartidas();
-  }, []);
-
-  function refreshPartidas() {
-    fetchPartidas();
-  }
+    if (lastJsonMessage?.key === WebsocketEvents.MATCHES_LIST) {
+      const partidas = lastJsonMessage.payload.matches;
+      setPartidas(partidas);
+    }
+  }, [lastJsonMessage]);
 
   function handleSelectPartida(partida) {
     setSelectedPartida(partida);
@@ -93,21 +82,6 @@ export const ListaPartidas = () => {
           </table>
         </div>
         <div className="buttons-menu">
-          <button className="refresh-button btn mb-1" onClick={refreshPartidas}>
-            <svg
-              className="h-2 w-2 text-gray-700"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="23 4 23 10 17 10" />
-              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
-            </svg>
-            Refrescar
-          </button>
           <CrearPartida />
           <UnirsePartida idPartida={selectedPartida?.id} />
         </div>

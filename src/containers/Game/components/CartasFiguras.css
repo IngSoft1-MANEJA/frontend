@@ -1,23 +1,117 @@
 .cartas-figuras {
   position: absolute;
-  bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
-  flex-direction: row;
+  width: 100vh;
+  height: 100vh;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  justify-content: center;
   align-items: center;
+  /* flex-direction: row; */
+  z-index: 40;
 }
 
 .cartas-figuras-propias {
+  position: absolute;
+  bottom: 15px;
   display: flex;
   flex-direction: row;
   gap: 10px;
 }
 
 .cartas-figuras-propias img {
-  width: 75px;
+  width: 12vh;
   height: auto;
   background-color: rgb(206, 191, 172);
   padding: 1px;
-  border-radius: 5px;
+  border-radius: 0.6vh;
+}
+
+.cartas-figuras-oponente-1.filas {
+  position: absolute;
+  top: 15px;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+  z-index: 0;
+}
+.cartas-figuras-oponente-1.columnas {
+  position: absolute;
+  right: 15px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  z-index: 0;
+}
+
+.cartas-figuras-oponente-1 img {
+  width: 12vh;
+  height: auto;
+  background-color: rgb(206, 191, 172);
+  padding: 1px;
+  border-radius: 0.6vh;
+}
+
+.cartas-figuras-oponente-2 {
+  position: absolute;
+  top: 15px;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+}
+.cartas-figuras-oponente-2 img {
+  width: 12vh;
+  height: auto;
+  background-color: rgb(206, 191, 172);
+  padding: 1px;
+  border-radius: 0.6vh;
+}
+.cartas-figuras-oponente-3 {
+  position: absolute;
+  left: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cartas-figuras-oponente-3 img {
+  width: 12vh;
+  height: auto;
+  background-color: rgb(206, 191, 172);
+  padding: 1px;
+  border-radius: 0.6vh;
+}
+
+.mazo img {
+  border: 0.8vh solid rgb(143, 120, 120);
+  border-radius: 0.6vh;
+  width: 12vh;
+  height: auto;
+  background-color: rgb(206, 191, 172);
+  padding: 1px;
+}
+
+.mazo {
+  position: relative;
+  display: inline-block;
+}
+
+.mazo[data-tooltip]:hover::after {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0.9;
+  width: 12vh;
+  height: 12vh;
 }

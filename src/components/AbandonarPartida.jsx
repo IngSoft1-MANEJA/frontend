@@ -24,7 +24,7 @@ export const AbandonarPartida = ({ estadoPartida, idJugador, idPartida }) => {
   };
 
   return (
-    <div className="absolute left-8 bottom-8">
+    <div className="absolute left-5 bottom-5 z-50">
       <button
         className="abandonar-partida-boton btn"
         onClick={manejarAbandonar}

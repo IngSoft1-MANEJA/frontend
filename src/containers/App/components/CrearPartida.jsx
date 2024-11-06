@@ -64,7 +64,7 @@ export const CrearPartida = () => {
       }
       setTimeout(() => {
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
-      }, 2000);
+      }, 1500);
     } catch (err) {
       setMessage("Error creando sala de partida");
       setShowSuccess("error");

@@ -8,26 +8,14 @@ function UnirsePartida({ idPartida }) {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [mensajeError, setMensajeError] = useState("");
   const [estaCargando, setEstaCargando] = useState(false);
-  const [shouldFetch, setShouldFetch] = useState(true);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const navigate = useNavigate();
-
-  const shouldFetchRef = useRef(shouldFetch);
-
-  useEffect(() => {
-    shouldFetchRef.current = shouldFetch;
-  }, [shouldFetch]);
 
   const manejarUnirse = async (e) => {
     e.preventDefault();
 
     if (nombreUsuario) {
-      setShouldFetch(true);
       setEstaCargando(true);
-
-      setTimeout(async () => {
-        if (!shouldFetchRef.current) return;
-
         try {
           const dataPartida = await ServicioPartida.unirsePartida(
             idPartida,
@@ -43,10 +31,14 @@ function UnirsePartida({ idPartida }) {
           navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
           setEstaCargando(false);
         } catch (error) {
+          if (error.status === 409) {
+            setMensajeError("La partida ya esta llena.");
+          } else {
+            setMensajeError("Error al unirse a partida");
+          }
           console.error(error.message);
           setEstaCargando(false);
         }
-      }, 1000);
     } else {
       setMensajeError("Por favor, ingrese un nombre de usuario");
     }
@@ -54,7 +46,6 @@ function UnirsePartida({ idPartida }) {
 
   const cerrarModal = (e) => {
     e.stopPropagation();
-    setShouldFetch(false);
     document.getElementById("modal-unirse-partida").close();
     setMensajeError("");
     setNombreUsuario("");

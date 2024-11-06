@@ -148,11 +148,9 @@ describe("UnirsePartida", () => {
     fireEvent.click(screen.getByText("Unirse"));
 
     await waitFor(() => {
-      setTimeout(() => {
-        expect(console.error).not.toHaveBeenCalled();
-        expect(mockNavigate).toHaveBeenCalledTimes(1);
-        expect(mockNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
-      }, 1000);
+      expect(console.error).not.toHaveBeenCalled();
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+      expect(mockNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
     });
   });
 
@@ -181,12 +179,10 @@ describe("UnirsePartida", () => {
     fireEvent.click(screen.getByText("Unirse"));
 
     await waitFor(() => {
-      setTimeout(() => {
-        expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith(
-          "Error al unirse a partida - estado: 500",
-        );
-      }, 1000);
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        "Error al unirse a partida - estado: 500",
+      );
     });
   });
 
@@ -227,12 +223,10 @@ describe("UnirsePartida", () => {
     fireEvent.click(screen.getByText("Unirse"));
 
     await waitFor(() => {
-      setTimeout(() => {
-        expect(mockSetDatosJugador).toHaveBeenCalledWith({
-          is_owner: false,
-          player_id: 2,
-        });
-      }, 1000);
+      expect(mockSetDatosJugador).toHaveBeenCalledWith({
+        is_owner: false,
+        player_id: 2,
+      });
     });
   });
 });

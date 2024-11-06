@@ -3,8 +3,6 @@
   border: 1.2vh solid rgb(143, 120, 120);
   border-radius: 8vh;
   padding: 2vh;
-  /* min-height: 350px;
-  min-width: 350px; */
   z-index: 900;
 }
 
@@ -21,9 +19,9 @@
 
 .celda {
   width: 10vh;
-  max-width: 68px;
+  max-width: 100px;
   height: 10vh;
-  max-height: 68px;
+  max-height: 100px;
   border: 2px solid rgb(143, 120, 120);
   border-radius: 8px;
   background-color: rgb(212, 212, 212);

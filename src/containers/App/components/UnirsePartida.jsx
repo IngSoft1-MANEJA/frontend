@@ -109,7 +109,9 @@ function UnirsePartida({ idPartida }) {
               </label>
               <button className="btn" onClick={manejarUnirse}>
                 Unirse
-                {estaCargando && <span className="loading loading-spinner" />}
+                {estaCargando && (
+                  <span className="loading loading-spinner infinite" />
+                )}
               </button>
             </form>
           </div>

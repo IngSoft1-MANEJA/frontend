@@ -5,20 +5,17 @@ import {
   screen,
   waitFor,
   cleanup,
-  fireEvent,
 } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { ListaPartidas } from "../containers/App/components/ListaPartidas.jsx";
 import { ListarPartidasMock } from "../__mocks__/ListarPartidas.mock.js";
 import {
-  DatosJugadorContext,
   DatosJugadorProvider,
 } from "../contexts/DatosJugadorContext.jsx";
-import * as reactRouterDom from "react-router-dom";
 import {
-  DatosPartidaContext,
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext.jsx";
+import useWebSocket from "react-use-websocket";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -27,12 +24,15 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve(ListarPartidasMock),
-  }),
-);
+jest.mock("react-use-websocket", () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
+
+const mockMatchList = {
+  key: "MATCHES_LIST",
+  payload: { matches: ListarPartidasMock }
+};
 
 describe("ListarPartidas", () => {
   afterEach(cleanup);
@@ -40,89 +40,98 @@ describe("ListarPartidas", () => {
     jest.clearAllMocks();
   });
 
-  test("debe renderizar las partidas correctamente", async () => {
-    render(
+  const customRender = () => {
+    return render(
       <DatosPartidaProvider>
         <DatosJugadorProvider>
           <ListaPartidas />
         </DatosJugadorProvider>
-        ,
-      </DatosPartidaProvider>,
+      </DatosPartidaProvider>
     );
+  }
 
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+  test("debe renderizar las partidas correctamente", () => {
 
-    await waitFor(() => {
-      ListarPartidasMock.forEach((partida) => {
-        expect(
-          screen.getByText(partida.match_id.toString()),
-        ).toBeInTheDocument();
-        expect(screen.getByText(partida.match_name)).toBeInTheDocument();
-        expect(
-          screen.getByText(partida.current_players.toString()),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByText(partida.max_players.toString()),
-        ).toBeInTheDocument();
-      });
+    useWebSocket.mockImplementation((url) => ({
+      lastJsonMessage: mockMatchList,
+    }));
+
+    customRender();
+
+    ListarPartidasMock.forEach((partida) => {
+      expect(
+        screen.getByText(partida.id.toString()),
+      ).toBeInTheDocument();
+      expect(screen.getByText(partida.match_name)).toBeInTheDocument();
+      expect(
+        screen.getByText(`${partida.current_players}/${partida.max_players}`),
+      ).toBeInTheDocument();
     });
   });
 
-  test("debe manejar errores de fetch y registrar el mensaje de error en la consola", async () => {
-    const consoleErrorSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+  test("debe sustituir la lista de partidas cuando le llegan partidas", () => {
+    useWebSocket.mockImplementation((url) => ({
+      lastJsonMessage: mockMatchList,
+    }));
 
-    fetch.mockImplementationOnce(() => Promise.reject("API is down"));
+    const { rerender } = customRender();
 
-    render(
+    ListarPartidasMock.forEach((partida) => {
+      expect(
+        screen.getByText(partida.id.toString()),
+      ).toBeInTheDocument();
+      expect(screen.getByText(partida.match_name)).toBeInTheDocument();
+      expect(
+        screen.getByText(`${partida.current_players}/${partida.max_players}`),
+      ).toBeInTheDocument();
+    });
+
+    const nuevaListaEvento = {
+      key: "MATCHES_LIST",
+      payload: {
+        matches: [
+          {
+            id: 3,
+            max_players: 4,
+            current_players: 2,
+            match_name: "Partida 3",
+          },
+          {
+            id: 4,
+            max_players: 2,
+            current_players: 1,
+            match_name: "Partida 4",
+          },
+        ]
+      }
+    }
+
+    useWebSocket.mockImplementation((url) => ({
+      lastJsonMessage: nuevaListaEvento,
+    }));
+
+    rerender(
       <DatosPartidaProvider>
         <DatosJugadorProvider>
           <ListaPartidas />
         </DatosJugadorProvider>
-      </DatosPartidaProvider>,
+      </DatosPartidaProvider>
     );
 
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
 
-    await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Error en fetch de partidas: API is down",
-      );
+    expect(screen.queryByText("Partida 1")).not.toBeInTheDocument();
+    expect(screen.queryByText("Partida 2")).not.toBeInTheDocument();
+
+    nuevaListaEvento.payload.matches.forEach((partida) => {
+      expect(
+        screen.getByText(partida.id.toString()),
+      ).toBeInTheDocument();
+      expect(screen.getByText(partida.match_name)).toBeInTheDocument();
+      expect(
+        screen.getByText(`${partida.current_players}/${partida.max_players}`),
+      ).toBeInTheDocument();
     });
 
-    consoleErrorSpy.mockRestore();
-  });
 
-  test("debe refrescar las partidas al hacer clic en el botón de refresco", async () => {
-    render(
-      <DatosPartidaProvider>
-        <DatosJugadorProvider>
-          <ListaPartidas />
-        </DatosJugadorProvider>
-        ,
-      </DatosPartidaProvider>,
-    );
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-
-    fireEvent.click(screen.getByText("Refrescar"));
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
-
-    await waitFor(() => {
-      ListarPartidasMock.forEach((partida) => {
-        expect(
-          screen.getByText(partida.match_id.toString()),
-        ).toBeInTheDocument();
-        expect(screen.getByText(partida.match_name)).toBeInTheDocument();
-        expect(
-          screen.getByText(partida.current_players.toString()),
-        ).toBeInTheDocument();
-        expect(
-          screen.getByText(partida.max_players.toString()),
-        ).toBeInTheDocument();
-      });
-    });
   });
 });

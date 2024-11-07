@@ -52,7 +52,7 @@ export const Tablero = () => {
   }, [ultimoEvento]);
 
   const manejarFiguraSeleccionadaEnClick = useCallback(
-    async (rowIndex, columnIndex) => {
+    async (rowIndex, columnIndex, tileColor) => {
       const figura = ServicioMovimiento.obtenerFiguraDeFicha(
         rowIndex,
         columnIndex,
@@ -60,33 +60,41 @@ export const Tablero = () => {
       );
 
       if (figura) {
-        try {
-          const respuesta = await ServicioPartida.completarFicha(
-            match_id,
-            datosJugador.player_id,
-            cartaFiguraSeleccionada,
-            figura,
-          );
+        if (tileColor !== figuras.color_prohibido) {
+          try {
+            const respuesta = await ServicioPartida.completarFicha(
+              match_id,
+              datosJugador.player_id,
+              cartaFiguraSeleccionada,
+              figura,
+            );
 
-          setCartaFiguraSeleccionada(null);
+            setCartaFiguraSeleccionada(null);
 
-          respuesta.movement_cards.forEach((cartaADeshacer) => {
+            respuesta.movement_cards.forEach((cartaADeshacer) => {
+              setUsarMovimiento((prev) => ({
+                ...prev,
+                cartasUsadas: prev.cartasUsadas.filter(
+                  (carta) => carta[0] !== cartaADeshacer[0],
+                ),
+              }));
+            });
+
             setUsarMovimiento((prev) => ({
               ...prev,
-              cartasUsadas: prev.cartasUsadas.filter(
-                (carta) => carta[0] !== cartaADeshacer[0],
-              ),
+              cartasCompletadas:
+                prev.cartasUsadas.length - respuesta.movement_cards.length,
             }));
-          });
-
-          setUsarMovimiento((prev) => ({
-            ...prev,
-            cartasCompletadas:
-              prev.cartasUsadas.length - respuesta.movement_cards.length,
-          }));
-        } catch (err) {
-          console.error(err);
-          setMensajeAlerta("Error al completar figura");
+          } catch (err) {
+            console.error(err);
+            setMensajeAlerta("Error al completar figura");
+            setMostrarAlerta(true);
+            setTimeout(() => {
+              setMostrarAlerta(false);
+            }, 1000);
+          }
+        } else {
+          setMensajeAlerta("La figura es del color prohibido");
           setMostrarAlerta(true);
           setTimeout(() => {
             setMostrarAlerta(false);
@@ -97,9 +105,9 @@ export const Tablero = () => {
     [usarMovimiento, figuras, datosJugador, cartaFiguraSeleccionada, match_id],
   );
 
-  const handleFichaClick = async (rowIndex, columnIndex) => {
+  const handleFichaClick = async (rowIndex, columnIndex, tileColor) => {
     if (cartaFiguraSeleccionada !== null) {
-      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex);
+      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex, tileColor);
     }
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(
@@ -199,7 +207,7 @@ export const Tablero = () => {
           id={`ficha-${rowIndex}-${columnIndex}`}
           key={`${rowIndex}-${columnIndex}`}
           color={tileColor}
-          onClick={() => handleFichaClick(rowIndex, columnIndex)}
+          onClick={() => handleFichaClick(rowIndex, columnIndex, tileColor)}
           highlightClass={highlighted}
           movimientoPosible={movimientoPosible}
           disabled={deshabilitado}

@@ -6,6 +6,7 @@ export const FigurasProvider = ({ children }) => {
   const [figuras, setFiguras] = useState({
     historial: [],
     figuras_actuales: [],
+    color_prohibido: "ninguno",
   });
 
   const agregarFiguras = (nuevasFiguras) => {
@@ -30,7 +31,7 @@ export const FigurasProvider = ({ children }) => {
 
   return (
     <FigurasContext.Provider
-      value={{ figuras, agregarFiguras, deshacerFiguras }}
+      value={{ figuras, agregarFiguras, deshacerFiguras, setFiguras }}
     >
       {children}
     </FigurasContext.Provider>

@@ -93,6 +93,10 @@ export const Registro = () => {
                 mensaje: `El jugador "${datosPartida.current_player_name}" ha completado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}".`,
                 tipo: "evento",
               },
+              {
+                mensaje: `Nuevo color prohibido: ${currentEvent.payload.prohibited_color}`,
+                tipo: "evento",
+              }
             ]);
             break;
           case "PLAYER_LEFT":
@@ -175,7 +179,7 @@ export const Registro = () => {
     });
 
   return (
-    <div className="registro-container absolute h-4/6 -translate-y-1/2 left-5 top-1/2 z-50 w-1/5 p-1 justify-center">
+    <div className="registro-container absolute h-3/5 -translate-y-1/2 left-5 top-1/2 z-50 w-1/5 p-1 justify-center">
       <div className="registro-container-inner relative bg-base-200 flex flex-col h-full w-full items-center">
         <div className="chatbox overflow-auto w-full flex flex-col-reverse">
           {registroMessage}

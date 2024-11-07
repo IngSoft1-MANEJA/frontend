@@ -60,7 +60,7 @@ export const ListaPartidas = () => {
               ) : (
                 partidas.map((partida) => (
                   <tr
-                    key={partida.match_id}
+                    key={partida.id}
                     onClick={() => handleSelectPartida(partida)}
                     style={{
                       cursor: "pointer",

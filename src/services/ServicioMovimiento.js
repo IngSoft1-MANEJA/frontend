@@ -112,7 +112,6 @@ const deshacerMovimiento = async (
       match_id,
       player_id,
     );
-    console.log(respuesta);
 
     const cartaADeshacer = respuesta.movement_card;
 

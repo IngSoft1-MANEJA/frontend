@@ -9,7 +9,6 @@ import { WEBSOCKET_URL } from "../../../variablesConfiguracion.js";
 export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
   const [selectedPartida, setSelectedPartida] = useState(null);
-  const [mensaje, setMensaje] = useState("");
 
   const { lastJsonMessage } = useWebSocket(`${WEBSOCKET_URL}/matches/ws`);
 
@@ -53,7 +52,7 @@ export const ListaPartidas = () => {
                         fontSize: "1.2em",
                       }}
                     >
-                      {mensaje}
+                      No se encuentran partidas disponibles
                     </td>
                   </tr>
                 </>

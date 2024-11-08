@@ -92,7 +92,7 @@ describe("ListarPartidas", () => {
       },
     };
 
-    useWebSocket.mockImplementation((url) => ({
+    useWebSocket.mockImplementation(() => ({
       lastJsonMessage: nuevaListaEvento,
     }));
 
@@ -114,5 +114,24 @@ describe("ListarPartidas", () => {
         screen.getByText(`${partida.current_players}/${partida.max_players}`),
       ).toBeInTheDocument();
     });
+  });
+
+  test("muestra mensaje de que no hay partidas disponibles cuando se reciba una lista vacia de partidas", () => {
+    const emptyListEvent = { key: "MATCHES_LIST", payload: { matches: [] } };
+    useWebSocket.mockImplementation((url) => ({
+      lastJsonMessage: emptyListEvent,
+    }));
+
+    render(
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <ListaPartidas />
+        </DatosJugadorProvider>
+      </DatosPartidaProvider>,
+    );
+
+    expect(
+      screen.queryByText("No se encuentran partidas disponibles"),
+    ).toBeInTheDocument();
   });
 });

@@ -32,11 +32,11 @@ function UnirsePartida({ idPartida }) {
           setEstaCargando(false);
         } catch (error) {
           switch(error.status){
-            case 400:
-              setMensajeError("Nombre invalido.");
-              break;
             case 409:
               setMensajeError("La partida ya esta llena.");
+              break;
+            case 422:
+              setMensajeError("Nombre invalido.");
               break;
             default:
               setMensajeError("Error al unirse a partida");

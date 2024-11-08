@@ -11,7 +11,7 @@ export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
   const [selectedPartida, setSelectedPartida] = useState(null);
 
-  const { lastJsonMessage } = useWebSocket(`${WEBSOCKET_URL}/matches/ws`);
+  const { lastJsonMessage, sendJsonMessage } = useWebSocket(`${WEBSOCKET_URL}/matches/ws`);
 
   useEffect(() => {
     if (lastJsonMessage?.key === WebsocketEvents.MATCHES_LIST) {
@@ -24,11 +24,16 @@ export const ListaPartidas = () => {
     setSelectedPartida(partida);
   }
 
+  const filtrarPorMaximoJugadores = (maximoJugadores) => {
+    // TODO: revisar el key y payload con el back.
+    sendJsonMessage({ key: "FILTER_MATCH", payload: { "max_players": maximoJugadores } });
+  };
+
   return (
     <div>
       <h1 className="poiret-one-regular text-8xl pb-5">EL SWITCHER</h1>
       <div className="m-auto">
-        <FiltrosDeBusqueda setPartidas={setPartidas} />
+        <FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={filtrarPorMaximoJugadores} />
       </div>
       <div className="Partidas">
         <div className="table-container">

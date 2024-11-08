@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import { ServicioPartida } from "../../../services/ServicioPartida.js";
 
-export const FiltrosDeBusqueda = ({ setPartidas }) => {
+export const FiltrosDeBusqueda = ({ alFiltrarPorMaximoDeJugadores }) => {
 
   const [maximoJugadores, setMaximoJugadores] = useState(0);
 
   const manejarClick = async () => {
     console.log(maximoJugadores);
     if (maximoJugadores <= 0 || maximoJugadores > 4) {
-      // mostrar alerta, con toast
+      // TODO: mostrar alerta, con toast
       return;
     }
 
     try {
-      const respuesta = await ServicioPartida.listarPartidas(maximoJugadores);
-      setPartidas(respuesta);
+      alFiltrarPorMaximoDeJugadores(maximoJugadores);
     } catch (error) {
       console.log(error);
-      //mostrar alerta
+      //TODO: mostrar alerta
     }
   };
 

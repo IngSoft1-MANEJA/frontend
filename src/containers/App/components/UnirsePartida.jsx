@@ -31,10 +31,16 @@ function UnirsePartida({ idPartida }) {
           navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
           setEstaCargando(false);
         } catch (error) {
-          if (error.status === 409) {
-            setMensajeError("La partida ya esta llena.");
-          } else {
-            setMensajeError("Error al unirse a partida");
+          switch(error.status){
+            case 400:
+              setMensajeError("Nombre invalido.");
+              break;
+            case 409:
+              setMensajeError("La partida ya esta llena.");
+              break;
+            default:
+              setMensajeError("Error al unirse a partida");
+              break;
           }
           console.error(error.message);
           setEstaCargando(false);

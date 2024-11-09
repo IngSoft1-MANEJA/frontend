@@ -7,3 +7,7 @@
 .registro-container-inner {
   border-radius: 5px;
 }
+
+.textarea {
+  height: 3vh;
+}

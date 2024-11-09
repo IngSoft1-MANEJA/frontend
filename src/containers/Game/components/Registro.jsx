@@ -7,11 +7,12 @@ import { JugadorGanoMotivo } from "../../../services/ServicioPartida";
 import { ServicioFigura } from "../../../services/ServicioFigura";
 import "./Registro.css";
 
-export const Registro = () => {
+export const Registro = ({ sendJsonMessage, lastMessage }) => {
   const { datosJugador } = useContext(DatosJugadorContext);
   const { datosPartida } = useContext(DatosPartidaContext);
   const { ultimoEvento } = useContext(EventoContext);
   const [eventQueue, setEventQueue] = useState([]);
+  const [messageText, setMessageText] = useState("");
   const [registro, setRegistro] = useState([
     {
       mensaje: "",
@@ -104,6 +105,15 @@ export const Registro = () => {
               },
             ]);
             break;
+          case "PLAYER_SEND_MESSAGE":
+            setRegistro((prevRegistro) => [
+              ...prevRegistro,
+              {
+                mensaje: `${currentEvent.payload.message}`,
+                tipo: "chat",
+              },
+            ]);
+            break;
           case WebsocketEvents.UNDO_PARTIAL_MOVE:
             setRegistro((prevRegistro) => [
               ...prevRegistro,
@@ -152,14 +162,53 @@ export const Registro = () => {
     return () => clearInterval(processEventQueue);
   }, [eventQueue]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (messageText.trim()) {
+      sendJsonMessage({
+        key: "PLAYER_SEND_MESSAGE",
+        payload: {
+          message: messageText,
+          turn_order: datosJugador.player_turn,
+          player_name: datosJugador.player_name,
+        },
+      });
+      setRegistro((prevRegistro) => [
+        ...prevRegistro,
+        {
+          mensaje: `${messageText}`,
+          tipo: "chat",
+        },
+      ]);
+      setMessageText("");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
   const registroMessage = registro
     .slice(0)
     .reverse(0)
     .map((message, index) => {
       if (message.tipo === "chat") {
+        const { turn_order, player_name } = message.payload || {};
+        const isPlayerMessage = turn_order === datosJugador.player_turn;
+
         return (
           <div key={index} className="registro-message">
-            <p>{message.mensaje}</p>
+            <div className={`chat ${isPlayerMessage ? "chat-start" : "chat-end"} text-sm`}>
+              <div className="chat-header pb-1">
+                {isPlayerMessage ? "Tu" :  player_name}
+              </div>
+              <div className="chat-bubble">
+                <p>{message.mensaje}</p>
+              </div>
+            </div>
           </div>
         );
       }
@@ -172,7 +221,7 @@ export const Registro = () => {
           </div>
         );
       }
-    });
+  });
 
   return (
     <div className="registro-container absolute h-4/6 -translate-y-1/2 left-5 top-1/2 z-50 w-1/5 p-1 justify-center">
@@ -180,6 +229,12 @@ export const Registro = () => {
         <div className="chatbox overflow-auto w-full flex flex-col-reverse">
           {registroMessage}
         </div>
+        <textarea 
+          className="textarea absolute bottom-0 w-full resize-none mt-2" 
+          placeholder="Comenta"
+          onChange={(e) => setMessageText(e.target.value)}
+          onKeyDown={handleKeyDown}>
+        </textarea>
       </div>
     </div>
   );

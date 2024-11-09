@@ -32,7 +32,7 @@ export function Game() {
   const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
   const navigate = useNavigate();
-  const { lastMessage, readyState } = useWebSocket(websocket_url, {
+  const { sendJsonMessage, lastMessage, readyState } = useWebSocket(websocket_url, {
     share: true,
     onClose: () => {
       console.log("Websocket - Game: conexión cerrada.");
@@ -143,7 +143,7 @@ export function Game() {
             <CartasFiguras />
             <Tablero />
             <InformacionTurno player_id={datosJugador.player_id} />
-            <Registro />
+            <Registro sendJsonMessage={sendJsonMessage} lastMessage={lastMessage} />
             <TerminarTurno />
             <AbandonarPartida
               estadoPartida="STARTED"

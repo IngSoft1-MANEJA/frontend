@@ -148,11 +148,9 @@ describe("UnirsePartida", () => {
     fireEvent.click(screen.getByText("Unirse"));
 
     await waitFor(() => {
-      setTimeout(() => {
-        expect(console.error).not.toHaveBeenCalled();
-        expect(mockNavigate).toHaveBeenCalledTimes(1);
-        expect(mockNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
-      }, 1500);
+      expect(console.error).not.toHaveBeenCalled();
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+      expect(mockNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
     });
   });
 

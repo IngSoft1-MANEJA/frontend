@@ -1,21 +1,27 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { set, useForm } from "react-hook-form";
 import { Alerts } from "../../../components/Alerts.jsx";
-import "./CrearPartida.css";
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
+import "./CrearPartida.css";
 
 export const CrearPartida = () => {
   const navegar = useNavigate();
 
   const [showSuccess, setShowSuccess] = useState(null);
   const [message, setMessage] = useState("");
+  const [shouldFetch, setShouldFetch] = useState(true);
+  const [estaCargando, setEstaCargando] = useState(false);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
+
+  const shouldFetchRef = useRef(shouldFetch);
+
+  useEffect(() => {
+    shouldFetchRef.current = shouldFetch;
+  }, [shouldFetch]);
 
   const {
     register,
@@ -37,50 +43,56 @@ export const CrearPartida = () => {
   const cantidadJugadoresWatch = watch("cantidadJugadores");
 
   const onSubmit = async (e) => {
-    try {
-      const resJson = await ServicioPartida.crearPartida(
-        nombreSalaWatch,
-        nombreJugadorWatch,
-        cantidadJugadoresWatch,
-      );
+    e.preventDefault();
+    setShouldFetch(true);
+    setEstaCargando(true);
 
-      setMessage("Sala de partida creada, redirigiendo al lobby...");
-      setShowSuccess("success");
-      console.log(resJson);
-      reset();
-      setDatosJugador({
-        ...datosJugador,
-        is_owner: true,
-        player_id: resJson.player_id,
-      });
-      if (
-        cantidadJugadoresWatch !== null &&
-        cantidadJugadoresWatch !== undefined
-      ) {
-        setDatosPartida({
-          ...datosPartida,
-          max_players: cantidadJugadoresWatch,
+    setTimeout(async () => {
+      if (!shouldFetchRef.current) return;
+
+      try {
+        const resJson = await ServicioPartida.crearPartida(
+          nombreSalaWatch,
+          nombreJugadorWatch,
+          cantidadJugadoresWatch,
+        );
+        console.log(resJson);
+        reset();
+        setDatosJugador({
+          ...datosJugador,
+          is_owner: true,
+          player_id: resJson.player_id,
         });
-      }
-      setTimeout(() => {
+        if (
+          cantidadJugadoresWatch !== null &&
+          cantidadJugadoresWatch !== undefined
+        ) {
+          setDatosPartida({
+            ...datosPartida,
+            max_players: cantidadJugadoresWatch,
+          });
+        }
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
-      }, 1500);
-    } catch (err) {
-      setMessage("Error creando sala de partida");
-      setShowSuccess("error");
-      console.log(err);
-    }
+        setEstaCargando(false);
+      } catch (err) {
+        setEstaCargando(false);
+        setMessage("Error creando sala de partida");
+        setShowSuccess("error");
+        console.log(err);
+      }
+    }, 1500);
   };
 
-  // handle closure of modal
   const handleClose = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    setShowSuccess(null);
+    setMessage("");
+    setShouldFetch(false);
     document.getElementById("my_modal_1").close();
     reset({}, { keepDirtyFields: true });
     clearErrors();
-    setShowSuccess(null);
-    setMessage("");
+    setEstaCargando(false);
   };
 
   return (
@@ -104,7 +116,6 @@ export const CrearPartida = () => {
               method="dialog"
               onSubmit={handleSubmit(onSubmit)}
             >
-              {/* if there is a button in form, it will close the modal */}
               <button
                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                 onClick={handleClose}
@@ -194,11 +205,10 @@ export const CrearPartida = () => {
                 <Alerts type={showSuccess} message={message} />
               ) : null}
               <div className="formButtons">
-                <input
-                  className="submit-crear-partida input btn btn-active "
-                  type="submit"
-                  value="Crear sala de partida"
-                />
+                <button className="btn" onClick={onSubmit}>
+                  Crear Sala de Partida
+                  {estaCargando && <span className="loading loading-spinner" />}
+                </button>
               </div>
             </form>
           </div>

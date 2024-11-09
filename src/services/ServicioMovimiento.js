@@ -39,6 +39,9 @@ const llamarServicio = async (
     setUsarMovimiento((prev) => ({
       ...prev,
       fichasSeleccionadas: [],
+      cartaSeleccionada: null,
+      cartasUsadas: [...prev.cartasUsadas, prev.cartaSeleccionada || ""],
+      highlightCarta: { state: false, key: "" },
     }));
     setTimeout(() => {
       setMostrarAlerta(false);
@@ -109,7 +112,6 @@ const deshacerMovimiento = async (
       match_id,
       player_id,
     );
-    console.log(respuesta);
 
     const cartaADeshacer = respuesta.movement_card;
 

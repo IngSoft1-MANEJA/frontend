@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ServicioPartida } from "../../../services/ServicioPartida";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
@@ -13,26 +13,38 @@ function UnirsePartida({ idPartida }) {
 
   const manejarUnirse = async (e) => {
     e.preventDefault();
+
     if (nombreUsuario) {
-      try {
-        setEstaCargando(true);
-        const dataPartida = await ServicioPartida.unirsePartida(
-          idPartida,
-          nombreUsuario,
-        );
+      setEstaCargando(true);
+        try {
+          const dataPartida = await ServicioPartida.unirsePartida(
+            idPartida,
+            nombreUsuario,
+          );
 
-        setDatosJugador({
-          ...datosJugador,
-          is_owner: false,
-          player_id: dataPartida.player_id,
-        });
+          setDatosJugador({
+            ...datosJugador,
+            is_owner: false,
+            player_id: dataPartida.player_id,
+          });
 
-        setEstaCargando(false);
-        navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
-      } catch (error) {
-        console.error(error.message);
-        setEstaCargando(false);
-      }
+          navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
+          setEstaCargando(false);
+        } catch (error) {
+          switch(error.status){
+            case 409:
+              setMensajeError("La partida ya esta llena.");
+              break;
+            case 422:
+              setMensajeError("Nombre invalido.");
+              break;
+            default:
+              setMensajeError("Error al unirse a partida");
+              break;
+          }
+          console.error(error.message);
+          setEstaCargando(false);
+        }
     } else {
       setMensajeError("Por favor, ingrese un nombre de usuario");
     }
@@ -43,6 +55,7 @@ function UnirsePartida({ idPartida }) {
     document.getElementById("modal-unirse-partida").close();
     setMensajeError("");
     setNombreUsuario("");
+    setEstaCargando(false);
   };
 
   return (
@@ -93,7 +106,9 @@ function UnirsePartida({ idPartida }) {
               </label>
               <button className="btn" onClick={manejarUnirse}>
                 Unirse
-                {estaCargando && <span className="loading loading-spinner" />}
+                {estaCargando && (
+                  <span className="loading loading-spinner infinite" />
+                )}
               </button>
             </form>
           </div>

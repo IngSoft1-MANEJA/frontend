@@ -8,6 +8,11 @@
   border-radius: 5px;
 }
 
+.chatbox {
+  height: 90%;
+}
+
+
 .textarea {
-  height: 3vh;
+  height: 10%;
 }

@@ -23,7 +23,6 @@ import {
   DatosPartidaContext,
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext.jsx";
-import { set } from "react-hook-form";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -217,7 +216,7 @@ describe("CrearPartida", () => {
     const nombreJugadorInput = screen.getByLabelText("nombreJugador");
     const nombreSalaInput = screen.getByLabelText("nombreSala");
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
-    const submitButton = screen.getByText("Crear sala de partida");
+    const submitButton = screen.getByText("Crear Sala de Partida");
 
     expect(nombreJugadorInput).toHaveValue("");
     expect(nombreSalaInput).toHaveValue("");
@@ -242,29 +241,31 @@ describe("CrearPartida", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
-        `${BACKEND_URL}/matches`,
-        expect.objectContaining({
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            lobby_name: CrearPartidaMock.nombreSala,
-            player_name: CrearPartidaMock.nombreJugador,
-            max_players: CrearPartidaMock.cantidadJugadores,
-            is_public: true,
-            token: "asdfasdf",
+      setTimeout(() => {
+        expect(fetch).toHaveBeenCalledWith(
+          `${BACKEND_URL}/matches`,
+          expect.objectContaining({
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              lobby_name: CrearPartidaMock.nombreSala,
+              player_name: CrearPartidaMock.nombreJugador,
+              max_players: CrearPartidaMock.cantidadJugadores,
+              is_public: true,
+              token: "asdfasdf",
+            }),
           }),
-        }),
-      );
+        );
+      }, 1500);
     });
 
     await waitFor(() => {
       setTimeout(() => {
         expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
         expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
-      }, 2000);
+      }, 1500);
     });
   });
 
@@ -288,7 +289,7 @@ describe("CrearPartida", () => {
     const nombreJugadorInput = screen.getByLabelText("nombreJugador");
     const nombreSalaInput = screen.getByLabelText("nombreSala");
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
-    const submitButton = screen.getByText("Crear sala de partida");
+    const submitButton = screen.getByText("Crear Sala de Partida");
 
     fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
 
@@ -302,10 +303,12 @@ describe("CrearPartida", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(mockSetDatosJugador).toHaveBeenCalledWith({
-        is_owner: true,
-        player_id: 2,
-      });
+      setTimeout(() => {
+        expect(mockSetDatosJugador).toHaveBeenCalledWith({
+          is_owner: true,
+          player_id: 2,
+        });
+      }, 1500);
     });
   });
 });

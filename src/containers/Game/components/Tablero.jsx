@@ -22,7 +22,7 @@ export const Tablero = () => {
   );
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
-  const { figuras, agregarFiguras } = useContext(FigurasContext);
+  const { figuras, agregarFiguras, setFiguras } = useContext(FigurasContext);
   const {
     cartaSeleccionada: cartaFiguraSeleccionada,
     setCartaSeleccionada: setCartaFiguraSeleccionada,
@@ -36,6 +36,10 @@ export const Tablero = () => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setTiles(ultimoEvento.payload.board);
+        setFiguras({
+          ...figuras,
+          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ultimoEvento.payload.ban_color,
+        });
       }
       if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
         ServicioMovimiento.swapFichas(
@@ -47,6 +51,12 @@ export const Tablero = () => {
       }
       if (ultimoEvento.key === "ALLOW_FIGURES") {
         agregarFiguras(ultimoEvento.payload);
+      }
+      if (ultimoEvento.key === "COMPLETED_FIGURE") {
+        setFiguras({
+          ...figuras,
+          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ultimoEvento.payload.ban_color,
+        });
       }
     }
   }, [ultimoEvento]);

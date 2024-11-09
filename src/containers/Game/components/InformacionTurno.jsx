@@ -5,7 +5,7 @@ import "./InformacionTurno.css";
 
 export const InformacionTurno = ({ player_id }) => {
   const [turnos, setTurnos] = useState({ current_turn: "" });
-  const { figuras, setFiguras } = useContext(FigurasContext);
+  const { figuras } = useContext(FigurasContext);
   const { ultimoEvento } = useContext(EventoContext);
 
   useEffect(() => {
@@ -15,22 +15,12 @@ export const InformacionTurno = ({ player_id }) => {
           setTurnos({
             current_turn: ultimoEvento.payload.current_turn_player,
           });
-          setFiguras({
-            ...figuras,
-            color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ultimoEvento.payload.ban_color,
-          });
+          
           break;
 
         case "END_PLAYER_TURN":
           setTurnos({
             current_turn: ultimoEvento.payload.next_player_name,
-          });
-          break;
-
-        case "COMPLETED_FIGURE":
-          setFiguras({
-            ...figuras,
-            color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ultimoEvento.payload.ban_color,
           });
           break;
 

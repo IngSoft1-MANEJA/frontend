@@ -13,6 +13,7 @@ export const FigurasProvider = ({ children }) => {
     setFiguras((prevState) => ({
       historial: [...prevState.historial, prevState.figuras_actuales],
       figuras_actuales: nuevasFiguras,
+      color_prohibido: prevState.color_prohibido,
     }));
   };
 
@@ -25,6 +26,7 @@ export const FigurasProvider = ({ children }) => {
       return {
         historial: nuevaHistoria,
         figuras_actuales: ultimasFiguras,
+        color_prohibido: prevState.color_prohibido,
       };
     });
   };

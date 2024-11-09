@@ -94,7 +94,7 @@ export const Registro = () => {
                 tipo: "evento",
               },
               {
-                mensaje: `Nuevo color prohibido: ${currentEvent.payload.prohibited_color}`,
+                mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : currentEvent.payload.ban_color}.`,
                 tipo: "evento",
               }
             ]);

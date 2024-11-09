@@ -49,7 +49,7 @@ export const Registro = () => {
                 setRegistro((prevRegistro) => [
                   ...prevRegistro,
                   {
-                    mensaje: `El jugador "${currentEvent.payload[0].player}" ha recibido la carta de figura "${currentEvent.payload[0].shape_cards[0][1]}".`,
+                    mensaje: `El jugador "${currentEvent.payload[0].player}" ha recibido la carta de figura "${ServicioFigura.cartaStringName(currentEvent.payload[0].shape_cards[0][1])}".`,
                     tipo: "evento",
                   },
                 ]);
@@ -94,7 +94,7 @@ export const Registro = () => {
                 tipo: "evento",
               },
               {
-                mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : currentEvent.payload.ban_color}.`,
+                mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
                 tipo: "evento",
               }
             ]);

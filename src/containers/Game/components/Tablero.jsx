@@ -8,10 +8,11 @@ import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext.j
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 import { EventoContext } from "../../../contexts/EventoContext.jsx";
 import { TilesContext } from "../../../contexts/tilesContext.jsx";
-import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 import { FigurasContext } from "../../../contexts/FigurasContext.jsx";
 import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext.jsx";
+import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
+import { ServicioFigura } from "../../../services/ServicioFigura.js";
 
 export const Tablero = () => {
   const { match_id } = useParams();
@@ -38,7 +39,7 @@ export const Tablero = () => {
         setTiles(ultimoEvento.payload.board);
         setFiguras({
           ...figuras,
-          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ultimoEvento.payload.ban_color,
+          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(ultimoEvento.payload.ban_color),
         });
       }
       if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
@@ -55,7 +56,7 @@ export const Tablero = () => {
       if (ultimoEvento.key === "COMPLETED_FIGURE") {
         setFiguras({
           ...figuras,
-          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ultimoEvento.payload.ban_color,
+          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(ultimoEvento.payload.ban_color),
         });
       }
     }

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 import { FigurasContext } from "../../../contexts/FigurasContext";
+import { ServicioFigura } from "../../../services/ServicioFigura";
 import "./InformacionTurno.css";
 
 export const InformacionTurno = ({ player_id }) => {
@@ -50,7 +51,7 @@ export const InformacionTurno = ({ player_id }) => {
           <tr className="bg-base-200 h-8">
             <th className="w-15 text-left">Color Prohibido:</th>
             <td className="min-w-20 max-w-44 text-right">
-              {figuras.color_prohibido}
+              {figuras.color_prohibido === "Ninguno" ? "Ninguno" : figuras.color_prohibido}
             </td>
           </tr>
         </tbody>

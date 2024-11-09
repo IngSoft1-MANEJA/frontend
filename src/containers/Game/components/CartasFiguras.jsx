@@ -104,7 +104,7 @@ export const CartasFiguras = () => {
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
-      } else if (ultimoEvento === "BLOCKED_FIGURE") {
+      } else if (ultimoEvento.key === "BLOCKED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
         setCartasBloqueadas((prev) => [...prev, cartaId]);
       }
@@ -156,6 +156,7 @@ export const CartasFiguras = () => {
               usarMovimiento.cartaSeleccionada,
               datosJugador.is_player_turn,
               cartasFigurasCompletadas,
+              cartasBloqueadas.includes(carta[0]) 
             )}
             onClick={() =>
               ServicioFigura.seleccionarCarta(
@@ -197,6 +198,7 @@ export const CartasFiguras = () => {
               usarMovimiento.cartaSeleccionada,
               datosJugador.is_player_turn,
               cartasFigurasCompletadas,
+              cartasBloqueadas.includes(carta[0]) 
             )}
             onClick={() =>
               ServicioFigura.seleccionarCarta(

@@ -26,6 +26,8 @@ export const Tablero = () => {
   const {
     cartaSeleccionada: cartaFiguraSeleccionada,
     setCartaSeleccionada: setCartaFiguraSeleccionada,
+    esCartaOponente : esCartaOponente,
+    setEsCartaOponente : setEsCartaOponente
   } = useContext(CompletarFiguraContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
@@ -52,7 +54,7 @@ export const Tablero = () => {
   }, [ultimoEvento]);
 
   const manejarFiguraSeleccionadaEnClick = useCallback(
-    async (rowIndex, columnIndex) => {
+    async (rowIndex, columnIndex, isOponent) => {
       const figura = ServicioMovimiento.obtenerFiguraDeFicha(
         rowIndex,
         columnIndex,
@@ -60,38 +62,74 @@ export const Tablero = () => {
       );
 
       if (figura) {
-        try {
-          const respuesta = await ServicioPartida.completarFicha(
-            match_id,
-            datosJugador.player_id,
-            cartaFiguraSeleccionada,
-            figura,
-          );
+        if(!isOponent){
+          try {
+            const respuesta = await ServicioPartida.completarFicha(
+              match_id,
+              datosJugador.player_id,
+              cartaFiguraSeleccionada,
+              figura,
+            );
 
-          setCartaFiguraSeleccionada(null);
+            setCartaFiguraSeleccionada(null);
 
-          respuesta.movement_cards.forEach((cartaADeshacer) => {
+            respuesta.movement_cards.forEach((cartaADeshacer) => {
+              setUsarMovimiento((prev) => ({
+                ...prev,
+                cartasUsadas: prev.cartasUsadas.filter(
+                  (carta) => carta[0] !== cartaADeshacer[0],
+                ),
+              }));
+            });
+
             setUsarMovimiento((prev) => ({
               ...prev,
-              cartasUsadas: prev.cartasUsadas.filter(
-                (carta) => carta[0] !== cartaADeshacer[0],
-              ),
+              cartasCompletadas:
+                prev.cartasUsadas.length - respuesta.movement_cards.length,
             }));
-          });
+          } catch (err) {
+            console.error(err);
+            setMensajeAlerta("Error al completar figura");
+            setMostrarAlerta(true);
+            setTimeout(() => {
+              setMostrarAlerta(false);
+            }, 1000);
+          }
+        } else {
+          try {
+            const respuesta = await ServicioPartida.bloquearFicha(
+              match_id,
+              datosJugador.player_id,
+              cartaFiguraSeleccionada,
+              figura,
+            );
 
-          setUsarMovimiento((prev) => ({
-            ...prev,
-            cartasCompletadas:
-              prev.cartasUsadas.length - respuesta.movement_cards.length,
-          }));
-        } catch (err) {
-          console.error(err);
-          setMensajeAlerta("Error al completar figura");
-          setMostrarAlerta(true);
-          setTimeout(() => {
-            setMostrarAlerta(false);
-          }, 1000);
-        }
+            setCartaFiguraSeleccionada(null);
+
+            respuesta.movement_cards.forEach((cartaADeshacer) => {
+              setUsarMovimiento((prev) => ({
+                ...prev,
+                cartasUsadas: prev.cartasUsadas.filter(
+                  (carta) => carta[0] !== cartaADeshacer[0],
+                ),
+              }));
+            });
+
+            setUsarMovimiento((prev) => ({
+              ...prev,
+              cartasCompletadas:
+                prev.cartasUsadas.length - respuesta.movement_cards.length,
+            }));
+            
+          } catch (err) {
+            console.error(err);
+            setMensajeAlerta("Error al completar figura");
+            setMostrarAlerta(true);
+            setTimeout(() => {
+              setMostrarAlerta(false);
+            }, 1000);
+          }
+        } 
       }
     },
     [usarMovimiento, figuras, datosJugador, cartaFiguraSeleccionada, match_id],
@@ -99,7 +137,7 @@ export const Tablero = () => {
 
   const handleFichaClick = async (rowIndex, columnIndex) => {
     if (cartaFiguraSeleccionada !== null) {
-      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex);
+      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex, esCartaOponente);
     }
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(

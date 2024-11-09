@@ -19,6 +19,7 @@ import { EventoProvider } from "../contexts/EventoContext";
 import useWebSocket from "react-use-websocket";
 import { TilesProvider } from "../contexts/tilesContext";
 import { FigurasProvider } from "../contexts/FigurasContext";
+import { HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext";
 
 jest.mock("../containers/Game/components/Ficha.jsx", () => ({
   Ficha: ({ color }) => (
@@ -67,13 +68,15 @@ describe("Game", () => {
             <DatosPartidaProvider>
               <TilesProvider>
                 <FigurasProvider>
-                  <Game />
+                  <HabilitarAccionesUsuarioProvider>
+                    <Game />
+                  </HabilitarAccionesUsuarioProvider>
                 </FigurasProvider>
               </TilesProvider>
             </DatosPartidaProvider>
           </DatosJugadorProvider>
         </EventoProvider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const fichasItem = screen.getAllByTestId("ficha");
@@ -108,7 +111,9 @@ describe("Game", () => {
             <DatosPartidaProvider>
               <TilesProvider>
                 <FigurasProvider>
+                  <HabilitarAccionesUsuarioProvider>
                   <Game />
+                  </HabilitarAccionesUsuarioProvider>
                 </FigurasProvider>
               </TilesProvider>
             </DatosPartidaProvider>
@@ -150,13 +155,15 @@ describe("Game", () => {
             <DatosPartidaProvider>
               <TilesProvider>
                 <FigurasProvider>
-                  <Game />
+                  <HabilitarAccionesUsuarioProvider>
+                    <Game />
+                  </HabilitarAccionesUsuarioProvider>
                 </FigurasProvider>
               </TilesProvider>
             </DatosPartidaProvider>
           </DatosJugadorProvider>
         </EventoProvider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const modal = screen.queryByText(
@@ -198,13 +205,15 @@ describe("Game", () => {
             >
               <TilesProvider>
                 <FigurasProvider>
-                  <Game />
+                  <HabilitarAccionesUsuarioProvider>
+                    <Game />
+                  </HabilitarAccionesUsuarioProvider>
                 </FigurasProvider>
               </TilesProvider>
             </DatosPartidaContext.Provider>
           </DatosJugadorContext.Provider>
         </EventoProvider>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     const button = screen.getByText("Volver al home");

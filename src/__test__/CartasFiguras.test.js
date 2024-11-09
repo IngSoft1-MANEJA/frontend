@@ -15,6 +15,7 @@ import {
   UsarMovimientoContext,
   UsarMovimientoProvider,
 } from "../contexts/UsarMovimientoContext.jsx";
+import { HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -45,11 +46,13 @@ describe("CartasFiguras", () => {
         <EventoContext.Provider value={evento}>
           <CompletarFiguraProvider>
             <UsarMovimientoContext.Provider value={usarMovimiento}>
-              <CartasFiguras />
+              <HabilitarAccionesUsuarioProvider>
+                <CartasFiguras />
+              </HabilitarAccionesUsuarioProvider>
             </UsarMovimientoContext.Provider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>,
+      </DatosJugadorContext.Provider>
     );
   };
 
@@ -87,11 +90,13 @@ describe("CartasFiguras", () => {
         <EventoContext.Provider value={mockInfoJugador}>
           <CompletarFiguraProvider>
             <UsarMovimientoProvider>
-              <CartasFiguras />
+              <HabilitarAccionesUsuarioProvider>
+                <CartasFiguras />
+              </HabilitarAccionesUsuarioProvider>
             </UsarMovimientoProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>,
+      </DatosJugadorContext.Provider>
     );
 
     rerender(
@@ -99,11 +104,13 @@ describe("CartasFiguras", () => {
         <EventoContext.Provider value={mockEvento}>
           <CompletarFiguraProvider>
             <UsarMovimientoProvider>
-              <CartasFiguras />
+              <HabilitarAccionesUsuarioProvider>
+                <CartasFiguras />
+              </HabilitarAccionesUsuarioProvider>
             </UsarMovimientoProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>,
+      </DatosJugadorContext.Provider>
     );
 
     expect(screen.getByAltText("1")).toBeInTheDocument();
@@ -124,11 +131,13 @@ describe("CartasFiguras", () => {
         <EventoContext.Provider value={eventoValue}>
           <CompletarFiguraProvider>
             <UsarMovimientoProvider>
-              <CartasFiguras />
+              <HabilitarAccionesUsuarioProvider>
+                <CartasFiguras />
+              </HabilitarAccionesUsuarioProvider>
             </UsarMovimientoProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>,
+      </DatosJugadorContext.Provider>
     );
 
     expect(screen.queryByAltText("1")).not.toBeInTheDocument();

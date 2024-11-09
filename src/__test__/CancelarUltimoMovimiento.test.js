@@ -14,6 +14,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ServicioMovimiento } from "../services/ServicioMovimiento";
 import { FigurasContext } from "../contexts/FigurasContext";
 import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext";
+import { HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext";
 
 const mockDatosJugador = {
   is_player_turn: true,
@@ -66,14 +67,16 @@ describe("CancelarUltimoMovimiento", () => {
                   value={{ tiles: tiles.tiles, setTiles: tiles.setTiles }}
                 >
                   <CompletarFiguraProvider>
-                    <CancelarUltimoMovimiento />
+                    <HabilitarAccionesUsuarioProvider>
+                      <CancelarUltimoMovimiento />
+                    </HabilitarAccionesUsuarioProvider>
                   </CompletarFiguraProvider>
                 </TilesContext.Provider>
               </EventoContext.Provider>
             </UsarMovimientoContext.Provider>
           </DatosJugadorContext.Provider>
         </FigurasContext.Provider>
-      </BrowserRouter>,
+      </BrowserRouter>
     );
   };
 

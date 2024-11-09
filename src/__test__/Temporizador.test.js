@@ -3,6 +3,7 @@ import { Temporizador } from "../containers/Game/components/Temporizador.jsx";
 import { act } from "react";
 import { EventoContext, EventoProvider } from "../contexts/EventoContext.jsx";
 import { WebsocketEvents } from "../services/ServicioWebsocket.js";
+import { HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext.jsx";
 
 describe("Temporizador", () => {
   beforeAll(() => {
@@ -15,8 +16,10 @@ describe("Temporizador", () => {
   it("deberia renderizar el componente con timer en 2 min", () => {
     render(
       <EventoProvider>
-        <Temporizador />
-      </EventoProvider>,
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
     );
 
     const minutos = screen.queryByText("min");
@@ -35,8 +38,10 @@ describe("Temporizador", () => {
   it("deberia renderizar componente con timer en 1 min 35 seg", () => {
     render(
       <EventoProvider>
-        <Temporizador duracion={95} />
-      </EventoProvider>,
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador duracion={95} />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
     );
 
     const minutos = screen.queryByText("min");
@@ -56,8 +61,10 @@ describe("Temporizador", () => {
     jest.spyOn(global, "setInterval");
     render(
       <EventoProvider>
-        <Temporizador />
-      </EventoProvider>,
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
     );
 
     await waitFor(() => {
@@ -69,8 +76,10 @@ describe("Temporizador", () => {
   it("deberia decrementar el tiempo en 1 seg despues de 1 seg", () => {
     render(
       <EventoProvider>
-        <Temporizador duracion={2} />
-      </EventoProvider>,
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador duracion={2} />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
     );
 
     const minutos = screen.queryByText("min");
@@ -96,8 +105,10 @@ describe("Temporizador", () => {
   it("deberia detener el timer en 0 seg", () => {
     render(
       <EventoProvider>
-        <Temporizador duracion={1} />
-      </EventoProvider>,
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador duracion={1} />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
     );
 
     const minutos = screen.queryByText("min");
@@ -130,8 +141,10 @@ describe("Temporizador", () => {
   it("deberia re renderizar donde quedo en el ultimo render", () => {
     const { rerender } = render(
       <EventoProvider>
-        <Temporizador />
-      </EventoProvider>,
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
     );
 
     const minutos = screen.queryByText("min");
@@ -155,8 +168,10 @@ describe("Temporizador", () => {
 
     rerender(
       <EventoProvider>
-        <Temporizador />
-      </EventoProvider>,
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
     );
 
     act(() => {
@@ -181,8 +196,10 @@ describe("Temporizador", () => {
     };
     const { rerender } = render(
       <EventoProvider>
-        <Temporizador />
-      </EventoProvider>,
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
     );
 
     const minutos = screen.queryByText("min");
@@ -206,8 +223,10 @@ describe("Temporizador", () => {
 
     rerender(
       <EventoContext.Provider value={mockEndOfTurn}>
-        <Temporizador />
-      </EventoContext.Provider>,
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoContext.Provider>
     );
 
     const nuevoMinutos = screen.queryByText("min");

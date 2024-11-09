@@ -52,7 +52,7 @@ describe("ServicioFigura", () => {
         setCartasFiguras,
         [{ turn_order: 2, shape_cards: [[3, "SNAKE"]] }],
         setOponentes,
-        cartasFigurasCompletadas,
+        cartasFigurasCompletadas
       );
 
       expect(setCartasFiguras).toHaveBeenCalledWith([
@@ -90,12 +90,12 @@ describe("ServicioFigura", () => {
         setCartasFiguras,
         [],
         setOponentes,
-        cartasFigurasCompletadas,
+        cartasFigurasCompletadas
       );
 
       expect(console.log).toHaveBeenCalledWith(
         "CartasFiguras - No se encontró jugador con turn_order:",
-        miTurno,
+        miTurno
       );
 
       expect(setCartasFiguras).not.toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe("ServicioFigura", () => {
       const resultado = ServicioFigura.ordenarOponentes(
         oponentes,
         maxPlayers,
-        miTurno,
+        miTurno
       );
       expect(resultado).toEqual([
         { turn_order: 4 },
@@ -127,12 +127,26 @@ describe("ServicioFigura", () => {
 
   describe("claseCarta", () => {
     it('debería retornar "opacity-25 pointer-events-none greyscale" si la carta está completada', () => {
-      const resultado = ServicioFigura.claseCarta(1, null, null, true, [1]);
+      const resultado = ServicioFigura.claseCarta(
+        1,
+        null,
+        null,
+        true,
+        [1],
+        true
+      );
       expect(resultado).toBe("opacity-25 pointer-events-none greyscale");
     });
 
     it("debería retornar el efecto de hover si es el turno del jugador y la carta no está completada", () => {
-      const resultado = ServicioFigura.claseCarta(2, null, null, true, []);
+      const resultado = ServicioFigura.claseCarta(
+        2,
+        null,
+        null,
+        true,
+        [],
+        true
+      );
       expect(resultado).toContain("hover:cursor-pointer");
     });
   });
@@ -147,6 +161,7 @@ describe("ServicioFigura", () => {
         null,
         setCartaSeleccionada,
         [],
+        true
       );
       expect(setCartaSeleccionada).toHaveBeenCalledWith(1);
     });
@@ -160,6 +175,7 @@ describe("ServicioFigura", () => {
         1,
         setCartaSeleccionada,
         [],
+        true
       );
       expect(setCartaSeleccionada).toHaveBeenCalledWith(null);
     });

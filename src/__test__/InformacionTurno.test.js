@@ -6,6 +6,7 @@ import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../variablesConfiguracion";
 import { Player } from "../__mocks__/InformacionTurno.mock.js";
 import { EventoContext } from "../contexts/EventoContext.jsx";
+import { HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext.jsx";
 
 jest.mock("react-use-websocket");
 
@@ -31,8 +32,10 @@ describe("InformacionTurno", () => {
     };
     render(
       <EventoContext.Provider value={eventoValue}>
-        <InformacionTurno {...Player} />
-      </EventoContext.Provider>,
+        <HabilitarAccionesUsuarioProvider>
+          <InformacionTurno {...Player} />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoContext.Provider>
     );
     const turnoActual = screen.getByText("Player 1");
 
@@ -50,8 +53,10 @@ describe("InformacionTurno", () => {
     };
     render(
       <EventoContext.Provider value={eventoValue}>
-        <InformacionTurno {...Player} />
-      </EventoContext.Provider>,
+        <HabilitarAccionesUsuarioProvider>
+          <InformacionTurno {...Player} />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoContext.Provider>
     );
     const turnoActual = screen.getByText("Player 1");
 

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Lobby from "../containers/Lobby/Lobby";
 import useWebSocket from "react-use-websocket";
@@ -14,8 +14,6 @@ import {
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext";
 import { EventoProvider } from "../contexts/EventoContext";
-import { act } from "react"; // Importa 'act' para controlar los efectos.
-import { waitFor } from "@testing-library/react";
 
 jest.mock("react-use-websocket");
 
@@ -99,5 +97,51 @@ describe("Lobby", () => {
       "El dueño de la sala ha cancelado la partida.",
     );
     expect(modalTexto).toBeInTheDocument();
+  });
+
+  it("debería actualizar cantidad de jugadores y mostrar alerta cuando un jugador se une", () => {
+    useWebSocket.mockReturnValue({
+      lastJsonMessage: { key: "PLAYER_JOIN", payload: { name: "NuevoJugador" } },
+    });
+  
+    render(
+      <reactRouterDom.MemoryRouter>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <EventoProvider>
+              <Lobby />
+            </EventoProvider>
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
+      </reactRouterDom.MemoryRouter>
+    );
+  
+    const alerta = screen.getByText("jugador NuevoJugador se ha unido.");
+    expect(alerta).toBeInTheDocument();
+  });
+});
+
+it("debería restablecer último evento y cantidad de jugadores en lobby al desmontar", async () => {
+  const mockSetUltimoEvento = jest.fn();
+  const mockSetCantPlayersLobby = jest.fn();
+
+  render(
+    <reactRouterDom.MemoryRouter>
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <EventoProvider value={{ setUltimoEvento: mockSetUltimoEvento }}>
+            <Lobby />
+          </EventoProvider>
+        </DatosJugadorProvider>
+      </DatosPartidaProvider>
+    </reactRouterDom.MemoryRouter>
+  );
+
+  cleanup(); // Esto simula el desmontaje del componente
+
+  // Usamos waitFor para esperar a que se complete la limpieza y los efectos
+  await waitFor(() => {
+    expect(mockSetUltimoEvento).toHaveBeenCalledWith(null);
+    expect(mockSetCantPlayersLobby).toHaveBeenCalledWith(1);
   });
 });

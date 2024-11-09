@@ -132,6 +132,7 @@ const claseCarta = (
   cartaMovSeleccionada,
   isPlayerTurn,
   cartasFigurasCompletadas,
+  bloqueada
 ) => {
   const efectoHover =
     " hover:cursor-pointer" +
@@ -149,7 +150,7 @@ const claseCarta = (
     return deshabilitada;
   }
 
-  if (!isPlayerTurn) {
+  if (!isPlayerTurn || bloqueada) {
     return "";
   }
 

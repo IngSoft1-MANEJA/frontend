@@ -5,12 +5,13 @@ import { EventoContext } from "../../../contexts/EventoContext.jsx";
 import { ServicioRegistro } from "../../../services/ServicioRegistro.js";
 import "./Registro.css";
 
-export const Registro = ({ sendJsonMessage, lastMessage }) => {
+export const Registro = ({ sendJsonMessage }) => {
   const { datosJugador } = useContext(DatosJugadorContext);
   const { datosPartida } = useContext(DatosPartidaContext);
   const { ultimoEvento } = useContext(EventoContext);
   const [eventQueue, setEventQueue] = useState([]);
   const [messageText, setMessageText] = useState("");
+  const [informacionChat, setInformacionChat] = useState({ turn_order: 0, player_name: "" });
   const [registro, setRegistro] = useState([
     {
       mensaje: "",
@@ -29,7 +30,7 @@ export const Registro = ({ sendJsonMessage, lastMessage }) => {
       if (eventQueue.length > 0) {
         const [currentEvent, ...remainingQueue] = eventQueue;
         setEventQueue(remainingQueue);
-        ServicioRegistro.procesarMensajeEvento(currentEvent, setRegistro, datosJugador, datosPartida);
+        ServicioRegistro.procesarMensajeEvento(currentEvent, setRegistro, datosJugador, datosPartida, setInformacionChat);
       }
     }, 150);
 
@@ -47,13 +48,6 @@ export const Registro = ({ sendJsonMessage, lastMessage }) => {
           player_name: datosJugador.player_name,
         },
       });
-      setRegistro((prevRegistro) => [
-        ...prevRegistro,
-        {
-          mensaje: `${messageText}`,
-          tipo: "chat",
-        },
-      ]);
       setMessageText("");
     }
   };
@@ -70,7 +64,7 @@ export const Registro = ({ sendJsonMessage, lastMessage }) => {
     .reverse(0)
     .map((message, index) => {
       if (message.tipo === "chat") {
-        const { turn_order, player_name } = message.payload || {};
+        const { turn_order, player_name } = informacionChat || {};
         const isPlayerMessage = turn_order === datosJugador.player_turn;
 
         return (
@@ -89,7 +83,7 @@ export const Registro = ({ sendJsonMessage, lastMessage }) => {
       if (message.tipo === "evento") {
         return (
           <div key={index} className="registro-message">
-            <p className="chat-divider text-sm mb-1 pt-1 pb-1 pl-4 text-left bg-base-300">
+            <p className="chat-divider text-sm mb-3 pt-1 pb-1 pl-4 text-left bg-base-300">
               {message.mensaje}
             </p>
           </div>

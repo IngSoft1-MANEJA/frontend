@@ -2,7 +2,7 @@ import { WebsocketEvents } from "./ServicioWebsocket";
 import { JugadorGanoMotivo } from "./ServicioPartida";
 import { ServicioFigura } from "./ServicioFigura";
 
-function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPartida){
+function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPartida, setInformacionChat) {
     switch (currentEvent.key) {
         case "GET_PLAYER_MATCH_INFO":
             setRegistro((prevRegistro) => [
@@ -84,6 +84,10 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                 tipo: "chat",
                 },
             ]);
+            setInformacionChat({
+                turn_order: currentEvent.payload.turn_order,
+                player_name: currentEvent.payload.player_name,
+            });
             break;
         case WebsocketEvents.UNDO_PARTIAL_MOVE:
             setRegistro((prevRegistro) => [

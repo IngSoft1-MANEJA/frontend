@@ -143,7 +143,7 @@ export function Game() {
             <CartasFiguras />
             <Tablero />
             <InformacionTurno player_id={datosJugador.player_id} />
-            <Registro sendJsonMessage={sendJsonMessage} lastMessage={lastMessage} />
+            <Registro sendJsonMessage={sendJsonMessage} />
             <TerminarTurno />
             <AbandonarPartida
               estadoPartida="STARTED"

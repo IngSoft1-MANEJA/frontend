@@ -70,9 +70,10 @@ export const CartasFiguras = () => {
   const [datosPartida, setDatosPartida] = useState(DatosPartidaContext);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
+  const [cartasBloqueadas, setCartasBloqueadas] = useState([])
   const [cartasMazo, setCartasMazo] = useState([]);
   const [oponentes, setOponentes] = useState([]);
-  const { cartaSeleccionada, setCartaSeleccionada } = useContext(
+  const { cartaSeleccionada, setCartaSeleccionada, esCartaOponente, setEsCartaOponente} = useContext(
     CompletarFiguraContext,
   );
   const { usarMovimiento } = useContext(UsarMovimientoContext);
@@ -103,6 +104,9 @@ export const CartasFiguras = () => {
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
+      } else if (ultimoEvento === "BLOCKED_FIGURE") {
+        const cartaId = ultimoEvento.payload.figure_id;
+        setCartasBloqueadas((prev) => [...prev, cartaId]);
       }
     }
   }, [ultimoEvento]);
@@ -161,10 +165,12 @@ export const CartasFiguras = () => {
                 cartaSeleccionada,
                 setCartaSeleccionada,
                 cartasFigurasCompletadas,
+                setEsCartaOponente,
+                false
               )
             }
           >
-            <img src={urlMap[carta[1]]} alt={carta[1]} />
+            <img src={cartasBloqueadas.includes(carta[0]) ? backfig : urlMap[carta[1]]} alt={carta[1]}/>
           </div>
         ))}
       </div>
@@ -184,8 +190,28 @@ export const CartasFiguras = () => {
             </div>
           )}
           {(oponente.shape_cards || []).map((carta, index) => (
-            <div key={index} className="carta-figura">
-              <img src={urlMap[carta[1]]} alt={carta[1]} />
+            <div key={index} 
+            className={ServicioFigura.claseCarta(
+              carta[0],
+              cartaSeleccionada,
+              usarMovimiento.cartaSeleccionada,
+              datosJugador.is_player_turn,
+              cartasFigurasCompletadas,
+            )}
+            onClick={() =>
+              ServicioFigura.seleccionarCarta(
+                carta[0],
+                datosJugador.is_player_turn,
+                usarMovimiento.cartaSeleccionada,
+                cartaSeleccionada,
+                setCartaSeleccionada,
+                cartasFigurasCompletadas,
+                setEsCartaOponente,
+                true
+              )
+            }
+          >
+               <img src={cartasBloqueadas.includes(carta[0]) ? backfig : urlMap[carta[1]]} alt={carta[1]}/> {/*dependiendo de si esta bloqueada o no mapeamos de una forma u otra*/}
             </div>
           ))}
         </div>

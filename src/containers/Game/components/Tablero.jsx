@@ -87,7 +87,14 @@ export const Tablero = () => {
             }));
           } catch (err) {
             console.error(err);
-            setMensajeAlerta("Error al completar figura");
+            switch(err.status){
+              case 409:
+                setMensajeAlerta("La figura es del color prohibido.");
+                break;
+              default:
+                setMensajeAlerta("Error al completar figura");
+                break;
+            }
             setMostrarAlerta(true);
             setTimeout(() => {
               setMostrarAlerta(false);

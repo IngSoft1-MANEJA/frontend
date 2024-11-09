@@ -15,6 +15,10 @@ export const InformacionTurno = ({ player_id }) => {
           setTurnos({
             current_turn: ultimoEvento.payload.current_turn_player,
           });
+          setFiguras({
+            ...figuras,
+            color_prohibido: ultimoEvento.payload.ban_color ?? "Ninguno",
+          });
           break;
 
         case "END_PLAYER_TURN":
@@ -26,7 +30,7 @@ export const InformacionTurno = ({ player_id }) => {
         case "COMPLETED_FIGURE":
           setFiguras({
             ...figuras,
-            color_prohibido: ultimoEvento.payload.color_prohibido,
+            color_prohibido: ultimoEvento.payload.ban_color ?? "Ninguno",
           });
           break;
 

@@ -6,7 +6,7 @@ export const FigurasProvider = ({ children }) => {
   const [figuras, setFiguras] = useState({
     historial: [],
     figuras_actuales: [],
-    color_prohibido: "ninguno",
+    color_prohibido: "",
   });
 
   const agregarFiguras = (nuevasFiguras) => {

@@ -60,7 +60,6 @@ export const Tablero = () => {
         columnIndex,
         figuras.figuras_actuales,
       );
-
       if (figura) {
         if(!isOponent){
           try {
@@ -123,7 +122,7 @@ export const Tablero = () => {
             
           } catch (err) {
             console.error(err);
-            setMensajeAlerta("Error al completar figura");
+            setMensajeAlerta("Error al bloquear figura");
             setMostrarAlerta(true);
             setTimeout(() => {
               setMostrarAlerta(false);

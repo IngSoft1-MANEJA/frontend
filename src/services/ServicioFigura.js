@@ -175,6 +175,8 @@ const seleccionarCarta = (
   cartaSeleccionada,
   setCartaSeleccionada,
   cartasFigurasCompletadas,
+  setEsCartaOponente,
+  esOponente,
 ) => {
   if (
     !isPlayerTurn ||
@@ -190,6 +192,7 @@ const seleccionarCarta = (
     }
   } else {
     setCartaSeleccionada(cartaId);
+    setEsCartaOponente(esOponente);
   }
 };
 

@@ -89,7 +89,11 @@ export const Tablero = () => {
             console.error(err);
             switch(err.status){
               case 409:
-                setMensajeAlerta("La figura es del color prohibido.");
+                if (tileColor !== figuras.color_prohibido){
+                  setMensajeAlerta("La figura es del color prohibido.");
+                } else {
+                  setMensajeAlerta("La figura seleccionada es incorrecta.");
+                }
                 break;
               default:
                 setMensajeAlerta("Error al completar figura");

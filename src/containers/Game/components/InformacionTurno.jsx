@@ -17,7 +17,7 @@ export const InformacionTurno = ({ player_id }) => {
           });
           setFiguras({
             ...figuras,
-            color_prohibido: ultimoEvento.payload.ban_color ?? "Ninguno",
+            color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ultimoEvento.payload.ban_color,
           });
           break;
 
@@ -30,7 +30,7 @@ export const InformacionTurno = ({ player_id }) => {
         case "COMPLETED_FIGURE":
           setFiguras({
             ...figuras,
-            color_prohibido: ultimoEvento.payload.ban_color ?? "Ninguno",
+            color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ultimoEvento.payload.ban_color,
           });
           break;
 

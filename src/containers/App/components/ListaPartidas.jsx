@@ -10,7 +10,7 @@ export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
   const [selectedPartida, setSelectedPartida] = useState(null);
   const [buscarTermino, setBuscarTermino] = useState("");
-  const { lastJsonMessage } = useWebSocket(`${WEBSOCKET_URL}/matches/ws`);
+  const { lastJsonMessage, sendJsonMessage } = useWebSocket(`${WEBSOCKET_URL}/matches/ws`);
 
   useEffect(() => {
     if (lastJsonMessage?.key === WebsocketEvents.MATCHES_LIST) {
@@ -23,10 +23,16 @@ export const ListaPartidas = () => {
     setSelectedPartida(partida);
   }
 
-  function handleSearchChange(event) {
+  function cambiaBusqueda(event) {
     setBuscarTermino(event.target.value);
-    fetchPartidas(event.target.value); // Filtramos las partidas con cada cambio en el campo de búsqueda
+    filtrarPorNombrePartida(event.target.value); 
   }
+
+  const filtrarPorNombrePartida = (nombrePartida) => {
+    // TODO: revisar el key y payload con el back.
+    sendJsonMessage({ key: "FILTER_MATCH", payload: { "match_name": nombrePartida } });
+  };
+
 
   return (
     <div>
@@ -35,7 +41,7 @@ export const ListaPartidas = () => {
         type="text"
         placeholder="Buscar partida por nombre..."
         value={buscarTermino}
-        onChange={handleSearchChange}
+        onChange={cambiaBusqueda}
         className="search-input" 
       />
       <div className="Partidas">

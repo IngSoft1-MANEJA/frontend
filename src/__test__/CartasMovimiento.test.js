@@ -7,7 +7,7 @@ import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
 import CartasMovimiento from "../containers/Game/components/CartasMovimiento.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
 import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
-import { HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext.jsx";
+import { HabilitarAccionesUsuarioContext, HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -197,5 +197,44 @@ describe("CartasMovimiento", () => {
     expect(screen.getByAltText("Line Border")).toBeInTheDocument();
     expect(screen.queryByAltText("Diagonal")).not.toBeInTheDocument();
     expect(screen.queryByAltText("Line")).not.toBeInTheDocument();
+  });
+
+  test("Al clickear una carta no ocurre nada si habilitarAccionesUsuario es false", async () => {
+    const eventoValue = {
+      ultimoEvento: {
+        key: "GET_MOVEMENT_CARD",
+        payload: {
+          movement_card: [
+            [1, "Diagonal"],
+            [2, "Inverse L"],
+            [3, "Line"],
+          ],
+        },
+      },
+    };
+
+    const mockDatosJugador = {
+      datosJugador: { player_id: "123", is_player_turn: true },
+      setDatosJugador: jest.fn(),
+    };
+
+    render(
+      <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+        <DatosJugadorContext.Provider value={mockDatosJugador}>
+          <EventoContext.Provider value={eventoValue}>
+            <CompletarFiguraProvider>
+              <HabilitarAccionesUsuarioContext.Provider value={{habilitarAccionesUsuario: false}}>
+                <CartasMovimiento />
+              </HabilitarAccionesUsuarioContext.Provider>
+            </CompletarFiguraProvider>
+          </EventoContext.Provider>
+        </DatosJugadorContext.Provider>
+      </UsarMovimientoContext.Provider>
+    );
+
+    const cartaDiagonal = screen.getByAltText("Diagonal");
+    fireEvent.click(cartaDiagonal);
+
+    expect(mockUsarMovimiento.setUsarMovimiento).not.toHaveBeenCalled();
   });
 });

@@ -2,7 +2,6 @@ import React from "react";
 import {
   act,
   cleanup,
-  fireEvent,
   render,
   screen,
 } from "@testing-library/react";
@@ -10,12 +9,18 @@ import { useParams } from "react-router-dom";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { CartasFiguras } from "../containers/Game/components/CartasFiguras.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
-import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
+import {
+  CompletarFiguraContext,
+  CompletarFiguraProvider,
+} from "../contexts/CompletarFiguraContext.jsx";
 import {
   UsarMovimientoContext,
   UsarMovimientoProvider,
 } from "../contexts/UsarMovimientoContext.jsx";
-import { HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext.jsx";
+import {
+  HabilitarAccionesUsuarioProvider,
+  HabilitarAccionesUsuarioContext,
+} from "../contexts/habilitarAccionesUsuarioContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -40,17 +45,33 @@ describe("CartasFiguras", () => {
     datosJugador,
     evento,
     usarMovimiento = { usarMovimiento: { cartaSeleccionada: null } },
+    completarFigura = null,
+    habilitarAccionesUsuario = {
+      habilitarAccionesUsuario: true,
+      setHabilitarAccionesUsuario: jest.fn(),
+    }
   ) => {
+    const completarFiguraConContexto = (
+      <CompletarFiguraContext.Provider value={completarFigura}>
+        <CartasFiguras />
+      </CompletarFiguraContext.Provider>
+    );
+
+    const completarFiguraConProvider = (
+      <CompletarFiguraProvider>
+        <CartasFiguras />
+      </CompletarFiguraProvider>
+    );
     return renderFunc(
       <DatosJugadorContext.Provider value={datosJugador}>
         <EventoContext.Provider value={evento}>
-          <CompletarFiguraProvider>
-            <UsarMovimientoContext.Provider value={usarMovimiento}>
-              <HabilitarAccionesUsuarioProvider>
-                <CartasFiguras />
-              </HabilitarAccionesUsuarioProvider>
-            </UsarMovimientoContext.Provider>
-          </CompletarFiguraProvider>
+          <UsarMovimientoContext.Provider value={usarMovimiento}>
+            <HabilitarAccionesUsuarioContext.Provider
+              value={habilitarAccionesUsuario}
+            >
+              {completarFigura ? completarFiguraConContexto : completarFiguraConProvider}
+            </HabilitarAccionesUsuarioContext.Provider>
+          </UsarMovimientoContext.Provider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>
     );
@@ -145,7 +166,14 @@ describe("CartasFiguras", () => {
     expect(screen.queryByAltText("3")).not.toBeInTheDocument();
   });
 
-  const preparaComponenteConFiguras = () => {
+  const preparaComponenteConFiguras = ({
+    usarMovimiento = { usarMovimiento: { cartaSeleccionada: null } },
+    completarFigura = null,
+    habilitarAccionesUsuario = {
+      habilitarAccionesUsuario: true,
+      setHabilitarAccionesUsuario: jest.fn(),
+    },
+  }) => {
     const eventoContext = {
       ultimoEvento: {
         key: "GET_PLAYER_MATCH_INFO",
@@ -161,7 +189,7 @@ describe("CartasFiguras", () => {
     const { rerender } = renderComponent(
       render,
       datosJugadorContext,
-      eventoContext,
+      eventoContext
     );
 
     const eventoContext2 = {
@@ -181,14 +209,21 @@ describe("CartasFiguras", () => {
       setUltimoEvento: jest.fn(),
     };
 
-    renderComponent(rerender, datosJugadorContext, eventoContext2);
+    renderComponent(
+      rerender,
+      datosJugadorContext,
+      eventoContext2,
+      usarMovimiento,
+      completarFigura,
+      habilitarAccionesUsuario
+    );
     return rerender;
   };
 
   const getCard = (index) => screen.getByAltText(index).parentElement;
 
   it("debe resaltar solo la figura cliqueada", () => {
-    preparaComponenteConFiguras();
+    preparaComponenteConFiguras({});
     const figure1 = getCard("1");
     const figure2 = getCard("2");
     const figure3 = getCard("3");
@@ -200,12 +235,12 @@ describe("CartasFiguras", () => {
     expect(figure1).not.toHaveClass(hoverClass);
     expect(figure2).not.toHaveClass(hoverClass);
     expect(figure3).toHaveClass(
-      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
     );
   });
 
   it("debe deseleccionar la figura si se cliquea nuevamente", () => {
-    preparaComponenteConFiguras();
+    preparaComponenteConFiguras({});
     const figure1 = getCard("1");
     const figure2 = getCard("2");
     const figure3 = getCard("3");
@@ -223,7 +258,7 @@ describe("CartasFiguras", () => {
   });
 
   it("debe hacer hover a una figura si no hay ninguna seleccionada", () => {
-    preparaComponenteConFiguras();
+    preparaComponenteConFiguras({});
     const getCard = (index) => screen.getByAltText(index).parentElement;
     const figure1 = getCard("1");
     const figure2 = getCard("2");
@@ -238,11 +273,11 @@ describe("CartasFiguras", () => {
   });
 
   it("no debe poder seleccionar si no es el turno del jugador", () => {
-    const rerender = preparaComponenteConFiguras();
+    const rerender = preparaComponenteConFiguras({});
     renderComponent(
       rerender,
       { datosJugador: { is_player_turn: false } },
-      { ultimoEvento: null },
+      { ultimoEvento: null }
     );
 
     const figure1 = getCard("1");
@@ -257,17 +292,17 @@ describe("CartasFiguras", () => {
     expect(figure2).not.toHaveClass(hoverClass);
     expect(figure3).not.toHaveClass(hoverClass);
     expect(figure3).not.toHaveClass(
-      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
     );
   });
 
   it("No debe poder seleccionar si hay una carta de movimiento seleccionada", () => {
-    const rerender = preparaComponenteConFiguras();
+    const rerender = preparaComponenteConFiguras({});
     renderComponent(
       rerender,
       { datosJugador: { is_player_turn: true } },
       { ultimoEvento: null },
-      { usarMovimiento: { cartaSeleccionada: [1, "Diagonal"] } },
+      { usarMovimiento: { cartaSeleccionada: [1, "Diagonal"] } }
     );
 
     const figure1 = getCard("1");
@@ -282,12 +317,12 @@ describe("CartasFiguras", () => {
     expect(figure2).toHaveClass(disabled);
     expect(figure3).toHaveClass(disabled);
     expect(figure3).not.toHaveClass(
-      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
     );
   });
 
   it("debe limpiar la carta seleccionada si se termina su turno", () => {
-    const rerender = preparaComponenteConFiguras();
+    const rerender = preparaComponenteConFiguras({});
 
     const figure1 = getCard("1");
     const figure2 = getCard("2");
@@ -300,17 +335,44 @@ describe("CartasFiguras", () => {
     expect(figure1).toHaveClass(disabled);
     expect(figure2).toHaveClass(disabled);
     expect(figure3).toHaveClass(
-      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
     );
 
     renderComponent(
       rerender,
       { datosJugador: { is_player_turn: false } },
-      { ultimoEvento: null },
+      { ultimoEvento: null }
     );
 
     expect(figure1.classList.length).toEqual(0);
     expect(figure2.classList.length).toEqual(0);
     expect(figure3.classList.length).toEqual(0);
+  });
+
+  it("no debe poder seleccionar si habilitarAccionesUsuarios es false", () => {
+    const mockSetCartaSeleccionada = jest.fn();
+    preparaComponenteConFiguras({
+      habilitarAccionesUsuario: {
+        habilitarAccionesUsuario: false,
+        setHabilitarAccionesUsuario: jest.fn(),
+      },
+    });
+
+    const figure1 = getCard("1");
+    const figure2 = getCard("2");
+    const figure3 = getCard("3");
+    act(() => {
+      figure3.click();
+    });
+    const hoverClass =
+      "hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105";
+    expect(figure1).not.toHaveClass(hoverClass);
+    expect(figure2).not.toHaveClass(hoverClass);
+    expect(figure3).not.toHaveClass(hoverClass);
+    expect(figure3).not.toHaveClass(
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
+    );
+
+    expect(mockSetCartaSeleccionada).not.toHaveBeenCalled();
   });
 });

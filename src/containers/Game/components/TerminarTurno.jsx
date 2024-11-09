@@ -76,6 +76,7 @@ export const TerminarTurno = () => {
             setHabilitarBoton(true);
             setDatosJugador({ ...datosJugador, is_player_turn: true });
           } else {
+            setHabilitarAccionesUsuario(false);
             setHabilitarBoton(false);
             setDatosJugador({ ...datosJugador, is_player_turn: false });
           }

@@ -149,6 +149,17 @@ describe("ServicioFigura", () => {
       );
       expect(resultado).toContain("hover:cursor-pointer");
     });
+    it("debería retornar vacío cuando habilitarAccionesUsuario sea falso", () => {
+      const resultado = ServicioFigura.claseCarta(
+        2,
+        null,
+        null,
+        true,
+        [],
+       false 
+      );
+      expect(resultado).toBe("");
+    });
   });
 
   describe("seleccionarCarta", () => {
@@ -178,6 +189,20 @@ describe("ServicioFigura", () => {
         true
       );
       expect(setCartaSeleccionada).toHaveBeenCalledWith(null);
+    });
+
+    it("no debería seleccionar la carta si habilitarAccionesUsuario es falso", () => {
+      const setCartaSeleccionada = jest.fn();
+      ServicioFigura.seleccionarCarta(
+        1,
+        true,
+        null,
+        null,
+        setCartaSeleccionada,
+        [],
+        false
+      );
+      expect(setCartaSeleccionada).not.toHaveBeenCalled();
     });
   });
 });

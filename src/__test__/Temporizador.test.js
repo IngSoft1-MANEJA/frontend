@@ -3,7 +3,10 @@ import { Temporizador } from "../containers/Game/components/Temporizador.jsx";
 import { act } from "react";
 import { EventoContext, EventoProvider } from "../contexts/EventoContext.jsx";
 import { WebsocketEvents } from "../services/ServicioWebsocket.js";
-import { HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext.jsx";
+import {
+  HabilitarAccionesUsuarioProvider,
+  HabilitarAccionesUsuarioContext,
+} from "../contexts/habilitarAccionesUsuarioContext.jsx";
 
 describe("Temporizador", () => {
   beforeAll(() => {
@@ -236,5 +239,50 @@ describe("Temporizador", () => {
 
     expect(nuevoMinutosTexto).toHaveStyle("--value: 2");
     expect(nuevoSegundosTexto).toHaveStyle("--value: 0");
+  });
+
+  it("deberia setear habilitarAccionesUsuario a false cuando el temporizador sea minutos y segundos 0", () => {
+    const mockSetHabilitarAccionesUsuario = jest.fn();
+    render(
+      <EventoProvider>
+        <HabilitarAccionesUsuarioContext.Provider
+          value={{
+            setHabilitarAccionesUsuario: mockSetHabilitarAccionesUsuario,
+          }}
+        >
+          <Temporizador duracion={1} />
+        </HabilitarAccionesUsuarioContext.Provider>
+      </EventoProvider>
+    );
+
+    const minutos = screen.queryByText("min");
+    const segundos = screen.queryByText("seg");
+
+    expect(minutos).toBeInTheDocument();
+    expect(segundos).toBeInTheDocument();
+
+    expect(mockSetHabilitarAccionesUsuario).not.toHaveBeenCalled();
+
+    const minutosTexto = minutos.firstChild.firstChild;
+    const segundosTexto = segundos.firstChild.firstChild;
+
+    expect(minutosTexto).toHaveStyle("--value: 0");
+    expect(segundosTexto).toHaveStyle("--value: 1");
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    expect(minutosTexto).toHaveStyle("--value: 0");
+    expect(segundosTexto).toHaveStyle("--value: 0");
+    expect(mockSetHabilitarAccionesUsuario).toHaveBeenCalledWith(false);
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    expect(minutosTexto).toHaveStyle("--value: 0");
+    expect(segundosTexto).toHaveStyle("--value: 0");
+    expect(mockSetHabilitarAccionesUsuario).toHaveBeenCalledTimes(1);
   });
 });

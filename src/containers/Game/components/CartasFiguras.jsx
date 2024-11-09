@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/habilitarAccionesUsuarioContext.jsx";
 
 import fig1 from "../../../assets/Figuras/Blancas/fig01.svg";
 import fig2 from "../../../assets/Figuras/Blancas/fig02.svg";
@@ -78,6 +79,7 @@ export const CartasFiguras = () => {
   const { usarMovimiento } = useContext(UsarMovimientoContext);
   const { datosJugador } = useContext(DatosJugadorContext);
   const { ultimoEvento } = useContext(EventoContext);
+  const { habilitarAccionesUsuario } = useContext(HabilitarAccionesUsuarioContext);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
@@ -152,6 +154,7 @@ export const CartasFiguras = () => {
               usarMovimiento.cartaSeleccionada,
               datosJugador.is_player_turn,
               cartasFigurasCompletadas,
+              habilitarAccionesUsuario
             )}
             onClick={() =>
               ServicioFigura.seleccionarCarta(
@@ -161,6 +164,7 @@ export const CartasFiguras = () => {
                 cartaSeleccionada,
                 setCartaSeleccionada,
                 cartasFigurasCompletadas,
+                habilitarAccionesUsuario
               )
             }
           >

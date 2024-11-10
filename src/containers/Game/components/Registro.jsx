@@ -49,7 +49,7 @@ export const Registro = () => {
                 setRegistro((prevRegistro) => [
                   ...prevRegistro,
                   {
-                    mensaje: `El jugador "${currentEvent.payload[0].player}" ha recibido la carta de figura "${currentEvent.payload[0].shape_cards[0][1]}".`,
+                    mensaje: `El jugador "${currentEvent.payload[0].player}" ha recibido la carta de figura "${ServicioFigura.cartaStringName(currentEvent.payload[0].shape_cards[0][1])}".`,
                     tipo: "evento",
                   },
                 ]);
@@ -93,6 +93,23 @@ export const Registro = () => {
                 mensaje: `El jugador "${datosPartida.current_player_name}" ha completado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}".`,
                 tipo: "evento",
               },
+              {
+                mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
+                tipo: "evento",
+              },
+            ]);
+            break;
+          case "BLOCKED_FIGURE":
+            setRegistro((prevRegistro) => [
+              ...prevRegistro,
+              {
+                mensaje: `El jugador "${datosPartida.current_player_name}" ha bloqueado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}" del jugador "${datosPartida.opponents.find(oponente => oponente.turn_order === datosPartida.lastPlayerBlockedTurn)?.player_name || 'desconocido'}".`,
+                tipo: "evento",
+              },
+              {
+                mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
+                tipo: "evento",
+              }
             ]);
             break;
           case "PLAYER_LEFT":
@@ -175,7 +192,7 @@ export const Registro = () => {
     });
 
   return (
-    <div className="registro-container absolute h-4/6 -translate-y-1/2 left-5 top-1/2 z-50 w-1/5 p-1 justify-center">
+    <div className="registro-container absolute h-3/5 -translate-y-2/3 left-5 top-2/3 z-50 w-1/5 p-1 justify-center">
       <div className="registro-container-inner relative bg-base-200 flex flex-col h-full w-full items-center">
         <div className="chatbox overflow-auto w-full flex flex-col-reverse">
           {registroMessage}

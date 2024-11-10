@@ -21,7 +21,9 @@ export class ServicioPartida {
     );
 
     if (!respuesta.ok) {
-      const error = new Error(`Error al unirse a partida - estado: ${respuesta.status}`);
+      const error = new Error(
+        `Error al unirse a partida - estado: ${respuesta.status}`,
+      );
       error.status = respuesta.status;
       throw error;
     }
@@ -233,6 +235,33 @@ export class ServicioPartida {
   static async completarFicha(idPartida, idJugador, idCartaFigura, figura) {
     const respuesta = await fetch(
       `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/player/${idJugador}/use-figure`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          figure_id: idCartaFigura,
+          coordinates: figura,
+        }),
+      },
+    );
+
+    if (!respuesta.ok) {
+      const error = new Error(
+        `Error al validar movimiento - estado: ${respuesta.status}`,
+      );
+      error.status = respuesta.status;
+      throw error;
+    }
+
+    const json = await respuesta.json();
+    return json;
+  }
+
+  static async bloquearFicha(idPartida, idJugador, idCartaFigura, figura) {
+    const respuesta = await fetch(
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/player/${idJugador}/block-figure`,
       {
         method: "POST",
         headers: {

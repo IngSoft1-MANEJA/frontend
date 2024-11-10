@@ -7,6 +7,8 @@ import { DatosJugadorProvider } from "../../contexts/DatosJugadorContext.jsx";
 import { DatosPartidaProvider } from "../../contexts/DatosPartidaContext.jsx";
 import { EventoProvider } from "../../contexts/EventoContext.jsx";
 import { TilesProvider } from "../../contexts/tilesContext.jsx";
+import Temporizador from "../Game/components/Temporizador.jsx";
+import { HabilitarAccionesUsuarioProvider } from "../../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 function App() {
   return (
@@ -39,12 +41,15 @@ function App() {
               <DatosPartidaProvider>
                 <DatosJugadorProvider>
                   <TilesProvider>
-                    <Game />
+                    <HabilitarAccionesUsuarioProvider>
+                      <Game />
+                    </HabilitarAccionesUsuarioProvider>
                   </TilesProvider>
                 </DatosJugadorProvider>
               </DatosPartidaProvider>
             }
           />
+          <Route path="/test-area" element={<Temporizador />} />
         </Routes>
       </EventoProvider>
     </div>

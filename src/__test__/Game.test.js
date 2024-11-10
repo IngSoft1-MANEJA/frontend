@@ -19,6 +19,10 @@ import { EventoProvider } from "../contexts/EventoContext";
 import useWebSocket from "react-use-websocket";
 import { TilesProvider } from "../contexts/tilesContext";
 import { FigurasProvider } from "../contexts/FigurasContext";
+import {
+  HabilitarAccionesUsuarioProvider,
+  HabilitarAccionesUsuarioContext,
+} from "../contexts/HabilitarAccionesUsuarioContext";
 
 jest.mock("../containers/Game/components/Ficha.jsx", () => ({
   Ficha: ({ color }) => (
@@ -67,7 +71,9 @@ describe("Game", () => {
             <DatosPartidaProvider>
               <TilesProvider>
                 <FigurasProvider>
-                  <Game />
+                  <HabilitarAccionesUsuarioProvider>
+                    <Game />
+                  </HabilitarAccionesUsuarioProvider>
                 </FigurasProvider>
               </TilesProvider>
             </DatosPartidaProvider>
@@ -108,7 +114,9 @@ describe("Game", () => {
             <DatosPartidaProvider>
               <TilesProvider>
                 <FigurasProvider>
-                  <Game />
+                  <HabilitarAccionesUsuarioProvider>
+                    <Game />
+                  </HabilitarAccionesUsuarioProvider>
                 </FigurasProvider>
               </TilesProvider>
             </DatosPartidaProvider>
@@ -150,7 +158,9 @@ describe("Game", () => {
             <DatosPartidaProvider>
               <TilesProvider>
                 <FigurasProvider>
-                  <Game />
+                  <HabilitarAccionesUsuarioProvider>
+                    <Game />
+                  </HabilitarAccionesUsuarioProvider>
                 </FigurasProvider>
               </TilesProvider>
             </DatosPartidaProvider>
@@ -198,7 +208,9 @@ describe("Game", () => {
             >
               <TilesProvider>
                 <FigurasProvider>
-                  <Game />
+                  <HabilitarAccionesUsuarioProvider>
+                    <Game />
+                  </HabilitarAccionesUsuarioProvider>
                 </FigurasProvider>
               </TilesProvider>
             </DatosPartidaContext.Provider>
@@ -222,5 +234,43 @@ describe("Game", () => {
       current_turn: "",
       max_players: 2,
     });
+  });
+
+  it("deberia llamar a setHabilitarAccionesUsuario con true cuando se monta el componente y false cuando se desmonta", () => {
+    useWebSocket.mockReturnValue({
+      sendMessage: jest.fn(),
+      lastMessage: null,
+      readyState: 0,
+    });
+    const mockFunc = jest.fn();
+    const { unmount } = render(
+      <MemoryRouter>
+        <EventoProvider>
+          <DatosJugadorProvider>
+            <DatosPartidaProvider>
+              <TilesProvider>
+                <FigurasProvider>
+                  <HabilitarAccionesUsuarioContext.Provider
+                    value={{
+                      habilitarAccionesUsuario: true,
+                      setHabilitarAccionesUsuario: mockFunc,
+                    }}
+                  >
+                    <Game />
+                  </HabilitarAccionesUsuarioContext.Provider>
+                </FigurasProvider>
+              </TilesProvider>
+            </DatosPartidaProvider>
+          </DatosJugadorProvider>
+        </EventoProvider>
+      </MemoryRouter>,
+    );
+
+    expect(mockFunc).toHaveBeenCalledWith(true);
+    expect(mockFunc).toHaveBeenCalledTimes(1);
+
+    unmount();
+    expect(mockFunc).toHaveBeenCalledWith(false);
+    expect(mockFunc).toHaveBeenCalledTimes(2);
   });
 });

@@ -14,6 +14,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ServicioMovimiento } from "../services/ServicioMovimiento";
 import { FigurasContext } from "../contexts/FigurasContext";
 import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext";
+import { HabilitarAccionesUsuarioContext } from "../contexts/HabilitarAccionesUsuarioContext";
 
 const mockDatosJugador = {
   is_player_turn: true,
@@ -40,6 +41,11 @@ const mockDeshacerFiguras = jest.fn();
 
 const mockAgregarFiguras = jest.fn();
 
+const mockHabilitarAccionesUsuario = {
+  habilitarAccionesUsuario: true,
+  setHabilitarAccionesUsuario: jest.fn(),
+};
+
 afterEach(() => {
   jest.clearAllMocks();
 });
@@ -53,6 +59,7 @@ describe("CancelarUltimoMovimiento", () => {
     figuras = mockFiguras,
     agregarFiguras = mockAgregarFiguras,
     deshacerFiguras = mockDeshacerFiguras,
+    habilitarAccionesUsuario = mockHabilitarAccionesUsuario,
   ) => {
     return render(
       <BrowserRouter>
@@ -66,7 +73,11 @@ describe("CancelarUltimoMovimiento", () => {
                   value={{ tiles: tiles.tiles, setTiles: tiles.setTiles }}
                 >
                   <CompletarFiguraProvider>
-                    <CancelarUltimoMovimiento />
+                    <HabilitarAccionesUsuarioContext.Provider
+                      value={habilitarAccionesUsuario}
+                    >
+                      <CancelarUltimoMovimiento />
+                    </HabilitarAccionesUsuarioContext.Provider>
                   </CompletarFiguraProvider>
                 </TilesContext.Provider>
               </EventoContext.Provider>
@@ -99,6 +110,24 @@ describe("CancelarUltimoMovimiento", () => {
       cartasUsadas: [],
     };
     renderComponent(mockDatosJugador, datosUsarMovimiento);
+    const boton = screen.getByRole("button");
+    expect(boton).toBeDisabled();
+  });
+
+  it("debería estar deshabilitado si habilitarAccionesUsuario es falso", () => {
+    renderComponent(
+      mockDatosJugador,
+      mockUsarMovimiento,
+      null,
+      mockTiles,
+      mockFiguras,
+      mockAgregarFiguras,
+      mockDeshacerFiguras,
+      {
+        habilitarAccionesUsuario: false,
+        setHabilitarAccionesUsuario: jest.fn(),
+      },
+    );
     const boton = screen.getByRole("button");
     expect(boton).toBeDisabled();
   });

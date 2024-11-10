@@ -54,6 +54,20 @@ const server = setupServer(
       return HttpResponse.json({ completed: true });
     },
   ),
+  http.post(
+    `${BACKEND_URL}/matches/:idPartida/player/:idJugador/block-figure`,
+    () => {
+      const figure_id = 123;
+      const coordinates = [
+        [1, 1],
+        [2, 2],
+      ];
+      if (!figure_id || !coordinates) {
+        return HttpResponse.json(null, { status: 400 });
+      }
+      return HttpResponse.json({ completed: true });
+    },
+  ),
 );
 
 beforeAll(() => {
@@ -263,4 +277,30 @@ describe("ServicioPartida", () => {
       ]),
     ).rejects.toThrow("Error al validar movimiento - estado: 500");
   });
+
+  it("debería bloquear una figura correctamente", async () => {
+    const response = await ServicioPartida.bloquearFicha(1, 2, 123, [
+      [1, 1],
+      [2, 2],
+    ]);
+    expect(response).toEqual({ completed: true });
+  });
+
+  it("debería lanzar un error si falla al bloquear una figura", async () => {
+    server.use(
+      http.post(
+        `${BACKEND_URL}/matches/:idPartida/player/:idJugador/block-figure`,
+        () => {
+          return HttpResponse.json(null, { status: 500 });
+        },
+      ),
+    );
+    await expect(
+      ServicioPartida.bloquearFicha(1, 2, 123, [
+        [1, 1],
+        [2, 2],
+      ]),
+    ).rejects.toThrow("Error al validar movimiento - estado: 500");
+  });
+
 });

@@ -6,6 +6,8 @@ import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../variablesConfiguracion";
 import { Player } from "../__mocks__/InformacionTurno.mock.js";
 import { EventoContext } from "../contexts/EventoContext.jsx";
+import { HabilitarAccionesUsuarioProvider } from "../contexts/HabilitarAccionesUsuarioContext.jsx";
+import { FigurasContext } from "../contexts/FigurasContext.jsx";
 
 jest.mock("react-use-websocket");
 
@@ -13,6 +15,17 @@ jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useParams: () => ({ match_id: 1 }),
 }));
+
+const mockFiguras = {
+  figuras: {
+    historial: [],
+    figuras_actuales: [],
+    color_prohibido: "",
+  },
+  agregarFiguras: jest.fn(),
+  deshacerFiguras: jest.fn(),
+  setFiguras: jest.fn(),
+};
 
 describe("InformacionTurno", () => {
   afterEach(() => {
@@ -31,7 +44,11 @@ describe("InformacionTurno", () => {
     };
     render(
       <EventoContext.Provider value={eventoValue}>
-        <InformacionTurno {...Player} />
+        <FigurasContext.Provider value={mockFiguras}>
+          <HabilitarAccionesUsuarioProvider>
+            <InformacionTurno {...Player} />
+          </HabilitarAccionesUsuarioProvider>
+        </FigurasContext.Provider>
       </EventoContext.Provider>,
     );
     const turnoActual = screen.getByText("Player 1");
@@ -50,7 +67,11 @@ describe("InformacionTurno", () => {
     };
     render(
       <EventoContext.Provider value={eventoValue}>
-        <InformacionTurno {...Player} />
+        <HabilitarAccionesUsuarioProvider>
+          <FigurasContext.Provider value={mockFiguras}>
+            <InformacionTurno {...Player} />
+          </FigurasContext.Provider>
+        </HabilitarAccionesUsuarioProvider>
       </EventoContext.Provider>,
     );
     const turnoActual = screen.getByText("Player 1");

@@ -41,7 +41,12 @@ export const Tablero = () => {
         setTiles(ultimoEvento.payload.board);
         setFiguras({
           ...figuras,
-          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(ultimoEvento.payload.ban_color),
+          color_prohibido:
+            ultimoEvento.payload.ban_color === null
+              ? "Ninguno"
+              : ServicioFigura.cambiarIdiomaColorFigura(
+                  ultimoEvento.payload.ban_color,
+                ),
         });
       }
       if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
@@ -58,7 +63,12 @@ export const Tablero = () => {
       if (ultimoEvento.key === "COMPLETED_FIGURE" || ultimoEvento.key === "BLOCKED_FIGURE") {
         setFiguras({
           ...figuras,
-          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(ultimoEvento.payload.ban_color),
+          color_prohibido:
+            ultimoEvento.payload.ban_color === null
+              ? "Ninguno"
+              : ServicioFigura.cambiarIdiomaColorFigura(
+                  ultimoEvento.payload.ban_color,
+                ),
         });
       }
     }

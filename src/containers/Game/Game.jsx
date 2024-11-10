@@ -22,12 +22,16 @@ import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
 import { CancelarUltimoMovimiento } from "./components/CancelarUltimoMovimiento.jsx";
 import { FigurasProvider } from "../../contexts/FigurasContext.jsx";
 import { CompletarFiguraProvider } from "../../contexts/CompletarFiguraContext.jsx";
+import { HabilitarAccionesUsuarioContext } from "../../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 export function Game() {
   const { match_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
+  const { setHabilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
   const [mensaje, setMensaje] = useState("");
   const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
@@ -43,8 +47,10 @@ export function Game() {
   });
 
   useEffect(() => {
+    setHabilitarAccionesUsuario(true);
     return () => {
       setUltimoEvento(null); // Limpia el último evento al desmontar el componente
+      setHabilitarAccionesUsuario(false);
     };
   }, []);
 

@@ -210,17 +210,43 @@ describe("ServicioFigura", () => {
 
   describe("claseCarta", () => {
     it('debería retornar "opacity-25 pointer-events-none greyscale" si la carta está completada', () => {
-      const resultado = ServicioFigura.claseCarta(1, null, null, true, [1]);
+      const resultado = ServicioFigura.claseCarta(
+        1,
+        null,
+        null,
+        true,
+        [1],
+        true,
+      );
       expect(resultado).toBe("opacity-25 pointer-events-none greyscale");
     });
 
     it("debería retornar el efecto de hover si es el turno del jugador y la carta no está completada", () => {
-      const resultado = ServicioFigura.claseCarta(2, null, null, true, []);
+      const resultado = ServicioFigura.claseCarta(
+        2,
+        null,
+        null,
+        true,
+        [],
+        false,
+        true,
+      );
       expect(resultado).toContain("hover:cursor-pointer");
     });
 
     it("deberia retornar una cadena vacia si la carta está bloqueada", () => {
       const resultado = ServicioFigura.claseCarta(3, null, null, true, [], true);
+      expect(resultado).toBe("");
+    });
+    it("debería retornar vacío cuando habilitarAccionesUsuario sea falso", () => {
+      const resultado = ServicioFigura.claseCarta(
+        2,
+        null,
+        null,
+        true,
+        [],
+        false,
+      );
       expect(resultado).toBe("");
     });
   });
@@ -238,12 +264,14 @@ describe("ServicioFigura", () => {
         [],
         setEsCartaOponente,
         false,
+        true,
       );
       expect(setCartaSeleccionada).toHaveBeenCalledWith(1);
     });
 
     it("debería deseleccionar la carta si ya está seleccionada", () => {
       const setCartaSeleccionada = jest.fn();
+      const setEsCartaOponente = jest.fn();
       ServicioFigura.seleccionarCarta(
         1,
         true,
@@ -251,8 +279,25 @@ describe("ServicioFigura", () => {
         1,
         setCartaSeleccionada,
         [],
+        setEsCartaOponente,
+        false,
+        true,
       );
       expect(setCartaSeleccionada).toHaveBeenCalledWith(null);
+    });
+
+    it("no debería seleccionar la carta si habilitarAccionesUsuario es falso", () => {
+      const setCartaSeleccionada = jest.fn();
+      ServicioFigura.seleccionarCarta(
+        1,
+        true,
+        null,
+        null,
+        setCartaSeleccionada,
+        [],
+        false,
+      );
+      expect(setCartaSeleccionada).not.toHaveBeenCalled();
     });
   });
 });

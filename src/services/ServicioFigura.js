@@ -151,7 +151,8 @@ const claseCarta = (
   cartaMovSeleccionada,
   isPlayerTurn,
   cartasFigurasCompletadas,
-  bloqueada
+  bloqueada,
+  habilitarAccionesUsuario,
 ) => {
   const efectoHover =
     " hover:cursor-pointer" +
@@ -169,7 +170,7 @@ const claseCarta = (
     return deshabilitada;
   }
 
-  if (!isPlayerTurn || bloqueada) {
+  if (!isPlayerTurn || bloqueada || !habilitarAccionesUsuario) {
     return "";
   }
 
@@ -197,8 +198,10 @@ const seleccionarCarta = (
   cartasFigurasCompletadas,
   setEsCartaOponente,
   esOponente,
+  habilitarAccionesUsuario
 ) => {
   if (
+    !habilitarAccionesUsuario ||
     !isPlayerTurn ||
     cartaMovSeleccionada !== null ||
     cartasFigurasCompletadas.includes(cartaId)

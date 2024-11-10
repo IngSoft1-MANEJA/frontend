@@ -62,6 +62,7 @@ export const CrearPartida = () => {
           ...datosJugador,
           is_owner: true,
           player_id: resJson.player_id,
+          player_name: nombreJugadorWatch,
         });
         if (
           cantidadJugadoresWatch !== null &&

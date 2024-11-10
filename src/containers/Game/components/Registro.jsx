@@ -99,6 +99,19 @@ export const Registro = () => {
               },
             ]);
             break;
+          case "BLOCKED_FIGURE":
+            setRegistro((prevRegistro) => [
+              ...prevRegistro,
+              {
+                mensaje: `El jugador "${datosPartida.current_player_name}" ha bloqueado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}" del jugador "${datosPartida.opponents.find(oponente => oponente.turn_order === datosPartida.lastPlayerBlockedTurn)?.player_name || 'desconocido'}".`,
+                tipo: "evento",
+              },
+              {
+                mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
+                tipo: "evento",
+              }
+            ]);
+            break;
           case "PLAYER_LEFT":
             setRegistro((prevRegistro) => [
               ...prevRegistro,

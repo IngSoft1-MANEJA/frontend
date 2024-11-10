@@ -2,13 +2,16 @@ import { useState, useContext, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ServicioPartida } from "../../../services/ServicioPartida";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
+import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
 import "./UnirsePartida.css";
 
 function UnirsePartida({ idPartida }) {
   const [nombreUsuario, setNombreUsuario] = useState("");
+  const [contraseña, setContraseña] = useState("");
   const [mensajeError, setMensajeError] = useState("");
   const [estaCargando, setEstaCargando] = useState(false);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
+  const { datosPartida } = useContext(DatosPartidaContext)
   const navigate = useNavigate();
 
   const manejarUnirse = async (e) => {
@@ -20,6 +23,7 @@ function UnirsePartida({ idPartida }) {
         const dataPartida = await ServicioPartida.unirsePartida(
           idPartida,
           nombreUsuario,
+          contraseña
         );
 
         setDatosJugador({
@@ -108,6 +112,20 @@ function UnirsePartida({ idPartida }) {
                   </span>
                 </div>
               </label>
+              {!datosPartida.is_public && (
+                <label className="form-control mb-6">
+                  <div className="label">
+                    <span className="label-text">Contraseña</span>
+                  </div>
+                  <input
+                    className="input input-bordered"
+                    type="password"
+                    placeholder="Contraseña"
+                    value={contraseña}
+                    onChange={(e) => setContraseña(e.target.value)}
+                  />
+                </label>
+              )}
               <button className="btn" onClick={manejarUnirse}>
                 Unirse
                 {estaCargando && (

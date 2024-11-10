@@ -13,6 +13,7 @@ import mov5 from "../../../assets/Movimientos/mov5.svg";
 import mov6 from "../../../assets/Movimientos/mov6.svg";
 import mov7 from "../../../assets/Movimientos/mov7.svg";
 import "./CartasMovimiento.css";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 const urlMap = {
   Diagonal: mov1,
@@ -35,6 +36,9 @@ export const CartasMovimiento = () => {
     CompletarFiguraContext,
   );
   const { ultimoEvento } = useContext(EventoContext);
+  const { habilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
 
   useEffect(() => {
     if (ultimoEvento !== null) {
@@ -55,7 +59,7 @@ export const CartasMovimiento = () => {
       return;
     }
 
-    if (datosJugador.is_player_turn) {
+    if (datosJugador.is_player_turn && habilitarAccionesUsuario) {
       if (!usarMovimiento.cartasUsadas.includes(carta[1])) {
         const isCartaHighlighted =
           usarMovimiento.highlightCarta.state &&

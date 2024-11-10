@@ -50,6 +50,7 @@ export const ListaPartidas = () => {
                 <th></th>
                 <th>Nombre de Sala</th>
                 <th className="cantidad-jugadores">Jugadores</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -88,6 +89,22 @@ export const ListaPartidas = () => {
                     <td>{partida.match_name}</td>
                     <td className="cantidad-jugadores">
                       {partida.current_players}/{partida.max_players}
+                    </td>
+                    <td>
+                      {!partida.is_public && (
+                        <svg
+                          className="h-8 w-8 text-gray-500 ml-2"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                      )}
                     </td>
                   </tr>
                 ))

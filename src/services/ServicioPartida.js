@@ -54,7 +54,7 @@ export class ServicioPartida {
     });
   }
 
-  static async crearPartida(nombreSala, nombreJugador, cantidadJugadores) {
+  static async crearPartida(nombreSala, nombreJugador, cantidadJugadores, contraseña) {
     const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}`, {
       method: "POST",
       headers: {
@@ -65,6 +65,7 @@ export class ServicioPartida {
         player_name: nombreJugador,
         max_players: cantidadJugadores,
         is_public: true,
+        pass: contraseña,
         token: "asdfasdf",
       }),
     });

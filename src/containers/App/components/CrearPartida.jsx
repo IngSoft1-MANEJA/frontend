@@ -176,6 +176,7 @@ export const CrearPartida = () => {
                 <input
                   type="password"
                   placeholder="Contraseña de la sala (opcional)"
+                  value={contrsaeñaWatch}
                   className={`input-modal-crear-partida input input-bordered w-full text-left${
                     errors.contraseña?.message ? " input-error" : ""
                   }`}
@@ -184,8 +185,6 @@ export const CrearPartida = () => {
                       value: 50,
                       message: "La contraseña debe ser menor a 50 caracteres",
                     },
-                    validate: value =>
-                      value === "" || value.length > 0 || "La contraseña no debe estar vacía",
                   })}
                 />
                 <span className="error">{errors.contraseña?.message}</span>

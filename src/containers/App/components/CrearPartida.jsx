@@ -42,7 +42,7 @@ export const CrearPartida = () => {
   const nombreJugadorWatch = watch("nombreJugador");
   const nombreSalaWatch = watch("nombreSala");
   const cantidadJugadoresWatch = watch("cantidadJugadores");
-  const contrsaeñaWatch = watch("contraseñaSala")
+  const contraseñaWatch = watch("contraseña")
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ export const CrearPartida = () => {
           nombreSalaWatch,
           nombreJugadorWatch,
           cantidadJugadoresWatch,
-          contrsaeñaWatch,
+          contraseñaWatch,
         );
         console.log(resJson);
         reset();
@@ -69,11 +69,17 @@ export const CrearPartida = () => {
         });
         if (
           cantidadJugadoresWatch !== null &&
-          cantidadJugadoresWatch !== undefined
+          cantidadJugadoresWatch !== undefined 
         ) {
           setDatosPartida({
             ...datosPartida,
             max_players: cantidadJugadoresWatch,
+          });
+        }
+        if ( contraseñaWatch !== null ) {
+          setDatosPartida({
+            ...datosPartida,
+            is_Public: false,
           });
         }
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
@@ -175,10 +181,13 @@ export const CrearPartida = () => {
                 <span className="error">{errors.nombreSala?.message}</span>
                 <input
                   type="password"
+                  aria-label="contraseña"
                   placeholder="Contraseña de la sala (opcional)"
-                  value={contrsaeñaWatch}
+                  value={contraseñaWatch}
                   className={`input-modal-crear-partida input input-bordered w-full text-left${
-                    errors.contraseña?.message ? " input-error" : ""
+                    errors.nombreSala?.message
+                      ? "input-modal-crear-partida input-error input-bordered w-full text-left"
+                      : ""
                   }`}
                   {...register("contraseña", {
                     maxLength: {

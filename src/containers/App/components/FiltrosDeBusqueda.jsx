@@ -2,36 +2,42 @@ import React, { useState } from 'react';
 
 export const FiltrosDeBusqueda = ({ alFiltrarPorMaximoDeJugadores }) => {
 
-  const [maximoJugadores, setMaximoJugadores] = useState(0);
+  const [maximoJugadores, setMaximoJugadores] = useState("0");
   const [badge, setBadge] = useState("");
   const [mensajeError, setMensajeError] = useState("");
 
   const manejarClick = async () => {
-    console.log(maximoJugadores);
-    if (maximoJugadores <= 0 || maximoJugadores > 4) {
+    const valor = parseInt(maximoJugadores);
+
+    if (Number.isNaN(valor)) {
+      setMensajeError("El número de jugadores debe ser un número entero");
+      return;
+    }
+
+    if (valor <= 0 || valor > 4) {
       setMensajeError("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
       return;
     }
 
     try {
-      alFiltrarPorMaximoDeJugadores(maximoJugadores);
+      alFiltrarPorMaximoDeJugadores(valor);
     } catch (error) {
       console.log(error);
       return;
     }
 
-    setBadge(maximoJugadores.toString());
+    setBadge(valor);
     setMensajeError("");
   };
 
   const eliminarBadge = () => {
     setBadge("");
-    setMaximoJugadores(0);
+    setMaximoJugadores("0");
     alFiltrarPorMaximoDeJugadores(null);
   };
 
   return (
-    <div className="ml-8">
+    <div className="ml-8 flex items-center">
       <div className="dropdown">
         <div tabIndex={0} role="button" className="btn m-1">
           <svg
@@ -85,13 +91,13 @@ export const FiltrosDeBusqueda = ({ alFiltrarPorMaximoDeJugadores }) => {
         </div>
       </div>
       {badge && (
-        <div id="badge" className="badge badge-neutral">
-          Máximo jugadores: {badge}
+        <div id="badge" className="badge badge-neutral ml-8 py-3">
+          Máximo de jugadores: {badge}
           <button
             className="btn btn-xs btn-circle btn-ghost ml-2"
             onClick={eliminarBadge}
           >
-            x
+            ✕
           </button>
         </div>
       )}

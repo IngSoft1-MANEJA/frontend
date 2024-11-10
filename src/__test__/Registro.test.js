@@ -9,7 +9,8 @@ import { JugadorGanoMotivo } from "../services/ServicioPartida";
 import { ServicioFigura } from "../services/ServicioFigura";
 
 jest.mock("../services/ServicioFigura", () => ({
-  cartaStringName: jest.fn((id) => `MockedFigura${id}`),
+  ...jest.requireActual('../services/ServicioFigura'),
+  cartaStringName: jest.fn().mockReturnValue("T_90"),
 }));
 
 describe("Registro Component", () => {
@@ -55,7 +56,7 @@ describe("Registro Component", () => {
   it("debería mostrar el mensaje cuando el jugador recibe una carta de figura", async () => {
     const eventoMock = {
       key: "PLAYER_RECEIVE_SHAPE_CARD",
-      payload: [{ player: "Player1", shape_cards: [[1, "MockedFigura1"]] }],
+      payload: [{ player: "Player1", shape_cards: [[1, 1]] }],
     };
 
     renderRegistro(eventoMock);
@@ -67,7 +68,7 @@ describe("Registro Component", () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          'El jugador "Player1" ha recibido la carta de figura "MockedFigura1".',
+          'El jugador "Player1" ha recibido la carta de figura "T_90".',
         ),
       ).toBeInTheDocument(),
     );

@@ -8,10 +8,11 @@ import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext.j
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 import { EventoContext } from "../../../contexts/EventoContext.jsx";
 import { TilesContext } from "../../../contexts/tilesContext.jsx";
-import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 import { FigurasContext } from "../../../contexts/FigurasContext.jsx";
 import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext.jsx";
+import { ServicioMovimiento } from "../../../services/ServicioMovimiento.js";
 import { ServicioPartida } from "../../../services/ServicioPartida.js";
+import { ServicioFigura } from "../../../services/ServicioFigura.js";
 
 export const Tablero = () => {
   const { match_id } = useParams();
@@ -22,7 +23,7 @@ export const Tablero = () => {
   );
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
-  const { figuras, agregarFiguras } = useContext(FigurasContext);
+  const { figuras, agregarFiguras, setFiguras } = useContext(FigurasContext);
   const {
     cartaSeleccionada: cartaFiguraSeleccionada,
     setCartaSeleccionada: setCartaFiguraSeleccionada,
@@ -36,6 +37,10 @@ export const Tablero = () => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setTiles(ultimoEvento.payload.board);
+        setFiguras({
+          ...figuras,
+          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(ultimoEvento.payload.ban_color),
+        });
       }
       if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
         ServicioMovimiento.swapFichas(
@@ -48,11 +53,17 @@ export const Tablero = () => {
       if (ultimoEvento.key === "ALLOW_FIGURES") {
         agregarFiguras(ultimoEvento.payload);
       }
+      if (ultimoEvento.key === "COMPLETED_FIGURE") {
+        setFiguras({
+          ...figuras,
+          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(ultimoEvento.payload.ban_color),
+        });
+      }
     }
   }, [ultimoEvento]);
 
   const manejarFiguraSeleccionadaEnClick = useCallback(
-    async (rowIndex, columnIndex) => {
+    async (rowIndex, columnIndex, tileColor) => {
       const figura = ServicioMovimiento.obtenerFiguraDeFicha(
         rowIndex,
         columnIndex,
@@ -60,33 +71,52 @@ export const Tablero = () => {
       );
 
       if (figura) {
-        try {
-          const respuesta = await ServicioPartida.completarFicha(
-            match_id,
-            datosJugador.player_id,
-            cartaFiguraSeleccionada,
-            figura,
-          );
+        if (tileColor !== figuras.color_prohibido) {
+          try {
+            const respuesta = await ServicioPartida.completarFicha(
+              match_id,
+              datosJugador.player_id,
+              cartaFiguraSeleccionada,
+              figura,
+            );
 
-          setCartaFiguraSeleccionada(null);
+            setCartaFiguraSeleccionada(null);
 
-          respuesta.movement_cards.forEach((cartaADeshacer) => {
+            respuesta.movement_cards.forEach((cartaADeshacer) => {
+              setUsarMovimiento((prev) => ({
+                ...prev,
+                cartasUsadas: prev.cartasUsadas.filter(
+                  (carta) => carta[0] !== cartaADeshacer[0],
+                ),
+              }));
+            });
+
             setUsarMovimiento((prev) => ({
               ...prev,
-              cartasUsadas: prev.cartasUsadas.filter(
-                (carta) => carta[0] !== cartaADeshacer[0],
-              ),
+              cartasCompletadas:
+                prev.cartasUsadas.length - respuesta.movement_cards.length,
             }));
-          });
-
-          setUsarMovimiento((prev) => ({
-            ...prev,
-            cartasCompletadas:
-              prev.cartasUsadas.length - respuesta.movement_cards.length,
-          }));
-        } catch (err) {
-          console.error(err);
-          setMensajeAlerta("Error al completar figura");
+          } catch (err) {
+            console.error(err);
+            switch(err.status){
+              case 409:
+                if (tileColor !== figuras.color_prohibido){
+                  setMensajeAlerta("La figura es del color prohibido.");
+                } else {
+                  setMensajeAlerta("La figura seleccionada es incorrecta.");
+                }
+                break;
+              default:
+                setMensajeAlerta("Error al completar figura");
+                break;
+            }
+            setMostrarAlerta(true);
+            setTimeout(() => {
+              setMostrarAlerta(false);
+            }, 1000);
+          }
+        } else {
+          setMensajeAlerta("La figura es del color prohibido");
           setMostrarAlerta(true);
           setTimeout(() => {
             setMostrarAlerta(false);
@@ -97,9 +127,9 @@ export const Tablero = () => {
     [usarMovimiento, figuras, datosJugador, cartaFiguraSeleccionada, match_id],
   );
 
-  const handleFichaClick = async (rowIndex, columnIndex) => {
+  const handleFichaClick = async (rowIndex, columnIndex, tileColor) => {
     if (cartaFiguraSeleccionada !== null) {
-      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex);
+      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex, tileColor);
     }
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(
@@ -199,7 +229,7 @@ export const Tablero = () => {
           id={`ficha-${rowIndex}-${columnIndex}`}
           key={`${rowIndex}-${columnIndex}`}
           color={tileColor}
-          onClick={() => handleFichaClick(rowIndex, columnIndex)}
+          onClick={() => handleFichaClick(rowIndex, columnIndex, tileColor)}
           highlightClass={highlighted}
           movimientoPosible={movimientoPosible}
           disabled={deshabilitado}

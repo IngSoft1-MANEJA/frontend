@@ -9,7 +9,6 @@ import { WEBSOCKET_URL } from "../../../variablesConfiguracion.js";
 export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
   const [selectedPartida, setSelectedPartida] = useState(null);
-  const [buscarTermino, setBuscarTermino] = useState("");
   const { lastJsonMessage, sendJsonMessage } = useWebSocket(`${WEBSOCKET_URL}/matches/ws`);
 
   useEffect(() => {
@@ -24,8 +23,7 @@ export const ListaPartidas = () => {
   }
 
   function cambiaBusqueda(event) {
-    setBuscarTermino(event.target.value);
-    filtrarPorNombrePartida(buscarTermino); 
+    filtrarPorNombrePartida(event.target.value); 
   }
 
   const filtrarPorNombrePartida = (nombrePartida) => {
@@ -40,7 +38,6 @@ export const ListaPartidas = () => {
       <input
         type="text"
         placeholder="Buscar partida por nombre..."
-        value={buscarTermino}
         onChange={cambiaBusqueda}
         className="search-input" 
       />

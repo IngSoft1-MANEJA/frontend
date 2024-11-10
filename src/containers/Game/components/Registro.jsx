@@ -40,14 +40,16 @@ export const Registro = ({ sendJsonMessage }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (messageText.trim()) {
-      sendJsonMessage({
-        key: "PLAYER_SEND_MESSAGE",
-        payload: {
-          message: messageText,
-          turn_order: datosJugador.player_turn,
-          player_name: datosJugador.player_name,
-        },
-      });
+      sendJsonMessage(
+        {
+          "key": "PLAYER_SEND_MESSAGE",
+          "payload": {
+              "message": messageText,
+              "turn_order": datosJugador.player_turn,
+              "player_name": datosJugador.player_name
+          }
+        }
+      );
       setMessageText("");
     }
   };

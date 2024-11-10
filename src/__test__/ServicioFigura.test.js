@@ -264,6 +264,7 @@ describe("ServicioFigura", () => {
         [],
         setEsCartaOponente,
         false,
+        false,
         true,
       );
       expect(setCartaSeleccionada).toHaveBeenCalledWith(1);
@@ -281,6 +282,7 @@ describe("ServicioFigura", () => {
         [],
         setEsCartaOponente,
         false,
+        false,
         true,
       );
       expect(setCartaSeleccionada).toHaveBeenCalledWith(null);
@@ -288,6 +290,7 @@ describe("ServicioFigura", () => {
 
     it("no debería seleccionar la carta si habilitarAccionesUsuario es falso", () => {
       const setCartaSeleccionada = jest.fn();
+      const setEsCartaOponente = jest.fn();
       ServicioFigura.seleccionarCarta(
         1,
         true,
@@ -295,6 +298,9 @@ describe("ServicioFigura", () => {
         null,
         setCartaSeleccionada,
         [],
+        setEsCartaOponente,
+        false,
+        false,
         false,
       );
       expect(setCartaSeleccionada).not.toHaveBeenCalled();

@@ -38,9 +38,11 @@ describe("VistaTablero", () => {
     figuras: {
       historial: [],
       figuras_actuales: [],
+      color_prohibido: "",
     },
     agregarFiguras: jest.fn(),
     deshacerFiguras: jest.fn(),
+    setFiguras: jest.fn(),
   };
 
   const mockUsarMovimiento = {

@@ -26,6 +26,7 @@ function UnirsePartida({ idPartida }) {
             ...datosJugador,
             is_owner: false,
             player_id: dataPartida.player_id,
+            player_name: nombreUsuario,
           });
 
           navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);

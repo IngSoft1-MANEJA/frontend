@@ -11,11 +11,12 @@ export const Registro = ({ sendJsonMessage }) => {
   const { ultimoEvento } = useContext(EventoContext);
   const [eventQueue, setEventQueue] = useState([]);
   const [messageText, setMessageText] = useState("");
-  const [informacionChat, setInformacionChat] = useState({ turn_order: 0, player_name: "" });
   const [registro, setRegistro] = useState([
     {
       mensaje: "",
       tipo: "",
+      turn_order: null,
+      player_name: null,
     },
   ]);
 
@@ -30,7 +31,7 @@ export const Registro = ({ sendJsonMessage }) => {
       if (eventQueue.length > 0) {
         const [currentEvent, ...remainingQueue] = eventQueue;
         setEventQueue(remainingQueue);
-        ServicioRegistro.procesarMensajeEvento(currentEvent, setRegistro, datosJugador, datosPartida, setInformacionChat);
+        ServicioRegistro.procesarMensajeEvento(currentEvent, setRegistro, datosJugador, datosPartida);
       }
     }, 150);
 
@@ -66,14 +67,13 @@ export const Registro = ({ sendJsonMessage }) => {
     .reverse(0)
     .map((message, index) => {
       if (message.tipo === "chat") {
-        const { turn_order, player_name } = informacionChat || {};
-        const isPlayerMessage = turn_order === datosJugador.player_turn;
+        const isPlayerMessage = message.turn_order === datosJugador.player_turn;
 
         return (
           <div key={index} className="registro-message">
-            <div className={`chat ${isPlayerMessage ? "chat-start" : "chat-end"} text-sm`}>
+            <div className={`chat ${isPlayerMessage ? "chat-end" : "chat-start"} text-sm`}>
               <div className="chat-header pb-1 mb-1">
-                {isPlayerMessage ? "Tu" :  player_name}
+                {isPlayerMessage ? "Tu" : message.player_name || "Anónimo"}
               </div>
               <div className="chat-bubble mb-2">
                 <p>{message.mensaje}</p>

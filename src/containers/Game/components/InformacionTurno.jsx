@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 import { FigurasContext } from "../../../contexts/FigurasContext";
-import { ServicioFigura } from "../../../services/ServicioFigura";
 import "./InformacionTurno.css";
 
 export const InformacionTurno = ({ player_id }) => {

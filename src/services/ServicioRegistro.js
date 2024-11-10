@@ -12,6 +12,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                     "Te has unido a la partida, tu orden de turno es: " +
                     currentEvent.payload.turn_order,
                 tipo: "evento",
+                turn_order: currentEvent.payload.turn_order ?? null,
+                player_name: currentEvent.payload.player_name ?? null,
                 },
             ]);
             break;
@@ -23,6 +25,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                     {
                     mensaje: `El jugador "${currentEvent.payload[0].player}" ha recibido la carta de figura "${ServicioFigura.cartaStringName(currentEvent.payload[0].shape_cards[0][1])}".`,
                     tipo: "evento",
+                    turn_order: currentEvent.payload.turn_order ?? null,
+                    player_name: currentEvent.payload.player_name ?? null,
                     },
                 ]);
                 } else {
@@ -31,6 +35,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                     {
                     mensaje: `El jugador "${currentEvent.payload[0].player}" ha recibido las cartas de figura "${currentEvent.payload[0].shape_cards.map((figura) => ServicioFigura.cartaStringName(figura[1])).join(", ")}".`,
                     tipo: "evento",
+                    turn_order: currentEvent.payload.turn_order ?? null,
+                    player_name: currentEvent.payload.player_name ?? null,
                     },
                 ]);
                 }
@@ -46,6 +52,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                 {
                 mensaje: `Turno de "${currentEvent.payload.next_player_name}".`,
                 tipo: "evento",
+                turn_order: currentEvent.payload.turn_order ?? null,
+                player_name: currentEvent.payload.player_name ?? null,
                 },
             ]);
             break;
@@ -55,6 +63,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                 {
                 mensaje: `El jugador "${datosPartida.current_player_name}" ha realizado un movimiento.`,
                 tipo: "evento",
+                turn_order: currentEvent.payload.turn_order ?? null,
+                player_name: currentEvent.payload.player_name ?? null,
                 },
             ]);
             break;
@@ -64,10 +74,14 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                 {
                   mensaje: `El jugador "${datosPartida.current_player_name}" ha completado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}".`,
                   tipo: "evento",
+                  turn_order: currentEvent.payload.turn_order ?? null,
+                  player_name: currentEvent.payload.player_name ?? null,
                 },
                 {
                   mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
                   tipo: "evento",
+                  turn_order: currentEvent.payload.turn_order ?? null,
+                  player_name: currentEvent.payload.player_name ?? null,
                 }
             ]);
             break;
@@ -77,6 +91,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                 {
                 mensaje: `El jugador "${currentEvent.payload.name}" ha abandonado la partida.`,
                 tipo: "evento",
+                turn_order: currentEvent.payload.turn_order ?? null,
+                player_name: currentEvent.payload.player_name ?? null,
                 },
             ]);
             break;
@@ -84,14 +100,12 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
             setRegistro((prevRegistro) => [
                 ...prevRegistro,
                 {
-                mensaje: `${currentEvent.payload.message}`,
-                tipo: "chat",
+                  mensaje: `${currentEvent.payload.message}`,
+                  tipo: "chat",
+                  turn_order: currentEvent.payload.turn_order ?? null,
+                  player_name: currentEvent.payload.player_name ?? null,
                 },
-            ]);
-            setInformacionChat({
-                turn_order: currentEvent.payload.turn_order,
-                player_name: currentEvent.payload.player_name,
-            });
+              ]);
             break;
         case WebsocketEvents.UNDO_PARTIAL_MOVE:
             setRegistro((prevRegistro) => [
@@ -99,6 +113,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                 {
                 mensaje: `El jugador "${datosPartida.current_player_name}" ha deshecho un movimiento.`,
                 tipo: "evento",
+                turn_order: currentEvent.payload.turn_order ?? null,
+                player_name: currentEvent.payload.player_name ?? null,
                 },
             ]);
             break;
@@ -109,6 +125,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                 {
                     mensaje: "Has ganado la partida!",
                     tipo: "evento",
+                    turn_order: currentEvent.payload.turn_order ?? null,
+                    player_name: currentEvent.payload.player_name ?? null,
                 },
                 ]);
             }
@@ -119,6 +137,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                     {
                     mensaje: "Has ganado la partida!",
                     tipo: "evento",
+                    turn_order: currentEvent.payload.turn_order ?? null,
+                    player_name: currentEvent.payload.player_name ?? null,
                     },
                 ]);
                 } else {
@@ -127,6 +147,8 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                     {
                     mensaje: "Has perdido la partida.",
                     tipo: "evento",
+                    turn_order: currentEvent.payload.turn_order ?? null,
+                    player_name: currentEvent.payload.player_name ?? null,
                     },
                 ]);
                 }

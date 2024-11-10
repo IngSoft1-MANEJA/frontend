@@ -28,7 +28,7 @@ export const ListaPartidas = () => {
 
   const filtrarPorNombrePartida = (nombrePartida) => {
     // TODO: revisar el key y payload con el back.
-    sendJsonMessage({ key: "FILTER_MATCH", payload: { "match_name": nombrePartida } });
+    sendJsonMessage({ key: "FILTER_MATCHES", payload: { "match_name": nombrePartida } });
   };
 
 

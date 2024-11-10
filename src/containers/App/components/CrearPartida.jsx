@@ -16,7 +16,7 @@ export const CrearPartida = () => {
   const [estaCargando, setEstaCargando] = useState(false);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
-
+  
   const shouldFetchRef = useRef(shouldFetch);
 
   useEffect(() => {
@@ -35,12 +35,14 @@ export const CrearPartida = () => {
       nombreJugador: "",
       nombreSala: "",
       cantidadJugadores: 2,
+      contraseña: "",
     },
   });
 
   const nombreJugadorWatch = watch("nombreJugador");
   const nombreSalaWatch = watch("nombreSala");
   const cantidadJugadoresWatch = watch("cantidadJugadores");
+  const contrsaeñaWatch = watch("contraseñaSala")
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -55,6 +57,7 @@ export const CrearPartida = () => {
           nombreSalaWatch,
           nombreJugadorWatch,
           cantidadJugadoresWatch,
+          contrsaeñaWatch,
         );
         console.log(resJson);
         reset();
@@ -170,6 +173,22 @@ export const CrearPartida = () => {
                   })}
                 />
                 <span className="error">{errors.nombreSala?.message}</span>
+                <input
+                  type="password"
+                  placeholder="Contraseña de la sala (opcional)"
+                  className={`input-modal-crear-partida input input-bordered w-full text-left${
+                    errors.contraseña?.message ? " input-error" : ""
+                  }`}
+                  {...register("contraseña", {
+                    maxLength: {
+                      value: 50,
+                      message: "La contraseña debe ser menor a 50 caracteres",
+                    },
+                    validate: value =>
+                      value === "" || value.length > 0 || "La contraseña no debe estar vacía",
+                  })}
+                />
+                <span className="error">{errors.contraseña?.message}</span>
                 <input
                   type="number"
                   min={2}

@@ -13,9 +13,9 @@ export const FiltrosDeBusqueda = ({ alFiltrarPorMaximoDeJugadores }) => {
       return;
     }
 
-    if (valor <= 0 || valor > 4) {
+    if (valor <= 1 || valor > 4) {
       setMensajeError(
-        "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+        "El número de jugadores debe ser mayor a 1 y menor o igual a 4",
       );
       return;
     }

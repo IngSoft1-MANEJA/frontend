@@ -70,7 +70,7 @@ describe("FiltrosDeBusqueda", () => {
     expect(mensajeError).not.toBeInTheDocument();
   });
 
-  it("deberia mostrar error al escoger una cantidad de maxima de jugadores <= 0 o > 4", () => {
+  it("deberia mostrar error al escoger una cantidad de maxima de jugadores <= 1 o > 4", () => {
     const alFiltrarPorMaximoDeJugadores = jest.fn();
     render(
       <FiltrosDeBusqueda
@@ -86,9 +86,19 @@ describe("FiltrosDeBusqueda", () => {
     });
 
     let mensajeError = screen.queryByText(
-      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+      "El número de jugadores debe ser mayor a 1 y menor o igual a 4",
     );
     expect(mensajeError).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.change(filtroDeJugadores, { target: { value: 2 } });
+      fireEvent.click(screen.getByText("Filtrar"));
+    });
+
+    mensajeError = screen.queryByText(
+      "El número de jugadores debe ser mayor a 1 y menor o igual a 4",
+    );
+    expect(mensajeError).not.toBeInTheDocument();
 
     act(() => {
       fireEvent.change(filtroDeJugadores, { target: { value: 1 } });
@@ -96,17 +106,7 @@ describe("FiltrosDeBusqueda", () => {
     });
 
     mensajeError = screen.queryByText(
-      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
-    );
-    expect(mensajeError).not.toBeInTheDocument();
-
-    act(() => {
-      fireEvent.change(filtroDeJugadores, { target: { value: 0 } });
-      fireEvent.click(screen.getByText("Filtrar"));
-    });
-
-    mensajeError = screen.queryByText(
-      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+      "El número de jugadores debe ser mayor a 1 y menor o igual a 4",
     );
     expect(mensajeError).toBeInTheDocument();
 
@@ -116,7 +116,7 @@ describe("FiltrosDeBusqueda", () => {
     });
 
     mensajeError = screen.queryByText(
-      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+      "El número de jugadores debe ser mayor a 1 y menor o igual a 4",
     );
     expect(mensajeError).not.toBeInTheDocument();
 
@@ -126,7 +126,7 @@ describe("FiltrosDeBusqueda", () => {
     });
 
     mensajeError = screen.queryByText(
-      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+      "El número de jugadores debe ser mayor a 1 y menor o igual a 4",
     );
     expect(mensajeError).toBeInTheDocument();
   });
@@ -147,7 +147,7 @@ describe("FiltrosDeBusqueda", () => {
     });
 
     const mensajeError = screen.queryByText(
-      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+      "El número de jugadores debe ser mayor a 1 y menor o igual a 4",
     );
     expect(mensajeError).toBeInTheDocument();
 
@@ -171,17 +171,17 @@ describe("FiltrosDeBusqueda", () => {
     });
 
     let mensajeError = screen.queryByText(
-      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+      "El número de jugadores debe ser mayor a 1 y menor o igual a 4",
     );
     expect(mensajeError).toBeInTheDocument();
 
     act(() => {
-      fireEvent.change(filtroDeJugadores, { target: { value: 1 } });
+      fireEvent.change(filtroDeJugadores, { target: { value: 2 } });
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
     mensajeError = screen.queryByText(
-      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+      "El número de jugadores debe ser mayor a 1 y menor o igual a 4",
     );
     expect(mensajeError).not.toBeInTheDocument();
   });

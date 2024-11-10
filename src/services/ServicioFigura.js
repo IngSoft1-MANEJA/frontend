@@ -63,19 +63,22 @@ function repartirCartasFigura(
   oponentes,
   setOponentes,
   cartasFigurasCompletadas,
+  isBloqued
 ) {
-  //Setea cartas de figuras del jugador
+
+  // Setea cartas de figuras del jugador
   const jugadorData = ultimoEvento.payload.find(
     (jugador) => jugador.turn_order === miTurno,
   );
 
-  if (jugadorData) {
-    const cartasNoUsadas = cartasFiguras.filter(
-      (carta) => !cartasFigurasCompletadas.includes(carta[0]),
-    );
+  const cartasNoUsadas = cartasFiguras.filter(
+    (carta) => !cartasFigurasCompletadas.includes(carta[0]),
+  );
 
+  if (isBloqued) {
+    setCartasFiguras(cartasNoUsadas);
+  } else if (jugadorData) {
     const nuevasCartas = jugadorData.shape_cards;
-
     setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
   } else {
     console.log(
@@ -84,8 +87,9 @@ function repartirCartasFigura(
     );
   }
 
-  //Setea cartas de figuras de los oponentes
+  // Setea cartas de figuras de los oponentes
   const oponentesActualizados = (oponentes || []).map((oponenteExistente) => {
+
     const nuevo = ultimoEvento.payload.find(
       (oponente) => oponente.turn_order === oponenteExistente.turn_order,
     );

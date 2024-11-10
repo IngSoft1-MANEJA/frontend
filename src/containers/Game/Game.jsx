@@ -87,7 +87,7 @@ export function Game() {
         setDatosPartida({
           ...datosPartida,
           current_player_name: ultimoEvento.payload.current_turn_player,
-          opponents: ultimoEvento.payload.opponents
+          opponents: ultimoEvento.payload.opponents,
         });
         if (ultimoEvento.payload.turn_order === 1) {
           setDatosJugador({

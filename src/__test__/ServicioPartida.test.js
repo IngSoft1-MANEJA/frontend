@@ -302,5 +302,4 @@ describe("ServicioPartida", () => {
       ]),
     ).rejects.toThrow("Error al validar movimiento - estado: 500");
   });
-
 });

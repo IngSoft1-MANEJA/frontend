@@ -5,11 +5,15 @@ import UnirsePartida from "./UnirsePartida.jsx";
 import useWebSocket from "react-use-websocket";
 import { WebsocketEvents } from "../../../services/ServicioWebsocket.js";
 import { WEBSOCKET_URL } from "../../../variablesConfiguracion.js";
+import FiltrosDeBusqueda from "./FiltrosDeBusqueda.jsx";
 
 export const ListaPartidas = () => {
   const [partidas, setPartidas] = useState([]);
   const [selectedPartida, setSelectedPartida] = useState(null);
-  const { lastJsonMessage, sendJsonMessage } = useWebSocket(`${WEBSOCKET_URL}/matches/ws`);
+
+  const { lastJsonMessage, sendJsonMessage } = useWebSocket(
+    `${WEBSOCKET_URL}/matches/ws`,
+  );
 
   useEffect(() => {
     if (lastJsonMessage?.key === WebsocketEvents.MATCHES_LIST) {
@@ -23,24 +27,38 @@ export const ListaPartidas = () => {
   }
 
   function cambiaBusqueda(event) {
-    filtrarPorNombrePartida(event.target.value); 
+    filtrarPorNombrePartida(event.target.value);
   }
 
   const filtrarPorNombrePartida = (nombrePartida) => {
     // TODO: revisar el key y payload con el back.
-    sendJsonMessage({ key: "FILTER_MATCHES", payload: { "match_name": nombrePartida } });
+    sendJsonMessage({
+      key: "FILTER_MATCHES",
+      payload: { match_name: nombrePartida },
+    });
   };
 
+  const filtrarPorMaximoJugadores = (maximoJugadores) => {
+    sendJsonMessage({
+      key: "FILTER_MATCHES",
+      payload: { max_players: maximoJugadores },
+    });
+  };
 
   return (
     <div>
       <h1 className="poiret-one-regular text-8xl pb-5">EL SWITCHER</h1>
-      <input
-        type="text"
-        placeholder="Buscar partida por nombre..."
-        onChange={cambiaBusqueda}
-        className="search-input" 
-      />
+      <div className="flex flex-row align-center justify-center items-center my-5">
+        <input
+          type="text"
+          placeholder="Buscar partida por nombre..."
+          onChange={cambiaBusqueda}
+          className="search-input"
+        />
+        <FiltrosDeBusqueda
+          alFiltrarPorMaximoDeJugadores={filtrarPorMaximoJugadores}
+        />
+      </div>
       <div className="Partidas">
         <div className="table-container">
           <table className="table-xs">

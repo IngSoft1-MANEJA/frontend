@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, act, waitFor } from "@testing-library/react";
+import { render, screen, act, waitFor, fireEvent } from "@testing-library/react";
 import { Registro } from "../containers/Game/components/Registro";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext";
 import { DatosPartidaContext } from "../contexts/DatosPartidaContext";
@@ -14,9 +14,10 @@ jest.mock("../services/ServicioFigura", () => ({
 }));
 
 describe("Registro Component", () => {
-  const datosJugadorMock = { player_id: "1", is_owner: true };
+  const datosJugadorMock = { player_id: "1", player_turn: 1, is_owner: true, player_name: "Player1" };
   const datosPartidaMock = { current_player_name: "Player1" };
   const setRegistroMock = jest.fn();
+  const sendJsonMessageMock = jest.fn();
   jest.useFakeTimers();
   jest.spyOn(global, "setInterval");
 
@@ -27,7 +28,7 @@ describe("Registro Component", () => {
           value={{ datosPartida: datosPartidaMock }}
         >
           <EventoContext.Provider value={{ ultimoEvento: ultimoEventoMock }}>
-            <Registro />
+            <Registro sendJsonMessage={sendJsonMessageMock}/>
           </EventoContext.Provider>
         </DatosPartidaContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -164,5 +165,85 @@ describe("Registro Component", () => {
     expect(
       screen.queryByText("Te has unido a la partida"),
     ).not.toBeInTheDocument();
+  });
+
+  it("debería alinear los mensajes hacia la izquierda para otros jugadores", async () => {
+    const eventoMock = {
+      key: "PLAYER_SEND_MESSAGE",
+      payload: {
+        message: "Mensaje de otro jugador",
+        turn_order: 2,
+        player_name: "Jugador2",
+      },
+    };
+
+    renderRegistro(eventoMock);
+
+    act(() => {
+      jest.advanceTimersByTime(150);
+    });
+
+    const mensajeOtroJugador = await waitFor(() => screen.getByText("Mensaje de otro jugador"));
+    expect(mensajeOtroJugador.closest(".chat")).toHaveClass("chat-start");
+  });
+
+  it("debería alinear los mensajes hacia la derecha para el jugador", async () => {
+    const eventoMock = {
+      key: "PLAYER_SEND_MESSAGE",
+      payload: {
+        message: "Mensaje del jugador",
+        turn_order: 1,
+        player_name: "Player1",
+      },
+    };
+
+    renderRegistro(eventoMock);
+
+    act(() => {
+      jest.advanceTimersByTime(150);
+    });
+
+    const mensajeJugador = await waitFor(() => screen.getByText("Mensaje del jugador"));
+    expect(mensajeJugador.closest(".chat")).toHaveClass("chat-end");
+  });
+
+  it("no debería enviar el mensaje al presionar Shift+Enter", () => {
+    renderRegistro(null);
+
+    const textarea = screen.getByPlaceholderText("Comenta");
+    act(() => {
+      textarea.value = "Mensaje no enviado";
+    });
+
+    const shiftEnterEvent = new KeyboardEvent("keydown", { key: "Enter", shiftKey: true });
+    act(() => {
+      textarea.dispatchEvent(shiftEnterEvent);
+    });
+
+    expect(sendJsonMessageMock).not.toHaveBeenCalled();
+    expect(textarea.value).toBe("Mensaje no enviado");
+  });
+
+  it("debería enviar un mensaje y limpiar el campo de texto al enviar usando handleSubmit", async () => {
+    renderRegistro(null);
+  
+    const textarea = screen.getByPlaceholderText("Comenta");
+  
+    fireEvent.change(textarea, { target: { value: "Mensaje de prueba" } });
+  
+    fireEvent.keyDown(textarea, { key: "Enter", code: "Enter", shiftKey: false });
+  
+    await waitFor(() => {
+      expect(sendJsonMessageMock).toHaveBeenCalledWith({
+        key: "PLAYER_SEND_MESSAGE",
+        payload: {
+          message: "Mensaje de prueba",
+          turn_order: datosJugadorMock.player_turn,
+          player_name: datosJugadorMock.player_name,
+        },
+      });
+
+      expect(textarea.value).toBe("");
+    });
   });
 });

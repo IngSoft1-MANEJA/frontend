@@ -6,12 +6,14 @@ export const FigurasProvider = ({ children }) => {
   const [figuras, setFiguras] = useState({
     historial: [],
     figuras_actuales: [],
+    color_prohibido: "",
   });
 
   const agregarFiguras = (nuevasFiguras) => {
     setFiguras((prevState) => ({
       historial: [...prevState.historial, prevState.figuras_actuales],
       figuras_actuales: nuevasFiguras,
+      color_prohibido: prevState.color_prohibido,
     }));
   };
 
@@ -24,13 +26,14 @@ export const FigurasProvider = ({ children }) => {
       return {
         historial: nuevaHistoria,
         figuras_actuales: ultimasFiguras,
+        color_prohibido: prevState.color_prohibido,
       };
     });
   };
 
   return (
     <FigurasContext.Provider
-      value={{ figuras, agregarFiguras, deshacerFiguras }}
+      value={{ figuras, agregarFiguras, deshacerFiguras, setFiguras }}
     >
       {children}
     </FigurasContext.Provider>

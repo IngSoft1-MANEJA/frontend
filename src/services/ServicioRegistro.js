@@ -21,7 +21,7 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
                 setRegistro((prevRegistro) => [
                     ...prevRegistro,
                     {
-                    mensaje: `El jugador "${currentEvent.payload[0].player}" ha recibido la carta de figura "${currentEvent.payload[0].shape_cards[0][1]}".`,
+                    mensaje: `El jugador "${currentEvent.payload[0].player}" ha recibido la carta de figura "${ServicioFigura.cartaStringName(currentEvent.payload[0].shape_cards[0][1])}".`,
                     tipo: "evento",
                     },
                 ]);
@@ -62,9 +62,13 @@ function procesarMensajeEvento (currentEvent, setRegistro, datosJugador, datosPa
             setRegistro((prevRegistro) => [
                 ...prevRegistro,
                 {
-                mensaje: `El jugador "${datosPartida.current_player_name}" ha completado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}".`,
-                tipo: "evento",
+                  mensaje: `El jugador "${datosPartida.current_player_name}" ha completado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}".`,
+                  tipo: "evento",
                 },
+                {
+                  mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
+                  tipo: "evento",
+                }
             ]);
             break;
         case "PLAYER_LEFT":

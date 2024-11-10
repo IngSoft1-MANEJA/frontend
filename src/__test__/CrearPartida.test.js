@@ -12,6 +12,8 @@ import { CrearPartida } from "../containers/App/components/CrearPartida.jsx";
 import {
   CrearPartidaMock,
   CrearPartidaMockError,
+  CrearPartidaMockErrorConContraseña,
+  CrearPartidaMockConContraseña
 } from "../__mocks__/CrearPartidaForm.mock.js";
 import * as reactRouterDom from "react-router-dom";
 import { BACKEND_URL } from "../variablesConfiguracion.js";
@@ -48,6 +50,11 @@ describe("CrearPartida", () => {
   afterEach(cleanup);
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   test("renders CrearPartida component", () => {
@@ -254,6 +261,7 @@ describe("CrearPartida", () => {
               player_name: CrearPartidaMock.nombreJugador,
               max_players: CrearPartidaMock.cantidadJugadores,
               is_public: true,
+              pass : "",
               token: "asdfasdf",
             }),
           }),
@@ -308,6 +316,80 @@ describe("CrearPartida", () => {
           is_owner: true,
           player_id: 2,
         });
+      }, 1500);
+    });
+  });
+  test("Fetch se ejecuta correctamente en partidas con constraseña", async () => {
+    render(
+      <reactRouterDom.MemoryRouter>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
+      </reactRouterDom.MemoryRouter>,
+    );
+
+    const openButton = screen.getByText("Crear sala");
+    fireEvent.click(openButton);
+
+    const nombreJugadorInput = screen.getByLabelText("nombreJugador");
+    const nombreSalaInput = screen.getByLabelText("nombreSala");
+    const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
+    const contraseñaInput = screen.getByLabelText("contraseña")
+    const submitButton = screen.getByText("Crear Sala de Partida");
+
+    expect(nombreJugadorInput).toHaveValue("");
+    expect(nombreSalaInput).toHaveValue("");
+    expect(cantidadJugadoresInput).toHaveValue(2);
+    fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
+    expect(contraseñaInput).toHaveValue("");
+
+    await userEvent.type(nombreJugadorInput, CrearPartidaMockConContraseña.nombreJugador);
+    await userEvent.type(nombreSalaInput, CrearPartidaMockConContraseña.nombreSala);
+    await userEvent.type(
+      cantidadJugadoresInput,
+      CrearPartidaMockConContraseña.cantidadJugadores.toString(),
+    );
+    await userEvent.type(contraseñaInput,CrearPartidaMockConContraseña.contraseña )
+
+    await waitFor(() => {
+      expect(nombreJugadorInput).toHaveValue(CrearPartidaMockConContraseña.nombreJugador);
+      expect(nombreSalaInput).toHaveValue(CrearPartidaMockConContraseña.nombreSala);
+      expect(cantidadJugadoresInput).toHaveValue(
+        CrearPartidaMockConContraseña.cantidadJugadores,
+      );
+      expect(contraseñaInput).toHaveValue(CrearPartidaMockConContraseña.contraseña)
+    });
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      setTimeout(() => {
+        expect(fetch).toHaveBeenCalledWith(
+          `${BACKEND_URL}/matches`,
+          expect.objectContaining({
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              lobby_name: CrearPartidaMock.nombreSala,
+              player_name: CrearPartidaMock.nombreJugador,
+              max_players: CrearPartidaMock.cantidadJugadores,
+              is_public: true,
+              pass : "123456",
+              token: "asdfasdf",
+            }),
+          }),
+        );
+      }, 1500);
+    });
+
+    await waitFor(() => {
+      setTimeout(() => {
+        expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
+        expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
       }, 1500);
     });
   });

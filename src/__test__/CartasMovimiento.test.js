@@ -10,7 +10,7 @@ import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx"
 import {
   HabilitarAccionesUsuarioContext,
   HabilitarAccionesUsuarioProvider,
-} from "../contexts/habilitarAccionesUsuarioContext.jsx";
+} from "../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),

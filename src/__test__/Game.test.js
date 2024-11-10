@@ -22,7 +22,7 @@ import { FigurasProvider } from "../contexts/FigurasContext";
 import {
   HabilitarAccionesUsuarioProvider,
   HabilitarAccionesUsuarioContext,
-} from "../contexts/habilitarAccionesUsuarioContext";
+} from "../contexts/HabilitarAccionesUsuarioContext";
 
 jest.mock("../containers/Game/components/Ficha.jsx", () => ({
   Ficha: ({ color }) => (

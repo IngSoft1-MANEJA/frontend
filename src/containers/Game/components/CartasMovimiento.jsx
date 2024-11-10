@@ -13,7 +13,7 @@ import mov5 from "../../../assets/Movimientos/mov5.svg";
 import mov6 from "../../../assets/Movimientos/mov6.svg";
 import mov7 from "../../../assets/Movimientos/mov7.svg";
 import "./CartasMovimiento.css";
-import { HabilitarAccionesUsuarioContext } from "../../../contexts/habilitarAccionesUsuarioContext.jsx";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 const urlMap = {
   Diagonal: mov1,

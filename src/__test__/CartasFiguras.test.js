@@ -15,7 +15,7 @@ import {
 import {
   HabilitarAccionesUsuarioProvider,
   HabilitarAccionesUsuarioContext,
-} from "../contexts/habilitarAccionesUsuarioContext.jsx";
+} from "../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),

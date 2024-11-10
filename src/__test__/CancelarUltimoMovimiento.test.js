@@ -14,7 +14,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ServicioMovimiento } from "../services/ServicioMovimiento";
 import { FigurasContext } from "../contexts/FigurasContext";
 import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext";
-import { HabilitarAccionesUsuarioContext } from "../contexts/habilitarAccionesUsuarioContext";
+import { HabilitarAccionesUsuarioContext } from "../contexts/HabilitarAccionesUsuarioContext";
 
 const mockDatosJugador = {
   is_player_turn: true,

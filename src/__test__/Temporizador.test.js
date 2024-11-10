@@ -6,7 +6,7 @@ import { WebsocketEvents } from "../services/ServicioWebsocket.js";
 import {
   HabilitarAccionesUsuarioProvider,
   HabilitarAccionesUsuarioContext,
-} from "../contexts/habilitarAccionesUsuarioContext.jsx";
+} from "../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 describe("Temporizador", () => {
   beforeAll(() => {

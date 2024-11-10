@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
-import { HabilitarAccionesUsuarioContext } from "../../../contexts/habilitarAccionesUsuarioContext.jsx";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 import fig1 from "../../../assets/Figuras/Blancas/fig01.svg";
 import fig2 from "../../../assets/Figuras/Blancas/fig02.svg";

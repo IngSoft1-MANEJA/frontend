@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 import { WebsocketEvents } from "../../../services/ServicioWebsocket";
 import { useTemporizador } from "../hooks/useTemporizador";
-import { HabilitarAccionesUsuarioContext } from "../../../contexts/habilitarAccionesUsuarioContext";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext";
 import { calcularTiempoRestante } from "../../../services/Utilidades";
 
 const TIEMPO_DE_TURNO = 120; // 2 minutos

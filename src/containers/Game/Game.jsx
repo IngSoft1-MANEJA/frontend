@@ -22,7 +22,7 @@ import { DatosPartidaContext } from "../../contexts/DatosPartidaContext.jsx";
 import { CancelarUltimoMovimiento } from "./components/CancelarUltimoMovimiento.jsx";
 import { FigurasProvider } from "../../contexts/FigurasContext.jsx";
 import { CompletarFiguraProvider } from "../../contexts/CompletarFiguraContext.jsx";
-import { HabilitarAccionesUsuarioContext } from "../../contexts/habilitarAccionesUsuarioContext.jsx";
+import { HabilitarAccionesUsuarioContext } from "../../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 export function Game() {
   const { match_id } = useParams();

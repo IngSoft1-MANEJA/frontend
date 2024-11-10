@@ -12,7 +12,7 @@ import { ServicioPartida } from "../services/ServicioPartida";
 import {
   HabilitarAccionesUsuarioContext,
   HabilitarAccionesUsuarioProvider,
-} from "../contexts/habilitarAccionesUsuarioContext";
+} from "../contexts/HabilitarAccionesUsuarioContext";
 
 jest.mock("react-use-websocket");
 jest.mock("../services/ServicioPartida");

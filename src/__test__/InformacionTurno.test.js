@@ -6,7 +6,7 @@ import useWebSocket from "react-use-websocket";
 import { WEBSOCKET_URL } from "../variablesConfiguracion";
 import { Player } from "../__mocks__/InformacionTurno.mock.js";
 import { EventoContext } from "../contexts/EventoContext.jsx";
-import { HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext.jsx";
+import { HabilitarAccionesUsuarioProvider } from "../contexts/HabilitarAccionesUsuarioContext.jsx";
 import { FigurasContext } from "../contexts/FigurasContext.jsx";
 
 jest.mock("react-use-websocket");

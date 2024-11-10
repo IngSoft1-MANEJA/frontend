@@ -7,7 +7,7 @@ import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { ServicioPartida } from "../../../services/ServicioPartida";
 import { Alerts } from "../../../components/Alerts";
 import { EventoContext } from "../../../contexts/EventoContext";
-import { HabilitarAccionesUsuarioContext } from "../../../contexts/habilitarAccionesUsuarioContext";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext";
 
 export const TerminarTurno = () => {
   const { match_id } = useParams();

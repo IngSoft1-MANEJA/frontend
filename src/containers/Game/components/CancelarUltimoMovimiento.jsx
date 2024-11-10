@@ -9,7 +9,7 @@ import { Alerts } from "../../../components/Alerts";
 import { useParams } from "react-router-dom";
 import { WebsocketEvents } from "../../../services/ServicioWebsocket";
 import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext";
-import { HabilitarAccionesUsuarioContext } from "../../../contexts/habilitarAccionesUsuarioContext";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext";
 
 export const CancelarUltimoMovimiento = () => {
   const { match_id } = useParams();

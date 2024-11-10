@@ -173,7 +173,7 @@ describe("ListarPartidas", () => {
 
     expect(mockSendJsonMessage).toHaveBeenCalledWith({
       key: "FILTER_MATCHES",
-      payload: { max_players: "2" },
+      payload: { max_players: 2 },
     });
   });
 });

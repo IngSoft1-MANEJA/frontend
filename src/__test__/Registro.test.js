@@ -9,7 +9,7 @@ import { JugadorGanoMotivo } from "../services/ServicioPartida";
 import { ServicioFigura } from "../services/ServicioFigura";
 
 jest.mock("../services/ServicioFigura", () => ({
-  ...jest.requireActual('../services/ServicioFigura'),
+  ...jest.requireActual("../services/ServicioFigura"),
   cartaStringName: jest.fn().mockReturnValue("T_90"),
 }));
 

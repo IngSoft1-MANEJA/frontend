@@ -7,6 +7,7 @@ import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { ServicioPartida } from "../../../services/ServicioPartida";
 import { Alerts } from "../../../components/Alerts";
 import { EventoContext } from "../../../contexts/EventoContext";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext";
 
 export const TerminarTurno = () => {
   const { match_id } = useParams();
@@ -17,6 +18,9 @@ export const TerminarTurno = () => {
     UsarMovimientoContext,
   );
   const { ultimoEvento } = useContext(EventoContext);
+  const { setHabilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");
@@ -70,9 +74,11 @@ export const TerminarTurno = () => {
           if (
             ultimoEvento.payload.next_player_turn === datosJugador.player_turn
           ) {
+            setHabilitarAccionesUsuario(true);
             setHabilitarBoton(true);
             setDatosJugador({ ...datosJugador, is_player_turn: true });
           } else {
+            setHabilitarAccionesUsuario(false);
             setHabilitarBoton(false);
             setDatosJugador({ ...datosJugador, is_player_turn: false });
           }

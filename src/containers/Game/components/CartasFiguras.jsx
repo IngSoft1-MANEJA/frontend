@@ -68,7 +68,6 @@ const urlMap = {
 
 export const CartasFiguras = () => {
   const [cartasFiguras, setCartasFiguras] = useState([]);
-  const [datosPartida, setDatosPartida] = useState(DatosPartidaContext);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
   const [cartasBloqueadas, setCartasBloqueadas] = useState([])
@@ -81,6 +80,7 @@ export const CartasFiguras = () => {
   const { usarMovimiento } = useContext(UsarMovimientoContext);
   const { datosJugador } = useContext(DatosJugadorContext);
   const { ultimoEvento } = useContext(EventoContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
 
   useEffect(() => {
     if (ultimoEvento !== null) {
@@ -109,7 +109,12 @@ export const CartasFiguras = () => {
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
       } else if (ultimoEvento.key === "BLOCKED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
-       
+
+        setDatosPartida({
+          ...datosPartida,
+          lastPlayerBlockedTurn: ultimoEvento.payload.player_turn,
+        });
+
         if (miTurno === ultimoEvento.payload.player_turn){
           setBloqueado(true);
         }

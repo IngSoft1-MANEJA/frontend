@@ -55,7 +55,7 @@ export const Tablero = () => {
       if (ultimoEvento.key === "ALLOW_FIGURES") {
         agregarFiguras(ultimoEvento.payload);
       }
-      if (ultimoEvento.key === "COMPLETED_FIGURE") {
+      if (ultimoEvento.key === "COMPLETED_FIGURE" || ultimoEvento.key === "BLOCKED_FIGURE") {
         setFiguras({
           ...figuras,
           color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(ultimoEvento.payload.ban_color),
@@ -65,14 +65,14 @@ export const Tablero = () => {
   }, [ultimoEvento]);
 
   const manejarFiguraSeleccionadaEnClick = useCallback(
-    async (rowIndex, columnIndex, isOponent) => {
+    async (rowIndex, columnIndex, esCartaOponente, tileColor) => {
       const figura = ServicioMovimiento.obtenerFiguraDeFicha(
         rowIndex,
         columnIndex,
         figuras.figuras_actuales,
       );
       if (figura) {
-        if(!isOponent){
+        if(!esCartaOponente && (tileColor !== figuras.color_prohibido)){
           try {
             const respuesta = await ServicioPartida.completarFicha(
               match_id,
@@ -105,7 +105,7 @@ export const Tablero = () => {
               setMostrarAlerta(false);
             }, 1000);
           }
-        } else {
+        } else if (esCartaOponente && (tileColor !== figuras.color_prohibido)) {
           try {
             const respuesta = await ServicioPartida.bloquearFicha(
               match_id,
@@ -139,7 +139,13 @@ export const Tablero = () => {
               setMostrarAlerta(false);
             }, 1000);
           }
-        } 
+        } else {
+          setMensajeAlerta("La figura es del color prohibido");
+          setMostrarAlerta(true);
+          setTimeout(() => {
+            setMostrarAlerta(false);
+          }, 1000);
+        }
       }
     },
     [usarMovimiento, figuras, datosJugador, cartaFiguraSeleccionada, match_id],
@@ -147,7 +153,7 @@ export const Tablero = () => {
 
   const handleFichaClick = async (rowIndex, columnIndex, tileColor) => {
     if (cartaFiguraSeleccionada !== null) {
-      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex, esCartaOponente);
+      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex, esCartaOponente, tileColor);
     }
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(

@@ -28,6 +28,19 @@ jest.mock("../containers/Game/components/Ficha.jsx", () => ({
   ),
 }));
 
+jest.mock("../services/ServicioFigura.js", () => ({
+  ...jest.requireActual("../services/ServicioFigura.js"),
+  cambiarIdiomaColorFigura: jest.fn((color) => {
+    const coloresPermitidos = {
+      red: "Rojo",
+      blue: "Azul",
+      green: "Verde",
+      yellow: "Amarillo",
+    };
+    return coloresPermitidos[color] || "Color no encontrado.";
+  }),
+}));
+
 describe("VistaTablero", () => {
   const tiles = Tiles;
   afterEach(() => {
@@ -208,6 +221,50 @@ describe("VistaTablero", () => {
     expect(nuevoEstado).toEqual({
       ...mockUsarMovimientoConFichaSeleccionada.usarMovimiento,
       fichasSeleccionadas: [],
+    });
+  });
+
+  test("actualiza el color_prohibido al jugar una carta de figura", () => {
+    const mockSetFiguras = jest.fn();
+
+    const mockFigurasConColorProhibido = {
+      figuras: {
+        historial: [],
+        figuras_actuales: [],
+        color_prohibido: "rojo",
+      },
+      agregarFiguras: jest.fn(),
+      setFiguras: mockSetFiguras,
+    };
+
+    const eventoCompletedFigure = {
+      key: "COMPLETED_FIGURE",
+      payload: { ban_color: "blue" },
+    };
+
+    const mockEventoContextConCompletedFigure = {
+      ultimoEvento: eventoCompletedFigure,
+    };
+
+    render(
+      <DatosJugadorContext.Provider value={mockDatosJugador}>
+        <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+          <FigurasContext.Provider value={mockFigurasConColorProhibido}>
+            <EventoContext.Provider value={mockEventoContextConCompletedFigure}>
+              <TilesProvider>
+                <CompletarFiguraProvider>
+                  <Tablero />
+                </CompletarFiguraProvider>
+              </TilesProvider>
+            </EventoContext.Provider>
+          </FigurasContext.Provider>
+        </UsarMovimientoContext.Provider>
+      </DatosJugadorContext.Provider>,
+    );
+
+    expect(mockSetFiguras).toHaveBeenCalledWith({
+      ...mockFigurasConColorProhibido.figuras,
+      color_prohibido: "azul",
     });
   });
 });

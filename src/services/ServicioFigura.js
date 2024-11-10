@@ -170,11 +170,15 @@ const claseCarta = (
     return deshabilitada;
   }
 
+  if(cartaMovSeleccionada !== null && bloqueada) {
+    return deshabilitada;
+  }
+
   if (!isPlayerTurn || bloqueada || !habilitarAccionesUsuario) {
     return "";
   }
 
-  if (cartaMovSeleccionada !== null) {
+  if (cartaMovSeleccionada !== null ) {
     return deshabilitada;
   }
 
@@ -198,12 +202,14 @@ const seleccionarCarta = (
   cartasFigurasCompletadas,
   setEsCartaOponente,
   esOponente,
+  bloqueada,
   habilitarAccionesUsuario
 ) => {
   if (
     !habilitarAccionesUsuario ||
     !isPlayerTurn ||
-    cartaMovSeleccionada !== null ||
+    cartaMovSeleccionada !== null || 
+    bloqueada ||
     cartasFigurasCompletadas.includes(cartaId)
   ) {
     return;

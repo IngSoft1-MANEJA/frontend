@@ -24,6 +24,16 @@ export const ListaPartidas = () => {
     setSelectedPartida(partida);
   }
 
+  function cambiaBusqueda(event) {
+    filtrarPorNombrePartida(event.target.value); 
+  }
+
+  const filtrarPorNombrePartida = (nombrePartida) => {
+    // TODO: revisar el key y payload con el back.
+    sendJsonMessage({ key: "FILTER_MATCHES", payload: { "match_name": nombrePartida } });
+  };
+
+
   const filtrarPorMaximoJugadores = (maximoJugadores) => {
     sendJsonMessage({ key: "FILTER_MATCHES", payload: { "max_players": maximoJugadores } });
   };
@@ -31,6 +41,12 @@ export const ListaPartidas = () => {
   return (
     <div>
       <h1 className="poiret-one-regular text-8xl pb-5">EL SWITCHER</h1>
+      <input
+        type="text"
+        placeholder="Buscar partida por nombre..."
+        onChange={cambiaBusqueda}
+        className="search-input" 
+      />
       <div className="m-auto">
         <FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={filtrarPorMaximoJugadores} />
       </div>

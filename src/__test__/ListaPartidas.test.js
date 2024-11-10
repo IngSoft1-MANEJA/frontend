@@ -1,6 +1,6 @@
 import React from "react";
 import { jest } from "@jest/globals";
-import { render, screen, waitFor, cleanup } from "@testing-library/react";
+import { render, screen, waitFor, cleanup, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { ListaPartidas } from "../containers/App/components/ListaPartidas.jsx";
 import { ListarPartidasMock } from "../__mocks__/ListarPartidas.mock.js";
@@ -134,6 +134,29 @@ describe("ListarPartidas", () => {
       screen.queryByText("No se encuentran partidas disponibles"),
     ).toBeInTheDocument();
   });
+
+  test("debe enviar el mensaje correcto al backend al filtrar partidas por nombre", () => {
+    const mockSendJsonMessage = jest.fn();
+    useWebSocket.mockImplementation(() => ({
+      lastJsonMessage: mockMatchList,
+      sendJsonMessage: mockSendJsonMessage,
+    }));
+  
+    customRender();
+  
+    const input = screen.getByPlaceholderText("Buscar partida por nombre...");
+    
+    // Simula el evento de cambio en el campo de búsqueda
+    const searchTerm = "Partida 1";
+    fireEvent.change(input, { target: { value: searchTerm } });
+  
+    // Verifica que `sendJsonMessage` haya sido llamado correctamente
+    expect(mockSendJsonMessage).toHaveBeenCalledWith({
+      key: "FILTER_MATCHES",
+      payload: { match_name: searchTerm },
+    });
+  });
+    
 
   test("debe enviar un request a la API para listar partidas por cantidad de jugadores", () => {
     const fetchSpy = jest.spyOn(global, "fetch");

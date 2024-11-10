@@ -152,7 +152,7 @@ describe("ListarPartidas", () => {
   
     // Verifica que `sendJsonMessage` haya sido llamado correctamente
     expect(mockSendJsonMessage).toHaveBeenCalledWith({
-      key: "FILTER_MATCH",
+      key: "FILTER_MATCHES",
       payload: { match_name: searchTerm },
     });
   });

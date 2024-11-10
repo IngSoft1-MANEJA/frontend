@@ -15,7 +15,7 @@ export const InformacionTurno = ({ player_id }) => {
           setTurnos({
             current_turn: ultimoEvento.payload.current_turn_player,
           });
-          
+
           break;
 
         case "END_PLAYER_TURN":
@@ -50,7 +50,9 @@ export const InformacionTurno = ({ player_id }) => {
           <tr className="bg-base-200 h-8">
             <th className="w-15 text-left">Color Prohibido:</th>
             <td className="min-w-20 max-w-44 text-right">
-              {figuras.color_prohibido === "Ninguno" ? "Ninguno" : figuras.color_prohibido}
+              {figuras.color_prohibido === "Ninguno"
+                ? "Ninguno"
+                : figuras.color_prohibido}
             </td>
           </tr>
         </tbody>

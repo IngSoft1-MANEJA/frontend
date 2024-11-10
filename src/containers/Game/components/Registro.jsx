@@ -31,7 +31,12 @@ export const Registro = ({ sendJsonMessage }) => {
       if (eventQueue.length > 0) {
         const [currentEvent, ...remainingQueue] = eventQueue;
         setEventQueue(remainingQueue);
-        ServicioRegistro.procesarMensajeEvento(currentEvent, setRegistro, datosJugador, datosPartida);
+        ServicioRegistro.procesarMensajeEvento(
+          currentEvent,
+          setRegistro,
+          datosJugador,
+          datosPartida,
+        );
       }
     }, 150);
 
@@ -41,16 +46,14 @@ export const Registro = ({ sendJsonMessage }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (messageText.trim()) {
-      sendJsonMessage(
-        {
-          "key": "PLAYER_SEND_MESSAGE",
-          "payload": {
-              "message": messageText,
-              "turn_order": datosJugador.player_turn,
-              "player_name": datosJugador.player_name
-          }
-        }
-      );
+      sendJsonMessage({
+        key: "PLAYER_SEND_MESSAGE",
+        payload: {
+          message: messageText,
+          turn_order: datosJugador.player_turn,
+          player_name: datosJugador.player_name,
+        },
+      });
       setMessageText("");
     }
   };
@@ -71,7 +74,9 @@ export const Registro = ({ sendJsonMessage }) => {
 
         return (
           <div key={index} className="registro-message">
-            <div className={`chat ${isPlayerMessage ? "chat-end" : "chat-start"} text-sm`}>
+            <div
+              className={`chat ${isPlayerMessage ? "chat-end" : "chat-start"} text-sm`}
+            >
               <div className="chat-header pb-1 mb-1">
                 {isPlayerMessage ? "Tu" : message.player_name || "Anónimo"}
               </div>
@@ -91,7 +96,7 @@ export const Registro = ({ sendJsonMessage }) => {
           </div>
         );
       }
-  });
+    });
 
   return (
     <div className="registro-container absolute h-3/5 -translate-y-1/2 left-5 top-1/2 z-50 w-1/5 p-1 justify-center">
@@ -99,13 +104,13 @@ export const Registro = ({ sendJsonMessage }) => {
         <div className="chatbox overflow-auto w-full flex flex-col-reverse">
           {registroMessage}
         </div>
-        <textarea 
-          className="textarea absolute bottom-0 w-full resize-none mt-2" 
+        <textarea
+          className="textarea absolute bottom-0 w-full resize-none mt-2"
           placeholder="Comenta"
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
-          onKeyDown={handleKeyDown}>
-        </textarea>
+          onKeyDown={handleKeyDown}
+        ></textarea>
       </div>
     </div>
   );

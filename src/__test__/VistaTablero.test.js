@@ -226,7 +226,7 @@ describe("VistaTablero", () => {
 
   test("actualiza el color_prohibido al jugar una carta de figura", () => {
     const mockSetFiguras = jest.fn();
-  
+
     const mockFigurasConColorProhibido = {
       figuras: {
         historial: [],
@@ -236,16 +236,16 @@ describe("VistaTablero", () => {
       agregarFiguras: jest.fn(),
       setFiguras: mockSetFiguras,
     };
-  
+
     const eventoCompletedFigure = {
       key: "COMPLETED_FIGURE",
       payload: { ban_color: "blue" },
     };
-  
+
     const mockEventoContextConCompletedFigure = {
       ultimoEvento: eventoCompletedFigure,
     };
-  
+
     render(
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
@@ -261,7 +261,7 @@ describe("VistaTablero", () => {
         </UsarMovimientoContext.Provider>
       </DatosJugadorContext.Provider>,
     );
-  
+
     expect(mockSetFiguras).toHaveBeenCalledWith({
       ...mockFigurasConColorProhibido.figuras,
       color_prohibido: "azul",

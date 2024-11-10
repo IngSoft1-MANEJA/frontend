@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, act, waitFor, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  act,
+  waitFor,
+  fireEvent,
+} from "@testing-library/react";
 import { Registro } from "../containers/Game/components/Registro";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext";
 import { DatosPartidaContext } from "../contexts/DatosPartidaContext";
@@ -9,12 +15,17 @@ import { JugadorGanoMotivo } from "../services/ServicioPartida";
 import { ServicioFigura } from "../services/ServicioFigura";
 
 jest.mock("../services/ServicioFigura", () => ({
-  ...jest.requireActual('../services/ServicioFigura'),
+  ...jest.requireActual("../services/ServicioFigura"),
   cartaStringName: jest.fn().mockReturnValue("T_90"),
 }));
 
 describe("Registro Component", () => {
-  const datosJugadorMock = { player_id: "1", player_turn: 1, is_owner: true, player_name: "Player1" };
+  const datosJugadorMock = {
+    player_id: "1",
+    player_turn: 1,
+    is_owner: true,
+    player_name: "Player1",
+  };
   const datosPartidaMock = { current_player_name: "Player1" };
   const setRegistroMock = jest.fn();
   const sendJsonMessageMock = jest.fn();
@@ -28,7 +39,7 @@ describe("Registro Component", () => {
           value={{ datosPartida: datosPartidaMock }}
         >
           <EventoContext.Provider value={{ ultimoEvento: ultimoEventoMock }}>
-            <Registro sendJsonMessage={sendJsonMessageMock}/>
+            <Registro sendJsonMessage={sendJsonMessageMock} />
           </EventoContext.Provider>
         </DatosPartidaContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -183,7 +194,9 @@ describe("Registro Component", () => {
       jest.advanceTimersByTime(150);
     });
 
-    const mensajeOtroJugador = await waitFor(() => screen.getByText("Mensaje de otro jugador"));
+    const mensajeOtroJugador = await waitFor(() =>
+      screen.getByText("Mensaje de otro jugador"),
+    );
     expect(mensajeOtroJugador.closest(".chat")).toHaveClass("chat-start");
   });
 
@@ -203,7 +216,9 @@ describe("Registro Component", () => {
       jest.advanceTimersByTime(150);
     });
 
-    const mensajeJugador = await waitFor(() => screen.getByText("Mensaje del jugador"));
+    const mensajeJugador = await waitFor(() =>
+      screen.getByText("Mensaje del jugador"),
+    );
     expect(mensajeJugador.closest(".chat")).toHaveClass("chat-end");
   });
 
@@ -215,7 +230,10 @@ describe("Registro Component", () => {
       textarea.value = "Mensaje no enviado";
     });
 
-    const shiftEnterEvent = new KeyboardEvent("keydown", { key: "Enter", shiftKey: true });
+    const shiftEnterEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      shiftKey: true,
+    });
     act(() => {
       textarea.dispatchEvent(shiftEnterEvent);
     });
@@ -226,13 +244,17 @@ describe("Registro Component", () => {
 
   it("debería enviar un mensaje y limpiar el campo de texto al enviar usando handleSubmit", async () => {
     renderRegistro(null);
-  
+
     const textarea = screen.getByPlaceholderText("Comenta");
-  
+
     fireEvent.change(textarea, { target: { value: "Mensaje de prueba" } });
-  
-    fireEvent.keyDown(textarea, { key: "Enter", code: "Enter", shiftKey: false });
-  
+
+    fireEvent.keyDown(textarea, {
+      key: "Enter",
+      code: "Enter",
+      shiftKey: false,
+    });
+
     await waitFor(() => {
       expect(sendJsonMessageMock).toHaveBeenCalledWith({
         key: "PLAYER_SEND_MESSAGE",

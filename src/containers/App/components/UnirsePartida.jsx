@@ -16,39 +16,39 @@ function UnirsePartida({ idPartida }) {
 
     if (nombreUsuario) {
       setEstaCargando(true);
-        try {
-          const dataPartida = await ServicioPartida.unirsePartida(
-            idPartida,
-            nombreUsuario,
-          );
+      try {
+        const dataPartida = await ServicioPartida.unirsePartida(
+          idPartida,
+          nombreUsuario,
+        );
 
-          setDatosJugador({
-            ...datosJugador,
-            is_owner: false,
-            player_id: dataPartida.player_id,
-            player_name: nombreUsuario,
-          });
+        setDatosJugador({
+          ...datosJugador,
+          is_owner: false,
+          player_id: dataPartida.player_id,
+          player_name: nombreUsuario,
+        });
 
-          navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
-          setEstaCargando(false);
-        } catch (error) {
-          switch(error.status){
-            case 404:
-              setMensajeError("La partida no existe o ha sido cancelada.");
-              break;
-            case 409:
-              setMensajeError("La partida ya esta llena.");
-              break;
-            case 422:
-              setMensajeError("Nombre invalido.");
-              break;
-            default:
-              setMensajeError("Error al unirse a partida");
-              break;
-          }
-          console.error(error.message);
-          setEstaCargando(false);
+        navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
+        setEstaCargando(false);
+      } catch (error) {
+        switch (error.status) {
+          case 404:
+            setMensajeError("La partida no existe o ha sido cancelada.");
+            break;
+          case 409:
+            setMensajeError("La partida ya esta llena.");
+            break;
+          case 422:
+            setMensajeError("Nombre invalido.");
+            break;
+          default:
+            setMensajeError("Error al unirse a partida");
+            break;
         }
+        console.error(error.message);
+        setEstaCargando(false);
+      }
     } else {
       setMensajeError("Por favor, ingrese un nombre de usuario");
     }

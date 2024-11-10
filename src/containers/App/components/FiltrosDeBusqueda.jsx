@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 export const FiltrosDeBusqueda = ({ alFiltrarPorMaximoDeJugadores }) => {
-
   const [maximoJugadores, setMaximoJugadores] = useState("0");
   const [badge, setBadge] = useState("");
   const [mensajeError, setMensajeError] = useState("");
@@ -15,7 +14,9 @@ export const FiltrosDeBusqueda = ({ alFiltrarPorMaximoDeJugadores }) => {
     }
 
     if (valor <= 0 || valor > 4) {
-      setMensajeError("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
+      setMensajeError(
+        "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+      );
       return;
     }
 
@@ -103,7 +104,6 @@ export const FiltrosDeBusqueda = ({ alFiltrarPorMaximoDeJugadores }) => {
       )}
     </div>
   );
-}
+};
 
 export default FiltrosDeBusqueda;
-

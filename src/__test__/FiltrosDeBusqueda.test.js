@@ -9,8 +9,13 @@ describe("FiltrosDeBusqueda", () => {
 
   it("deberia ejecutar alFiltrarPorMaximoDeJugadores al escoger una cantidad de maxima de jugadores", () => {
     const alFiltrarPorMaximoDeJugadores = jest.fn();
-    render(<FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores} />);
-    const filtroDeJugadores = screen.getByPlaceholderText(/Número de jugadores/i);
+    render(
+      <FiltrosDeBusqueda
+        alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores}
+      />,
+    );
+    const filtroDeJugadores =
+      screen.getByPlaceholderText(/Número de jugadores/i);
     fireEvent.change(filtroDeJugadores, { target: { value: 2 } });
     fireEvent.click(screen.getByText("Filtrar"));
     expect(alFiltrarPorMaximoDeJugadores).toHaveBeenCalledWith(2);
@@ -18,8 +23,13 @@ describe("FiltrosDeBusqueda", () => {
 
   it("deberia agregar un badge al escoger una cantidad de maxima de jugadores", () => {
     const alFiltrarPorMaximoDeJugadores = jest.fn();
-    render(<FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores} />);
-    const filtroDeJugadores = screen.getByPlaceholderText(/Número de jugadores/i);
+    render(
+      <FiltrosDeBusqueda
+        alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores}
+      />,
+    );
+    const filtroDeJugadores =
+      screen.getByPlaceholderText(/Número de jugadores/i);
     act(() => {
       fireEvent.change(filtroDeJugadores, { target: { value: 2 } });
       fireEvent.click(screen.getByText("Filtrar"));
@@ -27,20 +37,26 @@ describe("FiltrosDeBusqueda", () => {
 
     const badge = screen.queryByText(/Máximo de jugadores: 2/i);
     expect(badge).toBeInTheDocument();
-
   });
 
   it("deberia mostrar error al escoger una cantidad de maxima de jugadores invalida", () => {
     const alFiltrarPorMaximoDeJugadores = jest.fn();
-    render(<FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores} />);
-    const filtroDeJugadores = screen.getByPlaceholderText(/Número de jugadores/i);
+    render(
+      <FiltrosDeBusqueda
+        alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores}
+      />,
+    );
+    const filtroDeJugadores =
+      screen.getByPlaceholderText(/Número de jugadores/i);
 
     act(() => {
       fireEvent.change(filtroDeJugadores, { target: { value: "asdf" } });
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    let mensajeError = screen.queryByText("El número de jugadores debe ser un número entero");
+    let mensajeError = screen.queryByText(
+      "El número de jugadores debe ser un número entero",
+    );
     expect(mensajeError).toBeInTheDocument();
 
     act(() => {
@@ -48,21 +64,30 @@ describe("FiltrosDeBusqueda", () => {
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    mensajeError = screen.queryByText("El número de jugadores debe ser un número entero");
+    mensajeError = screen.queryByText(
+      "El número de jugadores debe ser un número entero",
+    );
     expect(mensajeError).not.toBeInTheDocument();
   });
 
   it("deberia mostrar error al escoger una cantidad de maxima de jugadores <= 0 o > 4", () => {
     const alFiltrarPorMaximoDeJugadores = jest.fn();
-    render(<FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores} />);
-    const filtroDeJugadores = screen.getByPlaceholderText(/Número de jugadores/i);
+    render(
+      <FiltrosDeBusqueda
+        alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores}
+      />,
+    );
+    const filtroDeJugadores =
+      screen.getByPlaceholderText(/Número de jugadores/i);
 
     act(() => {
       fireEvent.change(filtroDeJugadores, { target: { value: -1 } });
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    let mensajeError = screen.queryByText("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
+    let mensajeError = screen.queryByText(
+      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+    );
     expect(mensajeError).toBeInTheDocument();
 
     act(() => {
@@ -70,7 +95,9 @@ describe("FiltrosDeBusqueda", () => {
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    mensajeError = screen.queryByText("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
+    mensajeError = screen.queryByText(
+      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+    );
     expect(mensajeError).not.toBeInTheDocument();
 
     act(() => {
@@ -78,7 +105,9 @@ describe("FiltrosDeBusqueda", () => {
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    mensajeError = screen.queryByText("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
+    mensajeError = screen.queryByText(
+      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+    );
     expect(mensajeError).toBeInTheDocument();
 
     act(() => {
@@ -86,7 +115,9 @@ describe("FiltrosDeBusqueda", () => {
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    mensajeError = screen.queryByText("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
+    mensajeError = screen.queryByText(
+      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+    );
     expect(mensajeError).not.toBeInTheDocument();
 
     act(() => {
@@ -94,21 +125,30 @@ describe("FiltrosDeBusqueda", () => {
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    mensajeError = screen.queryByText("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
+    mensajeError = screen.queryByText(
+      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+    );
     expect(mensajeError).toBeInTheDocument();
   });
 
   it("no deberia aparecer el badge al escoger una cantidad maxima de jugadores no aceptable", () => {
     const alFiltrarPorMaximoDeJugadores = jest.fn();
-    render(<FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores} />);
-    const filtroDeJugadores = screen.getByPlaceholderText(/Número de jugadores/i);
+    render(
+      <FiltrosDeBusqueda
+        alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores}
+      />,
+    );
+    const filtroDeJugadores =
+      screen.getByPlaceholderText(/Número de jugadores/i);
 
     act(() => {
       fireEvent.change(filtroDeJugadores, { target: { value: -1 } });
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    const mensajeError = screen.queryByText("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
+    const mensajeError = screen.queryByText(
+      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+    );
     expect(mensajeError).toBeInTheDocument();
 
     const badge = screen.queryByText(/Máximo de jugadores: -1/i);
@@ -117,15 +157,22 @@ describe("FiltrosDeBusqueda", () => {
 
   it("deberia eliminar el mensaje de error si se escoge una cantidad de jugadores aceptable", () => {
     const alFiltrarPorMaximoDeJugadores = jest.fn();
-    render(<FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores} />);
-    const filtroDeJugadores = screen.getByPlaceholderText(/Número de jugadores/i);
+    render(
+      <FiltrosDeBusqueda
+        alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores}
+      />,
+    );
+    const filtroDeJugadores =
+      screen.getByPlaceholderText(/Número de jugadores/i);
 
     act(() => {
       fireEvent.change(filtroDeJugadores, { target: { value: -1 } });
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    let mensajeError = screen.queryByText("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
+    let mensajeError = screen.queryByText(
+      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+    );
     expect(mensajeError).toBeInTheDocument();
 
     act(() => {
@@ -133,14 +180,21 @@ describe("FiltrosDeBusqueda", () => {
       fireEvent.click(screen.getByText("Filtrar"));
     });
 
-    mensajeError = screen.queryByText("El número de jugadores debe ser mayor a 0 y menor o igual a 4");
+    mensajeError = screen.queryByText(
+      "El número de jugadores debe ser mayor a 0 y menor o igual a 4",
+    );
     expect(mensajeError).not.toBeInTheDocument();
   });
 
   it("deberia eliminar el badge al hacer click en la x y correr alFiltrarPorMaximoDeJugadores con null", () => {
     const alFiltrarPorMaximoDeJugadores = jest.fn();
-    render(<FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores} />);
-    const filtroDeJugadores = screen.getByPlaceholderText(/Número de jugadores/i);
+    render(
+      <FiltrosDeBusqueda
+        alFiltrarPorMaximoDeJugadores={alFiltrarPorMaximoDeJugadores}
+      />,
+    );
+    const filtroDeJugadores =
+      screen.getByPlaceholderText(/Número de jugadores/i);
     act(() => {
       fireEvent.change(filtroDeJugadores, { target: { value: 2 } });
       fireEvent.click(screen.getByText("Filtrar"));

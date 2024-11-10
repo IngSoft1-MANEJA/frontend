@@ -188,6 +188,7 @@ export const CartasFiguras = () => {
                 cartasFigurasCompletadas,
                 setEsCartaOponente,
                 false,
+                cartasBloqueadas.includes(carta[0]),
                 habilitarAccionesUsuario,
               )
             }
@@ -232,6 +233,7 @@ export const CartasFiguras = () => {
                 cartasFigurasCompletadas,
                 setEsCartaOponente,
                 true,
+                cartasBloqueadas.includes(carta[0]),
                 habilitarAccionesUsuario,
               )
             }

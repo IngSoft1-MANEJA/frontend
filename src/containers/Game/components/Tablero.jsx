@@ -39,7 +39,12 @@ export const Tablero = () => {
         setTiles(ultimoEvento.payload.board);
         setFiguras({
           ...figuras,
-          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(ultimoEvento.payload.ban_color),
+          color_prohibido:
+            ultimoEvento.payload.ban_color === null
+              ? "Ninguno"
+              : ServicioFigura.cambiarIdiomaColorFigura(
+                  ultimoEvento.payload.ban_color,
+                ),
         });
       }
       if (ultimoEvento.key === "PLAYER_RECEIVE_NEW_BOARD") {
@@ -56,7 +61,12 @@ export const Tablero = () => {
       if (ultimoEvento.key === "COMPLETED_FIGURE") {
         setFiguras({
           ...figuras,
-          color_prohibido: ultimoEvento.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(ultimoEvento.payload.ban_color),
+          color_prohibido:
+            ultimoEvento.payload.ban_color === null
+              ? "Ninguno"
+              : ServicioFigura.cambiarIdiomaColorFigura(
+                  ultimoEvento.payload.ban_color,
+                ),
         });
       }
     }
@@ -98,9 +108,9 @@ export const Tablero = () => {
             }));
           } catch (err) {
             console.error(err);
-            switch(err.status){
+            switch (err.status) {
               case 409:
-                if (tileColor !== figuras.color_prohibido){
+                if (tileColor !== figuras.color_prohibido) {
                   setMensajeAlerta("La figura es del color prohibido.");
                 } else {
                   setMensajeAlerta("La figura seleccionada es incorrecta.");

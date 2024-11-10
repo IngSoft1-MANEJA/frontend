@@ -46,8 +46,8 @@ describe("InformacionTurno", () => {
       <EventoContext.Provider value={eventoValue}>
         <FigurasContext.Provider value={mockFiguras}>
           <HabilitarAccionesUsuarioProvider>
-          <InformacionTurno {...Player} />
-        </HabilitarAccionesUsuarioProvider>
+            <InformacionTurno {...Player} />
+          </HabilitarAccionesUsuarioProvider>
         </FigurasContext.Provider>
       </EventoContext.Provider>,
     );
@@ -69,8 +69,8 @@ describe("InformacionTurno", () => {
       <EventoContext.Provider value={eventoValue}>
         <HabilitarAccionesUsuarioProvider>
           <FigurasContext.Provider value={mockFiguras}>
-          <InformacionTurno {...Player} />
-        </FigurasContext.Provider>
+            <InformacionTurno {...Player} />
+          </FigurasContext.Provider>
         </HabilitarAccionesUsuarioProvider>
       </EventoContext.Provider>,
     );

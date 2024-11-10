@@ -96,7 +96,7 @@ export const Registro = () => {
               {
                 mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
                 tipo: "evento",
-              }
+              },
             ]);
             break;
           case "PLAYER_LEFT":

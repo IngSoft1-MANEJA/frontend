@@ -27,6 +27,8 @@ export const Tablero = () => {
   const {
     cartaSeleccionada: cartaFiguraSeleccionada,
     setCartaSeleccionada: setCartaFiguraSeleccionada,
+    esCartaOponente : esCartaOponente,
+    setEsCartaOponente : setEsCartaOponente
   } = useContext(CompletarFiguraContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
@@ -58,7 +60,7 @@ export const Tablero = () => {
       if (ultimoEvento.key === "ALLOW_FIGURES") {
         agregarFiguras(ultimoEvento.payload);
       }
-      if (ultimoEvento.key === "COMPLETED_FIGURE") {
+      if (ultimoEvento.key === "COMPLETED_FIGURE" || ultimoEvento.key === "BLOCKED_FIGURE") {
         setFiguras({
           ...figuras,
           color_prohibido:
@@ -73,15 +75,14 @@ export const Tablero = () => {
   }, [ultimoEvento]);
 
   const manejarFiguraSeleccionadaEnClick = useCallback(
-    async (rowIndex, columnIndex, tileColor) => {
+    async (rowIndex, columnIndex, esCartaOponente, tileColor) => {
       const figura = ServicioMovimiento.obtenerFiguraDeFicha(
         rowIndex,
         columnIndex,
         figuras.figuras_actuales,
       );
-
       if (figura) {
-        if (tileColor !== figuras.color_prohibido) {
+        if(!esCartaOponente && (tileColor !== figuras.color_prohibido)){
           try {
             const respuesta = await ServicioPartida.completarFicha(
               match_id,
@@ -108,18 +109,41 @@ export const Tablero = () => {
             }));
           } catch (err) {
             console.error(err);
-            switch (err.status) {
-              case 409:
-                if (tileColor !== figuras.color_prohibido) {
-                  setMensajeAlerta("La figura es del color prohibido.");
-                } else {
-                  setMensajeAlerta("La figura seleccionada es incorrecta.");
-                }
-                break;
-              default:
-                setMensajeAlerta("Error al completar figura");
-                break;
-            }
+            setMensajeAlerta("Error al completar figura");
+            setMostrarAlerta(true);
+            setTimeout(() => {
+              setMostrarAlerta(false);
+            }, 1000);
+          }
+        } else if (esCartaOponente && (tileColor !== figuras.color_prohibido)) {
+          try {
+            const respuesta = await ServicioPartida.bloquearFicha(
+              match_id,
+              datosJugador.player_id,
+              cartaFiguraSeleccionada,
+              figura,
+            );
+
+            setCartaFiguraSeleccionada(null);
+
+            respuesta.movement_cards.forEach((cartaADeshacer) => {
+              setUsarMovimiento((prev) => ({
+                ...prev,
+                cartasUsadas: prev.cartasUsadas.filter(
+                  (carta) => carta[0] !== cartaADeshacer[0],
+                ),
+              }));
+            });
+
+            setUsarMovimiento((prev) => ({
+              ...prev,
+              cartasCompletadas:
+                prev.cartasUsadas.length - respuesta.movement_cards.length,
+            }));
+            
+          } catch (err) {
+            console.error(err);
+            setMensajeAlerta("Error al bloquear figura");
             setMostrarAlerta(true);
             setTimeout(() => {
               setMostrarAlerta(false);
@@ -139,7 +163,7 @@ export const Tablero = () => {
 
   const handleFichaClick = async (rowIndex, columnIndex, tileColor) => {
     if (cartaFiguraSeleccionada !== null) {
-      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex, tileColor);
+      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex, esCartaOponente, tileColor);
     }
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(

@@ -78,19 +78,22 @@ function repartirCartasFigura(
   oponentes,
   setOponentes,
   cartasFigurasCompletadas,
+  isBloqued
 ) {
-  //Setea cartas de figuras del jugador
+
+  // Setea cartas de figuras del jugador
   const jugadorData = ultimoEvento.payload.find(
     (jugador) => jugador.turn_order === miTurno,
   );
 
-  if (jugadorData) {
-    const cartasNoUsadas = cartasFiguras.filter(
-      (carta) => !cartasFigurasCompletadas.includes(carta[0]),
-    );
+  const cartasNoUsadas = cartasFiguras.filter(
+    (carta) => !cartasFigurasCompletadas.some(c => c === carta[0] || c[0] === carta[0]),
+  );
 
+  if (isBloqued) {
+    setCartasFiguras(cartasNoUsadas);
+  } else if (jugadorData) {
     const nuevasCartas = jugadorData.shape_cards;
-
     setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
   } else {
     console.log(
@@ -99,8 +102,9 @@ function repartirCartasFigura(
     );
   }
 
-  //Setea cartas de figuras de los oponentes
+  // Setea cartas de figuras de los oponentes
   const oponentesActualizados = (oponentes || []).map((oponenteExistente) => {
+
     const nuevo = ultimoEvento.payload.find(
       (oponente) => oponente.turn_order === oponenteExistente.turn_order,
     );
@@ -147,6 +151,7 @@ const claseCarta = (
   cartaMovSeleccionada,
   isPlayerTurn,
   cartasFigurasCompletadas,
+  bloqueada,
   habilitarAccionesUsuario,
 ) => {
   const efectoHover =
@@ -165,7 +170,7 @@ const claseCarta = (
     return deshabilitada;
   }
 
-  if (!isPlayerTurn || !habilitarAccionesUsuario) {
+  if (!isPlayerTurn || bloqueada || !habilitarAccionesUsuario) {
     return "";
   }
 
@@ -191,7 +196,9 @@ const seleccionarCarta = (
   cartaSeleccionada,
   setCartaSeleccionada,
   cartasFigurasCompletadas,
-  habilitarAccionesUsuario,
+  setEsCartaOponente,
+  esOponente,
+  habilitarAccionesUsuario
 ) => {
   if (
     !habilitarAccionesUsuario ||
@@ -208,6 +215,7 @@ const seleccionarCarta = (
     }
   } else {
     setCartaSeleccionada(cartaId);
+    setEsCartaOponente(esOponente);
   }
 };
 

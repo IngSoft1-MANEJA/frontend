@@ -251,4 +251,29 @@ export class ServicioPartida {
     const json = await respuesta.json();
     return json;
   }
+
+  static async bloquearFicha(idPartida, idJugador, idCartaFigura, figura) {
+    const respuesta = await fetch(
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/player/${idJugador}/block-figure`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          figure_id: idCartaFigura,
+          coordinates: figura,
+        }),
+      },
+    );
+
+    if (!respuesta.ok) {
+      throw new Error(
+        `Error al validar movimiento - estado: ${respuesta.status}`,
+      );
+    }
+
+    const json = await respuesta.json();
+    return json;
+  }
 }

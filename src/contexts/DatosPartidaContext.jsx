@@ -6,6 +6,8 @@ export const DatosPartidaProvider = ({ children }) => {
   const [datosPartida, setDatosPartida] = useState({
     max_players: 2,
     current_player_name: "",
+    opponents: [],
+    lastPlayerBlockedTurn : 0
   });
 
   return (

@@ -41,13 +41,13 @@ export const ListaPartidas = () => {
   return (
     <div>
       <h1 className="poiret-one-regular text-8xl pb-5">EL SWITCHER</h1>
-      <input
-        type="text"
-        placeholder="Buscar partida por nombre..."
-        onChange={cambiaBusqueda}
-        className="search-input" 
-      />
-      <div className="m-auto">
+      <div className="flex flex-row align-center justify-center items-center my-5">
+        <input
+          type="text"
+          placeholder="Buscar partida por nombre..."
+          onChange={cambiaBusqueda}
+          className="search-input" 
+        />
         <FiltrosDeBusqueda alFiltrarPorMaximoDeJugadores={filtrarPorMaximoJugadores} />
       </div>
       <div className="Partidas">

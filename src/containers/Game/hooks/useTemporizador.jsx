@@ -23,7 +23,7 @@ export const useTemporizador = (duracion) => {
   const [segundos, setSegundos] = useState(tiempoSegundos);
   const timerId = React.useRef(null);
 
-  const crearIntervalo = useCallback(() => {
+  const crearIntervalo = () => {
     if (timerId.current) {
       clearInterval(timerId.current);
       timerId.current = null;
@@ -31,6 +31,11 @@ export const useTemporizador = (duracion) => {
 
     const temporizador = setInterval(() => {
       setCuenta((prevTiempo) => {
+
+        if (prevTiempo === 0) {
+          return prevTiempo;
+        }
+
         const nuevoTiempo = prevTiempo - 1;
 
         const [minutosNuevos, segundosNuevos] = calcularTiempo(nuevoTiempo);
@@ -42,7 +47,7 @@ export const useTemporizador = (duracion) => {
     }, 1000);
 
     timerId.current = temporizador;
-  }, [timerId.current]);
+  };
 
   useEffect(() => {
     setCuenta(reiniciarCon.tiempo);
@@ -53,13 +58,6 @@ export const useTemporizador = (duracion) => {
       }
     };
   }, [reiniciarCon]);
-
-  useEffect(() => {
-    if (cuenta <= 0) {
-      clearInterval(timerId.current);
-      timerId.current = null;
-    }
-  }, [cuenta]);
 
   return { minutos, segundos, setReiniciarCon };
 };

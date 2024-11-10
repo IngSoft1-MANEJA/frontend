@@ -36,6 +36,7 @@ import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { ServicioFigura } from "../../../services/ServicioFigura.js";
+import { set } from "react-hook-form";
 
 const urlMap = {
   1: fig1,
@@ -73,6 +74,7 @@ export const CartasFiguras = () => {
   const [cartasBloqueadas, setCartasBloqueadas] = useState([])
   const [cartasMazo, setCartasMazo] = useState([]);
   const [oponentes, setOponentes] = useState([]);
+  const [bloqueado, setBloqueado] = useState(false);
   const { cartaSeleccionada, setCartaSeleccionada, esCartaOponente, setEsCartaOponente} = useContext(
     CompletarFiguraContext,
   );
@@ -103,9 +105,15 @@ export const CartasFiguras = () => {
         setCartasFigurasCompletadas([]);
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
+   
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
       } else if (ultimoEvento.key === "BLOCKED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
+       
+        if (miTurno === ultimoEvento.payload.player_turn){
+          setBloqueado(true);
+        }
+
         setCartasBloqueadas((prev) => [...prev, cartaId]);
       }
     }
@@ -115,9 +123,10 @@ export const CartasFiguras = () => {
     if (
       ultimoEvento &&
       (ultimoEvento.key === "PLAYER_RECIEVE_ALL_SHAPES" ||
-        ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD") &&
-      miTurno !== 0
+        ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD" ) && 
+      miTurno !== 0 
     ) {
+      
       ServicioFigura.repartirCartasFigura(
         ultimoEvento,
         miTurno,
@@ -126,6 +135,7 @@ export const CartasFiguras = () => {
         oponentes,
         setOponentes,
         cartasFigurasCompletadas,
+        bloqueado
       );
     }
   }, [ultimoEvento, miTurno]);

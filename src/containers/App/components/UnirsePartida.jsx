@@ -32,6 +32,9 @@ function UnirsePartida({ idPartida }) {
           setEstaCargando(false);
         } catch (error) {
           switch(error.status){
+            case 404:
+              setMensajeError("La partida no existe o ha sido cancelada.");
+              break;
             case 409:
               setMensajeError("La partida ya esta llena.");
               break;

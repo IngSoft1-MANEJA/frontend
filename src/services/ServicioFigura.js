@@ -55,6 +55,21 @@ function cartaStringName(carta) {
   }
 }
 
+function cambiarIdiomaColorFigura(carta) {
+  switch (carta) {
+    case "red":
+      return "rojo";
+    case "blue":
+      return "azul";
+    case "green":
+      return "verde";
+    case "yellow":
+      return "amarillo";
+    default:
+      return "Color no encontrado.";
+  }
+}
+
 function repartirCartasFigura(
   ultimoEvento,
   miTurno,
@@ -203,6 +218,7 @@ const seleccionarCarta = (
 
 export const ServicioFigura = {
   cartaStringName,
+  cambiarIdiomaColorFigura,
   ordenarOponentes,
   claseCarta,
   seleccionarCarta,

@@ -25,8 +25,7 @@ export const ListaPartidas = () => {
   }
 
   const filtrarPorMaximoJugadores = (maximoJugadores) => {
-    // TODO: revisar el key y payload con el back.
-    sendJsonMessage({ key: "FILTER_MATCH", payload: { "max_players": maximoJugadores } });
+    sendJsonMessage({ key: "FILTER_MATCHES", payload: { "max_players": maximoJugadores } });
   };
 
   return (

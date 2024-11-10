@@ -285,4 +285,122 @@ describe("Temporizador", () => {
     expect(segundosTexto).toHaveStyle("--value: 0");
     expect(mockSetHabilitarAccionesUsuario).toHaveBeenCalledTimes(1);
   });
+
+  it("deberia quedar el temporizador con tiempo restante 20 seg si el timestamp empezo hace 100 seg y llego END_PLAYER_TURN", () => {
+    const { rerender } = render(
+      <EventoProvider>
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
+    );
+
+    const minutos = screen.queryByText("min");
+    const segundos = screen.queryByText("seg");
+
+    expect(minutos).toBeInTheDocument();
+    expect(segundos).toBeInTheDocument();
+
+    const minutosTexto = minutos.firstChild.firstChild;
+    const segundosTexto = segundos.firstChild.firstChild;
+
+    expect(minutosTexto).toHaveStyle("--value: 2");
+    expect(segundosTexto).toHaveStyle("--value: 0");
+
+    act(() => {
+      jest.advanceTimersByTime(10000);
+    });
+
+    expect(minutosTexto).toHaveStyle("--value: 1");
+    expect(segundosTexto).toHaveStyle("--value: 50");
+
+    const timestamp = new Date(Date.now() - (120 - 20) * 1000).toISOString();
+    const mockEndOfTurn = {
+      ultimoEvento: {
+        key: WebsocketEvents.END_PLAYER_TURN,
+        payload: {
+          turn_started: timestamp,
+        },
+      },
+    };
+
+    rerender(
+      <EventoContext.Provider value={mockEndOfTurn}>
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoContext.Provider>
+    );
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    const nuevoMinutos = screen.queryByText("min");
+    const nuevoSegundos = screen.queryByText("seg");
+    const nuevoMinutosTexto = nuevoMinutos.firstChild.firstChild;
+    const nuevoSegundosTexto = nuevoSegundos.firstChild.firstChild;
+
+    expect(nuevoMinutosTexto).toHaveStyle("--value: 0");
+    expect(nuevoSegundosTexto).toHaveStyle("--value: 19");
+  });
+
+  it("deberia quedar el temporizador con tiempo restante 20 seg si el timestamp empezo hace 100 seg y llego GET_PLAYER_MATCH_INFO", () => {
+    const { rerender } = render(
+      <EventoProvider>
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoProvider>
+    );
+
+    const minutos = screen.queryByText("min");
+    const segundos = screen.queryByText("seg");
+
+    expect(minutos).toBeInTheDocument();
+    expect(segundos).toBeInTheDocument();
+
+    const minutosTexto = minutos.firstChild.firstChild;
+    const segundosTexto = segundos.firstChild.firstChild;
+
+    expect(minutosTexto).toHaveStyle("--value: 2");
+    expect(segundosTexto).toHaveStyle("--value: 0");
+
+    act(() => {
+      jest.advanceTimersByTime(10000);
+    });
+
+    expect(minutosTexto).toHaveStyle("--value: 1");
+    expect(segundosTexto).toHaveStyle("--value: 50");
+
+    const timestamp = new Date(Date.now() - (120 - 30) * 1000).toISOString();
+    const mockEndOfTurn = {
+      ultimoEvento: {
+        key: WebsocketEvents.GET_PLAYER_MATCH_INFO,
+        payload: {
+          turn_started: timestamp,
+        },
+      },
+    };
+
+    rerender(
+      <EventoContext.Provider value={mockEndOfTurn}>
+        <HabilitarAccionesUsuarioProvider>
+          <Temporizador />
+        </HabilitarAccionesUsuarioProvider>
+      </EventoContext.Provider>
+    );
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    const nuevoMinutos = screen.queryByText("min");
+    const nuevoSegundos = screen.queryByText("seg");
+    const nuevoMinutosTexto = nuevoMinutos.firstChild.firstChild;
+    const nuevoSegundosTexto = nuevoSegundos.firstChild.firstChild;
+
+    expect(nuevoMinutosTexto).toHaveStyle("--value: 0");
+    expect(nuevoSegundosTexto).toHaveStyle("--value: 29");
+  });
 });

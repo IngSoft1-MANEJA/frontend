@@ -3,6 +3,7 @@ import { EventoContext } from "../../../contexts/EventoContext";
 import { WebsocketEvents } from "../../../services/ServicioWebsocket";
 import { useTemporizador } from "../hooks/useTemporizador";
 import { HabilitarAccionesUsuarioContext } from "../../../contexts/habilitarAccionesUsuarioContext";
+import { calcularTiempoRestante } from "../../../services/Utilidades";
 
 const TIEMPO_DE_TURNO = 120; // 2 minutos
 
@@ -12,8 +13,13 @@ export const Temporizador = ({ duracion = TIEMPO_DE_TURNO }) => {
   const { setHabilitarAccionesUsuario } = useContext(HabilitarAccionesUsuarioContext);
 
   useEffect(() => {
-    if (ultimoEvento?.key === WebsocketEvents.END_PLAYER_TURN) {
-      setReiniciarCon({ tiempo: TIEMPO_DE_TURNO });
+    if (
+      ultimoEvento?.key === WebsocketEvents.END_PLAYER_TURN ||
+      ultimoEvento?.key === WebsocketEvents.GET_PLAYER_MATCH_INFO
+    ) {
+      const empezo = ultimoEvento.payload.turn_started;
+      const restante = calcularTiempoRestante(empezo, TIEMPO_DE_TURNO);
+      setReiniciarCon({ tiempo: restante });
     }
   }, [ultimoEvento]);
 

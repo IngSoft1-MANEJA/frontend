@@ -36,7 +36,9 @@ export const CartasMovimiento = () => {
     CompletarFiguraContext,
   );
   const { ultimoEvento } = useContext(EventoContext);
-  const { habilitarAccionesUsuario } = useContext(HabilitarAccionesUsuarioContext);
+  const { habilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
 
   useEffect(() => {
     if (ultimoEvento !== null) {

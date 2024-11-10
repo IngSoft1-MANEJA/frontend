@@ -10,7 +10,9 @@ const TIEMPO_DE_TURNO = 120; // 2 minutos
 export const Temporizador = ({ duracion = TIEMPO_DE_TURNO }) => {
   const { minutos, segundos, setReiniciarCon } = useTemporizador(duracion);
   const { ultimoEvento } = useContext(EventoContext);
-  const { setHabilitarAccionesUsuario } = useContext(HabilitarAccionesUsuarioContext);
+  const { setHabilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
 
   useEffect(() => {
     if (

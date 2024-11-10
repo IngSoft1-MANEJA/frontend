@@ -132,7 +132,7 @@ const claseCarta = (
   cartaMovSeleccionada,
   isPlayerTurn,
   cartasFigurasCompletadas,
-  habilitarAccionesUsuario
+  habilitarAccionesUsuario,
 ) => {
   const efectoHover =
     " hover:cursor-pointer" +
@@ -176,7 +176,7 @@ const seleccionarCarta = (
   cartaSeleccionada,
   setCartaSeleccionada,
   cartasFigurasCompletadas,
-  habilitarAccionesUsuario
+  habilitarAccionesUsuario,
 ) => {
   if (
     !habilitarAccionesUsuario ||

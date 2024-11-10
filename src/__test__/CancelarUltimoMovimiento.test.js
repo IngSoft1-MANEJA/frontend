@@ -73,7 +73,9 @@ describe("CancelarUltimoMovimiento", () => {
                   value={{ tiles: tiles.tiles, setTiles: tiles.setTiles }}
                 >
                   <CompletarFiguraProvider>
-                    <HabilitarAccionesUsuarioContext.Provider value={habilitarAccionesUsuario}>
+                    <HabilitarAccionesUsuarioContext.Provider
+                      value={habilitarAccionesUsuario}
+                    >
                       <CancelarUltimoMovimiento />
                     </HabilitarAccionesUsuarioContext.Provider>
                   </CompletarFiguraProvider>
@@ -82,7 +84,7 @@ describe("CancelarUltimoMovimiento", () => {
             </UsarMovimientoContext.Provider>
           </DatosJugadorContext.Provider>
         </FigurasContext.Provider>
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   };
 
@@ -124,7 +126,7 @@ describe("CancelarUltimoMovimiento", () => {
       {
         habilitarAccionesUsuario: false,
         setHabilitarAccionesUsuario: jest.fn(),
-      }
+      },
     );
     const boton = screen.getByRole("button");
     expect(boton).toBeDisabled();

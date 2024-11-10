@@ -18,7 +18,9 @@ export const TerminarTurno = () => {
     UsarMovimientoContext,
   );
   const { ultimoEvento } = useContext(EventoContext);
-  const {setHabilitarAccionesUsuario} = useContext(HabilitarAccionesUsuarioContext);
+  const { setHabilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("");

@@ -29,7 +29,9 @@ export function Game() {
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
-  const {setHabilitarAccionesUsuario} = useContext(HabilitarAccionesUsuarioContext);
+  const { setHabilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
   const [mensaje, setMensaje] = useState("");
   const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
   const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;

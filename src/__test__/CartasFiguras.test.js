@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  act,
-  cleanup,
-  render,
-  screen,
-} from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { useParams } from "react-router-dom";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { CartasFiguras } from "../containers/Game/components/CartasFiguras.jsx";
@@ -49,7 +44,7 @@ describe("CartasFiguras", () => {
     habilitarAccionesUsuario = {
       habilitarAccionesUsuario: true,
       setHabilitarAccionesUsuario: jest.fn(),
-    }
+    },
   ) => {
     const completarFiguraConContexto = (
       <CompletarFiguraContext.Provider value={completarFigura}>
@@ -69,11 +64,13 @@ describe("CartasFiguras", () => {
             <HabilitarAccionesUsuarioContext.Provider
               value={habilitarAccionesUsuario}
             >
-              {completarFigura ? completarFiguraConContexto : completarFiguraConProvider}
+              {completarFigura
+                ? completarFiguraConContexto
+                : completarFiguraConProvider}
             </HabilitarAccionesUsuarioContext.Provider>
           </UsarMovimientoContext.Provider>
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>
+      </DatosJugadorContext.Provider>,
     );
   };
 
@@ -117,7 +114,7 @@ describe("CartasFiguras", () => {
             </UsarMovimientoProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>
+      </DatosJugadorContext.Provider>,
     );
 
     rerender(
@@ -131,7 +128,7 @@ describe("CartasFiguras", () => {
             </UsarMovimientoProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>
+      </DatosJugadorContext.Provider>,
     );
 
     expect(screen.getByAltText("1")).toBeInTheDocument();
@@ -158,7 +155,7 @@ describe("CartasFiguras", () => {
             </UsarMovimientoProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
-      </DatosJugadorContext.Provider>
+      </DatosJugadorContext.Provider>,
     );
 
     expect(screen.queryByAltText("1")).not.toBeInTheDocument();
@@ -189,7 +186,7 @@ describe("CartasFiguras", () => {
     const { rerender } = renderComponent(
       render,
       datosJugadorContext,
-      eventoContext
+      eventoContext,
     );
 
     const eventoContext2 = {
@@ -215,7 +212,7 @@ describe("CartasFiguras", () => {
       eventoContext2,
       usarMovimiento,
       completarFigura,
-      habilitarAccionesUsuario
+      habilitarAccionesUsuario,
     );
     return rerender;
   };
@@ -235,7 +232,7 @@ describe("CartasFiguras", () => {
     expect(figure1).not.toHaveClass(hoverClass);
     expect(figure2).not.toHaveClass(hoverClass);
     expect(figure3).toHaveClass(
-      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
     );
   });
 
@@ -277,7 +274,7 @@ describe("CartasFiguras", () => {
     renderComponent(
       rerender,
       { datosJugador: { is_player_turn: false } },
-      { ultimoEvento: null }
+      { ultimoEvento: null },
     );
 
     const figure1 = getCard("1");
@@ -292,7 +289,7 @@ describe("CartasFiguras", () => {
     expect(figure2).not.toHaveClass(hoverClass);
     expect(figure3).not.toHaveClass(hoverClass);
     expect(figure3).not.toHaveClass(
-      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
     );
   });
 
@@ -302,7 +299,7 @@ describe("CartasFiguras", () => {
       rerender,
       { datosJugador: { is_player_turn: true } },
       { ultimoEvento: null },
-      { usarMovimiento: { cartaSeleccionada: [1, "Diagonal"] } }
+      { usarMovimiento: { cartaSeleccionada: [1, "Diagonal"] } },
     );
 
     const figure1 = getCard("1");
@@ -317,7 +314,7 @@ describe("CartasFiguras", () => {
     expect(figure2).toHaveClass(disabled);
     expect(figure3).toHaveClass(disabled);
     expect(figure3).not.toHaveClass(
-      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
     );
   });
 
@@ -335,13 +332,13 @@ describe("CartasFiguras", () => {
     expect(figure1).toHaveClass(disabled);
     expect(figure2).toHaveClass(disabled);
     expect(figure3).toHaveClass(
-      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
     );
 
     renderComponent(
       rerender,
       { datosJugador: { is_player_turn: false } },
-      { ultimoEvento: null }
+      { ultimoEvento: null },
     );
 
     expect(figure1.classList.length).toEqual(0);
@@ -370,7 +367,7 @@ describe("CartasFiguras", () => {
     expect(figure2).not.toHaveClass(hoverClass);
     expect(figure3).not.toHaveClass(hoverClass);
     expect(figure3).not.toHaveClass(
-      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105"
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
     );
 
     expect(mockSetCartaSeleccionada).not.toHaveBeenCalled();

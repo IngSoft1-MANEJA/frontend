@@ -52,7 +52,7 @@ describe("ServicioFigura", () => {
         setCartasFiguras,
         [{ turn_order: 2, shape_cards: [[3, "SNAKE"]] }],
         setOponentes,
-        cartasFigurasCompletadas
+        cartasFigurasCompletadas,
       );
 
       expect(setCartasFiguras).toHaveBeenCalledWith([
@@ -90,12 +90,12 @@ describe("ServicioFigura", () => {
         setCartasFiguras,
         [],
         setOponentes,
-        cartasFigurasCompletadas
+        cartasFigurasCompletadas,
       );
 
       expect(console.log).toHaveBeenCalledWith(
         "CartasFiguras - No se encontró jugador con turn_order:",
-        miTurno
+        miTurno,
       );
 
       expect(setCartasFiguras).not.toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe("ServicioFigura", () => {
       const resultado = ServicioFigura.ordenarOponentes(
         oponentes,
         maxPlayers,
-        miTurno
+        miTurno,
       );
       expect(resultado).toEqual([
         { turn_order: 4 },
@@ -133,7 +133,7 @@ describe("ServicioFigura", () => {
         null,
         true,
         [1],
-        true
+        true,
       );
       expect(resultado).toBe("opacity-25 pointer-events-none greyscale");
     });
@@ -145,7 +145,7 @@ describe("ServicioFigura", () => {
         null,
         true,
         [],
-        true
+        true,
       );
       expect(resultado).toContain("hover:cursor-pointer");
     });
@@ -156,7 +156,7 @@ describe("ServicioFigura", () => {
         null,
         true,
         [],
-       false 
+        false,
       );
       expect(resultado).toBe("");
     });
@@ -172,7 +172,7 @@ describe("ServicioFigura", () => {
         null,
         setCartaSeleccionada,
         [],
-        true
+        true,
       );
       expect(setCartaSeleccionada).toHaveBeenCalledWith(1);
     });
@@ -186,7 +186,7 @@ describe("ServicioFigura", () => {
         1,
         setCartaSeleccionada,
         [],
-        true
+        true,
       );
       expect(setCartaSeleccionada).toHaveBeenCalledWith(null);
     });
@@ -200,7 +200,7 @@ describe("ServicioFigura", () => {
         null,
         setCartaSeleccionada,
         [],
-        false
+        false,
       );
       expect(setCartaSeleccionada).not.toHaveBeenCalled();
     });

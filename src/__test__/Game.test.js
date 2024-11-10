@@ -79,7 +79,7 @@ describe("Game", () => {
             </DatosPartidaProvider>
           </DatosJugadorProvider>
         </EventoProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const fichasItem = screen.getAllByTestId("ficha");
@@ -115,7 +115,7 @@ describe("Game", () => {
               <TilesProvider>
                 <FigurasProvider>
                   <HabilitarAccionesUsuarioProvider>
-                  <Game />
+                    <Game />
                   </HabilitarAccionesUsuarioProvider>
                 </FigurasProvider>
               </TilesProvider>
@@ -166,7 +166,7 @@ describe("Game", () => {
             </DatosPartidaProvider>
           </DatosJugadorProvider>
         </EventoProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const modal = screen.queryByText(
@@ -216,7 +216,7 @@ describe("Game", () => {
             </DatosPartidaContext.Provider>
           </DatosJugadorContext.Provider>
         </EventoProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const button = screen.getByText("Volver al home");
@@ -263,7 +263,7 @@ describe("Game", () => {
             </DatosPartidaProvider>
           </DatosJugadorProvider>
         </EventoProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(mockFunc).toHaveBeenCalledWith(true);

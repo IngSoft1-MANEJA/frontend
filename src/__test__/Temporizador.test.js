@@ -22,7 +22,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     const minutos = screen.queryByText("min");
@@ -44,7 +44,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador duracion={95} />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     const minutos = screen.queryByText("min");
@@ -67,7 +67,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     await waitFor(() => {
@@ -82,7 +82,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador duracion={2} />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     const minutos = screen.queryByText("min");
@@ -111,7 +111,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador duracion={1} />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     const minutos = screen.queryByText("min");
@@ -147,7 +147,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     const minutos = screen.queryByText("min");
@@ -174,7 +174,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     act(() => {
@@ -202,7 +202,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     const minutos = screen.queryByText("min");
@@ -229,7 +229,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoContext.Provider>
+      </EventoContext.Provider>,
     );
 
     const nuevoMinutos = screen.queryByText("min");
@@ -252,7 +252,7 @@ describe("Temporizador", () => {
         >
           <Temporizador duracion={1} />
         </HabilitarAccionesUsuarioContext.Provider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     const minutos = screen.queryByText("min");
@@ -292,7 +292,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     const minutos = screen.queryByText("min");
@@ -329,7 +329,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoContext.Provider>
+      </EventoContext.Provider>,
     );
 
     act(() => {
@@ -351,7 +351,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoProvider>
+      </EventoProvider>,
     );
 
     const minutos = screen.queryByText("min");
@@ -388,7 +388,7 @@ describe("Temporizador", () => {
         <HabilitarAccionesUsuarioProvider>
           <Temporizador />
         </HabilitarAccionesUsuarioProvider>
-      </EventoContext.Provider>
+      </EventoContext.Provider>,
     );
 
     act(() => {

@@ -79,7 +79,9 @@ export const CartasFiguras = () => {
   const { usarMovimiento } = useContext(UsarMovimientoContext);
   const { datosJugador } = useContext(DatosJugadorContext);
   const { ultimoEvento } = useContext(EventoContext);
-  const { habilitarAccionesUsuario } = useContext(HabilitarAccionesUsuarioContext);
+  const { habilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
 
   useEffect(() => {
     if (ultimoEvento !== null) {
@@ -154,7 +156,7 @@ export const CartasFiguras = () => {
               usarMovimiento.cartaSeleccionada,
               datosJugador.is_player_turn,
               cartasFigurasCompletadas,
-              habilitarAccionesUsuario
+              habilitarAccionesUsuario,
             )}
             onClick={() =>
               ServicioFigura.seleccionarCarta(
@@ -164,7 +166,7 @@ export const CartasFiguras = () => {
                 cartaSeleccionada,
                 setCartaSeleccionada,
                 cartasFigurasCompletadas,
-                habilitarAccionesUsuario
+                habilitarAccionesUsuario,
               )
             }
           >

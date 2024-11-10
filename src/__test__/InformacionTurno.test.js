@@ -35,7 +35,7 @@ describe("InformacionTurno", () => {
         <HabilitarAccionesUsuarioProvider>
           <InformacionTurno {...Player} />
         </HabilitarAccionesUsuarioProvider>
-      </EventoContext.Provider>
+      </EventoContext.Provider>,
     );
     const turnoActual = screen.getByText("Player 1");
 
@@ -56,7 +56,7 @@ describe("InformacionTurno", () => {
         <HabilitarAccionesUsuarioProvider>
           <InformacionTurno {...Player} />
         </HabilitarAccionesUsuarioProvider>
-      </EventoContext.Provider>
+      </EventoContext.Provider>,
     );
     const turnoActual = screen.getByText("Player 1");
 

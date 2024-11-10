@@ -23,7 +23,9 @@ export const CancelarUltimoMovimiento = () => {
   const { cartaSeleccionada: cartaFiguraSeleccionada } = useContext(
     CompletarFiguraContext,
   );
-  const { habilitarAccionesUsuario } = useContext(HabilitarAccionesUsuarioContext);
+  const { habilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("Error");
 

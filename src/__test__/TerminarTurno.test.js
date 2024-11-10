@@ -9,7 +9,10 @@ import { DatosPartidaProvider } from "../contexts/DatosPartidaContext";
 import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext";
 import { EventoContext, EventoProvider } from "../contexts/EventoContext";
 import { ServicioPartida } from "../services/ServicioPartida";
-import { HabilitarAccionesUsuarioContext, HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext";
+import {
+  HabilitarAccionesUsuarioContext,
+  HabilitarAccionesUsuarioProvider,
+} from "../contexts/habilitarAccionesUsuarioContext";
 
 jest.mock("react-use-websocket");
 jest.mock("../services/ServicioPartida");
@@ -120,7 +123,7 @@ describe("TerminarTurno Component", () => {
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -156,7 +159,7 @@ describe("TerminarTurno Component", () => {
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     const button = screen.getByText("Terminar turno");
@@ -193,7 +196,7 @@ describe("TerminarTurno Component", () => {
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -229,7 +232,7 @@ describe("TerminarTurno Component", () => {
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     const alerta = screen.getByText("Turno de Player 1.");
@@ -265,7 +268,7 @@ describe("TerminarTurno Component", () => {
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
     setTimeout(() => {
       const alerta = screen.getByText("Player 1 ha terminado su turno.");
@@ -306,7 +309,7 @@ describe("TerminarTurno Component", () => {
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -342,14 +345,19 @@ describe("TerminarTurno Component", () => {
           >
             <EventoContext.Provider value={eventoValue}>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <HabilitarAccionesUsuarioContext.Provider value={{setHabilitarAccionesUsuario: mockSetHabilitarAccionesUsuario}}>
+                <HabilitarAccionesUsuarioContext.Provider
+                  value={{
+                    setHabilitarAccionesUsuario:
+                      mockSetHabilitarAccionesUsuario,
+                  }}
+                >
                   <TerminarTurno />
                 </HabilitarAccionesUsuarioContext.Provider>
               </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     expect(mockSetHabilitarAccionesUsuario).toHaveBeenCalledWith(false);
@@ -378,14 +386,19 @@ describe("TerminarTurno Component", () => {
           >
             <EventoContext.Provider value={eventoValue}>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <HabilitarAccionesUsuarioContext.Provider value={{setHabilitarAccionesUsuario: mockSetHabilitarAccionesUsuario}}>
+                <HabilitarAccionesUsuarioContext.Provider
+                  value={{
+                    setHabilitarAccionesUsuario:
+                      mockSetHabilitarAccionesUsuario,
+                  }}
+                >
                   <TerminarTurno />
                 </HabilitarAccionesUsuarioContext.Provider>
               </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>
+      </reactRouterDom.MemoryRouter>,
     );
 
     expect(mockSetHabilitarAccionesUsuario).toHaveBeenCalledWith(true);

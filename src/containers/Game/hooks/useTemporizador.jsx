@@ -31,7 +31,6 @@ export const useTemporizador = (duracion) => {
 
     const temporizador = setInterval(() => {
       setCuenta((prevTiempo) => {
-
         if (prevTiempo === 0) {
           return prevTiempo;
         }

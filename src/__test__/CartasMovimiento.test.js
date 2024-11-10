@@ -7,7 +7,10 @@ import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext.jsx";
 import CartasMovimiento from "../containers/Game/components/CartasMovimiento.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
 import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
-import { HabilitarAccionesUsuarioContext, HabilitarAccionesUsuarioProvider } from "../contexts/habilitarAccionesUsuarioContext.jsx";
+import {
+  HabilitarAccionesUsuarioContext,
+  HabilitarAccionesUsuarioProvider,
+} from "../contexts/habilitarAccionesUsuarioContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -66,7 +69,7 @@ describe("CartasMovimiento", () => {
             </CompletarFiguraProvider>
           </EventoContext.Provider>
         </DatosJugadorContext.Provider>
-      </UsarMovimientoContext.Provider>
+      </UsarMovimientoContext.Provider>,
     );
 
     expect(screen.getByAltText("Diagonal")).toBeInTheDocument();
@@ -95,7 +98,7 @@ describe("CartasMovimiento", () => {
             </CompletarFiguraProvider>
           </EventoContext.Provider>
         </DatosJugadorContext.Provider>
-      </UsarMovimientoContext.Provider>
+      </UsarMovimientoContext.Provider>,
     );
 
     expect(screen.queryByAltText("Diagonal")).not.toBeInTheDocument();
@@ -133,7 +136,7 @@ describe("CartasMovimiento", () => {
             </CompletarFiguraProvider>
           </EventoContext.Provider>
         </DatosJugadorContext.Provider>
-      </UsarMovimientoContext.Provider>
+      </UsarMovimientoContext.Provider>,
     );
 
     const cartaDiagonal = screen.getByAltText("Diagonal");
@@ -190,7 +193,7 @@ describe("CartasMovimiento", () => {
             </CompletarFiguraProvider>
           </EventoContext.Provider>
         </DatosJugadorContext.Provider>
-      </UsarMovimientoContext.Provider>
+      </UsarMovimientoContext.Provider>,
     );
 
     expect(screen.getByAltText("L")).toBeInTheDocument();
@@ -223,13 +226,15 @@ describe("CartasMovimiento", () => {
         <DatosJugadorContext.Provider value={mockDatosJugador}>
           <EventoContext.Provider value={eventoValue}>
             <CompletarFiguraProvider>
-              <HabilitarAccionesUsuarioContext.Provider value={{habilitarAccionesUsuario: false}}>
+              <HabilitarAccionesUsuarioContext.Provider
+                value={{ habilitarAccionesUsuario: false }}
+              >
                 <CartasMovimiento />
               </HabilitarAccionesUsuarioContext.Provider>
             </CompletarFiguraProvider>
           </EventoContext.Provider>
         </DatosJugadorContext.Provider>
-      </UsarMovimientoContext.Provider>
+      </UsarMovimientoContext.Provider>,
     );
 
     const cartaDiagonal = screen.getByAltText("Diagonal");

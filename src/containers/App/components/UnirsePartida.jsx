@@ -46,6 +46,9 @@ function UnirsePartida({ idPartida }) {
           case 422:
             setMensajeError("Nombre invalido.");
             break;
+          case 403:
+            setMensajeError("Contraseña invalida.")
+            break;
           default:
             setMensajeError("Error al unirse a partida");
             break;

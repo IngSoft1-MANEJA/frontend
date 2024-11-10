@@ -52,11 +52,6 @@ describe("CrearPartida", () => {
     jest.clearAllMocks();
   });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    jest.resetAllMocks();
-  });
-
   test("renders CrearPartida component", () => {
     render(
       <reactRouterDom.MemoryRouter>
@@ -318,6 +313,66 @@ describe("CrearPartida", () => {
         });
       }, 1500);
     });
+  });
+  test("fetch no es llamado cuando la contraseña es invalida", async () => {
+    render(
+      <reactRouterDom.MemoryRouter>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
+      </reactRouterDom.MemoryRouter>,
+    );
+
+
+    const openButton = screen.getByText("Crear sala");
+    fireEvent.click(openButton);
+
+
+    const nombreJugadorInput = screen.getByLabelText("nombreJugador");
+    const nombreSalaInput = screen.getByLabelText("nombreSala");
+    const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
+    const contraseñaInput = screen.getByLabelText("contraseña");
+    const submitButton = screen.getByText("Crear sala");
+
+
+    fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
+
+
+    await userEvent.type(
+      nombreJugadorInput,
+      CrearPartidaMockErrorConContraseña.nombreJugador,
+    );
+    await userEvent.type(nombreSalaInput, CrearPartidaMockErrorConContraseña.nombreSala);
+    await userEvent.type(
+      cantidadJugadoresInput,
+      CrearPartidaMockErrorConContraseña.cantidadJugadores.toString(),
+    );
+    await userEvent.type(
+      contraseñaInput,
+      CrearPartidaMockErrorConContraseña.contraseña
+    )
+
+
+    await waitFor(() => {
+      expect(nombreJugadorInput).toHaveValue(
+        CrearPartidaMockErrorConContraseña.nombreJugador,
+      );
+      expect(nombreSalaInput).toHaveValue(CrearPartidaMockErrorConContraseña.nombreSala);
+      expect(cantidadJugadoresInput).toHaveValue(
+        CrearPartidaMockErrorConContraseña.cantidadJugadores,
+      );
+      expect(contraseñaInput).toHaveValue(
+        CrearPartidaMockErrorConContraseña.contraseña
+      )
+    });
+
+
+    fireEvent.click(submitButton);
+
+
+    expect(fetch).not.toHaveBeenCalled();
   });
   test("Fetch se ejecuta correctamente en partidas con constraseña", async () => {
     render(

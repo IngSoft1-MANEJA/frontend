@@ -91,7 +91,7 @@ export const FiltrosDeBusqueda = ({ alFiltrarPorMaximoDeJugadores }) => {
             className="btn btn-xs btn-circle btn-ghost ml-2"
             onClick={eliminarBadge}
           >
-            ✕
+            x
           </button>
         </div>
       )}

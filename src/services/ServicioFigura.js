@@ -55,6 +55,21 @@ function cartaStringName(carta) {
   }
 }
 
+function cambiarIdiomaColorFigura(carta) {
+  switch (carta) {
+    case "red":
+      return "rojo";
+    case "blue":
+      return "azul";
+    case "green":
+      return "verde";
+    case "yellow":
+      return "amarillo";
+    default:
+      return "Color no encontrado.";
+  }
+}
+
 function repartirCartasFigura(
   ultimoEvento,
   miTurno,
@@ -132,6 +147,7 @@ const claseCarta = (
   cartaMovSeleccionada,
   isPlayerTurn,
   cartasFigurasCompletadas,
+  habilitarAccionesUsuario,
 ) => {
   const efectoHover =
     " hover:cursor-pointer" +
@@ -149,7 +165,7 @@ const claseCarta = (
     return deshabilitada;
   }
 
-  if (!isPlayerTurn) {
+  if (!isPlayerTurn || !habilitarAccionesUsuario) {
     return "";
   }
 
@@ -175,8 +191,10 @@ const seleccionarCarta = (
   cartaSeleccionada,
   setCartaSeleccionada,
   cartasFigurasCompletadas,
+  habilitarAccionesUsuario,
 ) => {
   if (
+    !habilitarAccionesUsuario ||
     !isPlayerTurn ||
     cartaMovSeleccionada !== null ||
     cartasFigurasCompletadas.includes(cartaId)
@@ -195,6 +213,7 @@ const seleccionarCarta = (
 
 export const ServicioFigura = {
   cartaStringName,
+  cambiarIdiomaColorFigura,
   ordenarOponentes,
   claseCarta,
   seleccionarCarta,

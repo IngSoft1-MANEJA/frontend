@@ -21,7 +21,9 @@ export class ServicioPartida {
     );
 
     if (!respuesta.ok) {
-      const error = new Error(`Error al unirse a partida - estado: ${respuesta.status}`);
+      const error = new Error(
+        `Error al unirse a partida - estado: ${respuesta.status}`,
+      );
       error.status = respuesta.status;
       throw error;
     }
@@ -247,9 +249,11 @@ export class ServicioPartida {
     );
 
     if (!respuesta.ok) {
-      throw new Error(
+      const error = new Error(
         `Error al validar movimiento - estado: ${respuesta.status}`,
       );
+      error.status = respuesta.status;
+      throw error;
     }
 
     const json = await respuesta.json();

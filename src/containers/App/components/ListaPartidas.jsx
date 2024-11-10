@@ -25,7 +25,7 @@ export const ListaPartidas = () => {
 
   function cambiaBusqueda(event) {
     setBuscarTermino(event.target.value);
-    filtrarPorNombrePartida(event.target.value); 
+    filtrarPorNombrePartida(buscarTermino); 
   }
 
   const filtrarPorNombrePartida = (nombrePartida) => {

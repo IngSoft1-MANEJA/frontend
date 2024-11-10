@@ -7,3 +7,11 @@
 .registro-container-inner {
   border-radius: 5px;
 }
+
+.chatbox {
+  height: 90%;
+}
+
+.textarea {
+  height: 10%;
+}

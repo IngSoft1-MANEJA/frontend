@@ -8,6 +8,7 @@ export const DatosJugadorProvider = ({ children }) => {
     player_id: null,
     player_turn: null,
     is_player_turn: false,
+    player_name: null,
   });
 
   return (

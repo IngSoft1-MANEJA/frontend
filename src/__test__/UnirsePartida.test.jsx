@@ -226,6 +226,7 @@ describe("UnirsePartida", () => {
       expect(mockSetDatosJugador).toHaveBeenCalledWith({
         is_owner: false,
         player_id: 2,
+        player_name: "test",
       });
     });
   });

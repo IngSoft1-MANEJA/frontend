@@ -26,7 +26,11 @@ describe("Registro Component", () => {
     is_owner: true,
     player_name: "Player1",
   };
-  const datosPartidaMock = { current_player_name: "Player1" };
+  const datosPartidaMock = { 
+    current_player_name: "Player1", 
+    opponents: [{ turn_order: 2, player_name: "Player2" }],
+    lastPlayerBlockedTurn: 2,
+  };
   const setRegistroMock = jest.fn();
   const sendJsonMessageMock = jest.fn();
   jest.useFakeTimers();
@@ -267,5 +271,111 @@ describe("Registro Component", () => {
 
       expect(textarea.value).toBe("");
     });
+  });
+  
+  it("debería mostrar el mensaje cuando el jugador recibe un nuevo tablero", async () => {
+    const eventoMock = {
+      key: "PLAYER_RECEIVE_NEW_BOARD",
+      payload: {
+        turn_order: 1,
+        player_name: "Player1",
+      },
+    };
+  
+    renderRegistro(eventoMock);
+  
+    act(() => {
+      jest.advanceTimersByTime(150);
+    });
+  
+    await waitFor(() =>
+      expect(
+        screen.getByText('El jugador "Player1" ha realizado un movimiento.'),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it("debería mostrar el mensaje cuando el jugador completa una figura", async () => {
+    const eventoMock = {
+      key: "COMPLETED_FIGURE",
+      payload: {
+        figure_name: 1,
+        turn_order: 1,
+        player_name: "Player1",
+        ban_color: "red",
+      },
+    };
+  
+    renderRegistro(eventoMock);
+  
+    act(() => {
+      jest.advanceTimersByTime(150);
+    });
+  
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          'El jugador "Player1" ha completado la figura "T_90".',
+        ),
+      ).toBeInTheDocument(),
+    );
+  
+    await waitFor(() =>
+      expect(
+        screen.getByText("Nuevo color prohibido: rojo."),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it("debería mostrar el mensaje cuando el jugador bloquea una figura", async () => {
+    const eventoMock = {
+      key: "BLOCKED_FIGURE",
+      payload: {
+        figure_name: 1,
+        ban_color: "blue",
+      },
+    };
+  
+    renderRegistro(eventoMock);
+  
+    act(() => {
+      jest.advanceTimersByTime(150);
+    });
+  
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          'El jugador "Player1" ha bloqueado la figura "T_90" del jugador "Player2".',
+        ),
+      ).toBeInTheDocument(),
+    );
+  
+    await waitFor(() =>
+      expect(
+        screen.getByText("Nuevo color prohibido: azul."),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it("debería mostrar el mensaje cuando un jugador abandona la partida", async () => {
+    const eventoMock = {
+      key: "PLAYER_LEFT",
+      payload: {
+        name: "Player1",
+        turn_order: 1,
+      },
+    };
+  
+    renderRegistro(eventoMock);
+  
+    act(() => {
+      jest.advanceTimersByTime(150);
+    });
+  
+    await waitFor(() =>
+      expect(
+        screen.getByText('El jugador "Player1" ha abandonado la partida.'),
+      ).toBeInTheDocument(),
+    );
   });
 });

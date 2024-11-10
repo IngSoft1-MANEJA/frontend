@@ -78,16 +78,18 @@ function repartirCartasFigura(
   oponentes,
   setOponentes,
   cartasFigurasCompletadas,
-  isBloqued
+  isBloqued,
 ) {
-
   // Setea cartas de figuras del jugador
   const jugadorData = ultimoEvento.payload.find(
     (jugador) => jugador.turn_order === miTurno,
   );
 
   const cartasNoUsadas = cartasFiguras.filter(
-    (carta) => !cartasFigurasCompletadas.some(c => c === carta[0] || c[0] === carta[0]),
+    (carta) =>
+      !cartasFigurasCompletadas.some(
+        (c) => c === carta[0] || c[0] === carta[0],
+      ),
   );
 
   if (isBloqued) {
@@ -104,7 +106,6 @@ function repartirCartasFigura(
 
   // Setea cartas de figuras de los oponentes
   const oponentesActualizados = (oponentes || []).map((oponenteExistente) => {
-
     const nuevo = ultimoEvento.payload.find(
       (oponente) => oponente.turn_order === oponenteExistente.turn_order,
     );
@@ -170,7 +171,7 @@ const claseCarta = (
     return deshabilitada;
   }
 
-  if(cartaMovSeleccionada !== null && bloqueada) {
+  if (cartaMovSeleccionada !== null && bloqueada) {
     return deshabilitada;
   }
 
@@ -178,7 +179,7 @@ const claseCarta = (
     return "";
   }
 
-  if (cartaMovSeleccionada !== null ) {
+  if (cartaMovSeleccionada !== null) {
     return deshabilitada;
   }
 
@@ -203,12 +204,12 @@ const seleccionarCarta = (
   setEsCartaOponente,
   esOponente,
   bloqueada,
-  habilitarAccionesUsuario
+  habilitarAccionesUsuario,
 ) => {
   if (
     !habilitarAccionesUsuario ||
     !isPlayerTurn ||
-    cartaMovSeleccionada !== null || 
+    cartaMovSeleccionada !== null ||
     bloqueada ||
     cartasFigurasCompletadas.includes(cartaId)
   ) {

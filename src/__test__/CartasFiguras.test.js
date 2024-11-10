@@ -62,16 +62,16 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={datosJugador}>
         <EventoContext.Provider value={evento}>
           <DatosPartidaProvider>
-              <UsarMovimientoContext.Provider value={usarMovimiento}>
+            <UsarMovimientoContext.Provider value={usarMovimiento}>
               <HabilitarAccionesUsuarioContext.Provider
-              value={habilitarAccionesUsuario}
-            >
-              {completarFigura
-                ? completarFiguraConContexto
-                : completarFiguraConProvider}
-            </HabilitarAccionesUsuarioContext.Provider>
+                value={habilitarAccionesUsuario}
+              >
+                {completarFigura
+                  ? completarFiguraConContexto
+                  : completarFiguraConProvider}
+              </HabilitarAccionesUsuarioContext.Provider>
             </UsarMovimientoContext.Provider>
-            </DatosPartidaProvider>
+          </DatosPartidaProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
     );
@@ -115,7 +115,7 @@ describe("CartasFiguras", () => {
                 <HabilitarAccionesUsuarioProvider>
                   <CartasFiguras />
                 </HabilitarAccionesUsuarioProvider>
-            </UsarMovimientoProvider>
+              </UsarMovimientoProvider>
             </DatosPartidaProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
@@ -131,7 +131,7 @@ describe("CartasFiguras", () => {
                 <HabilitarAccionesUsuarioProvider>
                   <CartasFiguras />
                 </HabilitarAccionesUsuarioProvider>
-            </UsarMovimientoProvider>
+              </UsarMovimientoProvider>
             </DatosPartidaProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
@@ -160,7 +160,7 @@ describe("CartasFiguras", () => {
                 <HabilitarAccionesUsuarioProvider>
                   <CartasFiguras />
                 </HabilitarAccionesUsuarioProvider>
-            </UsarMovimientoProvider>
+              </UsarMovimientoProvider>
             </DatosPartidaProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>

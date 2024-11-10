@@ -11,6 +11,7 @@ import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { CartasFiguras } from "../containers/Game/components/CartasFiguras.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
 import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
+import { DatosPartidaProvider } from "../contexts/DatosPartidaContext.jsx";
 import {
   UsarMovimientoContext,
   UsarMovimientoProvider,
@@ -43,11 +44,13 @@ describe("CartasFiguras", () => {
     return renderFunc(
       <DatosJugadorContext.Provider value={datosJugador}>
         <EventoContext.Provider value={evento}>
-          <CompletarFiguraProvider>
-            <UsarMovimientoContext.Provider value={usarMovimiento}>
-              <CartasFiguras />
-            </UsarMovimientoContext.Provider>
-          </CompletarFiguraProvider>
+          <DatosPartidaProvider>
+            <CompletarFiguraProvider>
+              <UsarMovimientoContext.Provider value={usarMovimiento}>
+                <CartasFiguras />
+              </UsarMovimientoContext.Provider>
+            </CompletarFiguraProvider>
+          </DatosPartidaProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
     );
@@ -86,9 +89,11 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={mockInfoJugador}>
           <CompletarFiguraProvider>
-            <UsarMovimientoProvider>
-              <CartasFiguras />
-            </UsarMovimientoProvider>
+            <DatosPartidaProvider>
+              <UsarMovimientoProvider>
+                <CartasFiguras />
+              </UsarMovimientoProvider>
+            </DatosPartidaProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -98,9 +103,11 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={mockEvento}>
           <CompletarFiguraProvider>
-            <UsarMovimientoProvider>
-              <CartasFiguras />
-            </UsarMovimientoProvider>
+            <DatosPartidaProvider>
+              <UsarMovimientoProvider>
+                <CartasFiguras />
+              </UsarMovimientoProvider>
+            </DatosPartidaProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -123,9 +130,11 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={eventoValue}>
           <CompletarFiguraProvider>
-            <UsarMovimientoProvider>
-              <CartasFiguras />
-            </UsarMovimientoProvider>
+            <DatosPartidaProvider>
+              <UsarMovimientoProvider>
+                <CartasFiguras />
+              </UsarMovimientoProvider>
+            </DatosPartidaProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,

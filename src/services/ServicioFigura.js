@@ -87,7 +87,7 @@ function repartirCartasFigura(
   );
 
   const cartasNoUsadas = cartasFiguras.filter(
-    (carta) => !cartasFigurasCompletadas.includes(carta[0]),
+    (carta) => !cartasFigurasCompletadas.some(c => c === carta[0] || c[0] === carta[0]),
   );
 
   if (isBloqued) {

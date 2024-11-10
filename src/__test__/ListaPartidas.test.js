@@ -158,63 +158,22 @@ describe("ListarPartidas", () => {
   });
     
 
-  test("debe enviar un request a la API para listar partidas por cantidad de jugadores", () => {
-    const fetchSpy = jest.spyOn(global, "fetch");
-    const mockLista = [
-      {
-        id: 1,
-        match_id: 1,
-        max_players: 3,
-        current_players: 2,
-        match_name: "Partida filtrada 1",
-      },
-      {
-        id: 2,
-        match_id: 2,
-        max_players: 4,
-        current_players: 2,
-        match_name: "Partida filtrada 2",
-      },
-    ];
-    fetchSpy.mockResolvedValue(mockLista);
+  test("debe llamar a sendJsonMessage al filtrar por maximo de jugadores", () => {
+    const mockSendJsonMessage = jest.fn();
+    useWebSocket.mockImplementation((url) => ({
+      lastJsonMessage: null,
+      sendJsonMessage: mockSendJsonMessage,
+    }));
 
-    render(
-      <DatosPartidaProvider>
-        <DatosJugadorProvider>
-          <ListaPartidas />
-        </DatosJugadorProvider>
-      </DatosPartidaProvider>
-    );
+    customRender();    
 
-    const botonDropdown = screen.getByText(/Filtrar/i);
+    const filtroDeJugadores = screen.getByPlaceholderText(/Número de jugadores/i);
+    fireEvent.change(filtroDeJugadores, { target: { value: "2" } });
+    fireEvent.click(screen.getByText("Filtrar"));
 
-    act(() => {
-      fireEvent.click(botonDropdown);
+    expect(mockSendJsonMessage).toHaveBeenCalledWith({
+      key: "FILTER_MATCHES",
+      payload: { max_players: "2" },
     });
-
-    const dropdown = screen.getByText(/Máximo de Jugadores/).parentNode.parentNode;
-    const filtroJugadores = dropdown.querySelector("input");
-    const botonFiltrar = dropdown.querySelector("button");
-
-    act(() => {
-      fireEvent.change(filtroJugadores, { target: { value: "2" } });
-      fireEvent.click(botonFiltrar);
-    });
-
-    expect(fetchSpy).toHaveBeenCalledWith(`${BACKEND_URL}/matches?max_players=2`);
-
-    mockLista.forEach((partida) => {
-      expect(
-        screen.getByText(partida.match_id.toString()),
-      ).toBeInTheDocument();
-      expect(screen.getByText(partida.match_name)).toBeInTheDocument();
-      expect(
-        screen.getByText(partida.current_players.toString()),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(partida.max_players.toString()),
-      ).toBeInTheDocument();
-    });
-
   });
 });

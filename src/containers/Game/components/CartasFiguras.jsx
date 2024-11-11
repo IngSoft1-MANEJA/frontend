@@ -96,6 +96,11 @@ export const CartasFiguras = () => {
             ultimoEvento.payload.deck_size,
           ),
         );
+        
+        if (ultimoEvento.payload.blocked_figures) {
+          setCartasBloqueadas(ultimoEvento.payload.blocked_figure.id);
+        }
+
       } else if (ultimoEvento.key === "END_PLAYER_TURN") {
         setCartasMazo((prevCartasMazo) => {
           const nuevasCartasMazo = [...prevCartasMazo];

@@ -90,9 +90,7 @@ function repartirCartasFigura(
     (carta) => !cartasFigurasCompletadas.some(c => c === carta[0] || c[0] === carta[0]),
   );
 
-  if (isBloqued) {
-    setCartasFiguras(cartasNoUsadas);
-  } else if (jugadorData) {
+  if (jugadorData) {
     const nuevasCartas = jugadorData.shape_cards;
     setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
   } else {

@@ -12,8 +12,8 @@ import { CrearPartida } from "../containers/App/components/CrearPartida.jsx";
 import {
   CrearPartidaMock,
   CrearPartidaMockError,
-  CrearPartidaMockErrorConContraseña,
-  CrearPartidaMockConContraseña
+  CrearPartidaMockErrorConClave,
+  CrearPartidaMockConClave
 } from "../__mocks__/CrearPartidaForm.mock.js";
 import * as reactRouterDom from "react-router-dom";
 import { BACKEND_URL } from "../variablesConfiguracion.js";
@@ -37,7 +37,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () =>
-      Promise.resolve({ player_name: "test", match_id: 1, player_id: 2 }),
+      Promise.resolve({ player_name: "test", match_id: 1, player_id: 2}),
   }),
 );
 
@@ -310,11 +310,12 @@ describe("CrearPartida", () => {
         expect(mockSetDatosJugador).toHaveBeenCalledWith({
           is_owner: true,
           player_id: 2,
+          player_name: CrearPartidaMock.nombreJugador
         });
       }, 1500);
     });
   });
-  test("fetch no es llamado cuando la contraseña es invalida", async () => {
+  test("fetch no es llamado cuando la clave es invalida", async () => {
     render(
       <reactRouterDom.MemoryRouter>
         <DatosPartidaProvider>
@@ -325,7 +326,7 @@ describe("CrearPartida", () => {
       </reactRouterDom.MemoryRouter>,
     );
 
-
+    console.error(CrearPartidaMockErrorConClave.clave);
     const openButton = screen.getByText("Crear sala");
     fireEvent.click(openButton);
 
@@ -333,7 +334,7 @@ describe("CrearPartida", () => {
     const nombreJugadorInput = screen.getByLabelText("nombreJugador");
     const nombreSalaInput = screen.getByLabelText("nombreSala");
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
-    const contraseñaInput = screen.getByLabelText("contraseña");
+    const claveInput = screen.getByLabelText("clave");
     const submitButton = screen.getByText("Crear sala");
 
 
@@ -342,29 +343,31 @@ describe("CrearPartida", () => {
 
     await userEvent.type(
       nombreJugadorInput,
-      CrearPartidaMockErrorConContraseña.nombreJugador,
+      CrearPartidaMockErrorConClave.nombreJugador,
     );
-    await userEvent.type(nombreSalaInput, CrearPartidaMockErrorConContraseña.nombreSala);
+    await userEvent.type(nombreSalaInput, CrearPartidaMockErrorConClave.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMockErrorConContraseña.cantidadJugadores.toString(),
+      CrearPartidaMockErrorConClave.cantidadJugadores.toString(),
     );
     await userEvent.type(
-      contraseñaInput,
-      CrearPartidaMockErrorConContraseña.contraseña
+      claveInput,
+      CrearPartidaMockErrorConClave.clave
     )
+
+    console.error("Print3 :", claveInput);
 
 
     await waitFor(() => {
       expect(nombreJugadorInput).toHaveValue(
-        CrearPartidaMockErrorConContraseña.nombreJugador,
+        CrearPartidaMockErrorConClave.nombreJugador,
       );
-      expect(nombreSalaInput).toHaveValue(CrearPartidaMockErrorConContraseña.nombreSala);
+      expect(nombreSalaInput).toHaveValue(CrearPartidaMockErrorConClave.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMockErrorConContraseña.cantidadJugadores,
+        CrearPartidaMockErrorConClave.cantidadJugadores,
       );
-      expect(contraseñaInput).toHaveValue(
-        CrearPartidaMockErrorConContraseña.contraseña
+      expect(claveInput).toHaveValue(
+        CrearPartidaMockErrorConClave.clave
       )
     });
 
@@ -374,7 +377,7 @@ describe("CrearPartida", () => {
 
     expect(fetch).not.toHaveBeenCalled();
   });
-  test("Fetch se ejecuta correctamente en partidas con constraseña", async () => {
+  test("Fetch se ejecuta correctamente en partidas con clave", async () => {
     render(
       <reactRouterDom.MemoryRouter>
         <DatosPartidaProvider>
@@ -391,30 +394,30 @@ describe("CrearPartida", () => {
     const nombreJugadorInput = screen.getByLabelText("nombreJugador");
     const nombreSalaInput = screen.getByLabelText("nombreSala");
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
-    const contraseñaInput = screen.getByLabelText("contraseña")
+    const claveInput = screen.getByLabelText("clave")
     const submitButton = screen.getByText("Crear Sala de Partida");
 
     expect(nombreJugadorInput).toHaveValue("");
     expect(nombreSalaInput).toHaveValue("");
     expect(cantidadJugadoresInput).toHaveValue(2);
     fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
-    expect(contraseñaInput).toHaveValue("");
+    expect(claveInput).toHaveValue("");
 
-    await userEvent.type(nombreJugadorInput, CrearPartidaMockConContraseña.nombreJugador);
-    await userEvent.type(nombreSalaInput, CrearPartidaMockConContraseña.nombreSala);
+    await userEvent.type(nombreJugadorInput, CrearPartidaMockConClave.nombreJugador);
+    await userEvent.type(nombreSalaInput, CrearPartidaMockConClave.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
-      CrearPartidaMockConContraseña.cantidadJugadores.toString(),
+      CrearPartidaMockConClave.cantidadJugadores.toString(),
     );
-    await userEvent.type(contraseñaInput,CrearPartidaMockConContraseña.contraseña )
+    await userEvent.type(claveInput,CrearPartidaMockConClave.clave )
 
     await waitFor(() => {
-      expect(nombreJugadorInput).toHaveValue(CrearPartidaMockConContraseña.nombreJugador);
-      expect(nombreSalaInput).toHaveValue(CrearPartidaMockConContraseña.nombreSala);
+      expect(nombreJugadorInput).toHaveValue(CrearPartidaMockConClave.nombreJugador);
+      expect(nombreSalaInput).toHaveValue(CrearPartidaMockConClave.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMockConContraseña.cantidadJugadores,
+        CrearPartidaMockConClave.cantidadJugadores,
       );
-      expect(contraseñaInput).toHaveValue(CrearPartidaMockConContraseña.contraseña)
+      expect(claveInput).toHaveValue(CrearPartidaMockConClave.clave)
     });
 
     fireEvent.click(submitButton);

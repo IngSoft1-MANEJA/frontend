@@ -7,7 +7,7 @@ import "./UnirsePartida.css";
 
 function UnirsePartida({ idPartida }) {
   const [nombreUsuario, setNombreUsuario] = useState("");
-  const [contraseña, setContraseña] = useState("");
+  const [clave, setClave] = useState("");
   const [mensajeError, setMensajeError] = useState("");
   const [estaCargando, setEstaCargando] = useState(false);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
@@ -23,7 +23,7 @@ function UnirsePartida({ idPartida }) {
         const dataPartida = await ServicioPartida.unirsePartida(
           idPartida,
           nombreUsuario,
-          contraseña
+          clave
         );
 
         setDatosJugador({
@@ -47,7 +47,7 @@ function UnirsePartida({ idPartida }) {
             setMensajeError("Nombre invalido.");
             break;
           case 403:
-            setMensajeError("Contraseña invalida.")
+            setMensajeError("Clave invalida.")
             break;
           default:
             setMensajeError("Error al unirse a partida");
@@ -118,14 +118,14 @@ function UnirsePartida({ idPartida }) {
               {!datosPartida.is_public && (
                 <label className="form-control mb-6">
                   <div className="label">
-                    <span className="label-text">Contraseña</span>
+                    <span className="label-text">Clave</span>
                   </div>
                   <input
                     className="input input-bordered"
                     type="password"
-                    placeholder="Contraseña"
-                    value={contraseña}
-                    onChange={(e) => setContraseña(e.target.value)}
+                    placeholder="Clave"
+                    value={clave}
+                    onChange={(e) => setClave(e.target.value)}
                   />
                 </label>
               )}

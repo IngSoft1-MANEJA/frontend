@@ -2,7 +2,7 @@ export const CrearPartidaMock = {
   nombreJugador: "nombreJugador",
   nombreSala: "nombreSala",
   cantidadJugadores: 3,
-  contraseña: "",
+  clave: "",
 };
 
 export const CrearPartidaMockError = {
@@ -10,15 +10,15 @@ export const CrearPartidaMockError = {
     "nombreJugadorEsDemasiadoLargoParaSerUsadoEnElCampoDeNombreJugador",
   nombreSala: "nombreSala",
   cantidadJugadores: 74,
-  contraseña: "",
+  clave: "",
 };
 
-export const CrearPartidaMockConContraseña = {
+export const CrearPartidaMockConClave = {
   ...CrearPartidaMock,
-  contraseña: "123456",
+  clave: "123456",
 };
 
-export const CrearPartidaMockErrorConContraseña = {
+export const CrearPartidaMockErrorConClave = {
   ...CrearPartidaMockError,
-  contraseña: "contraseñaQueSuperaLos50CaracteresDeLimiteParaLaContraseña",
+  clave: "contraseñaQueSuperaLos50CaracteresDeLimiteParaLaContraseña",
 };

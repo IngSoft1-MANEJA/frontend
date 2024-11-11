@@ -35,14 +35,14 @@ export const CrearPartida = () => {
       nombreJugador: "",
       nombreSala: "",
       cantidadJugadores: 2,
-      contraseña: "",
+      clave: "",
     },
   });
 
   const nombreJugadorWatch = watch("nombreJugador");
   const nombreSalaWatch = watch("nombreSala");
   const cantidadJugadoresWatch = watch("cantidadJugadores");
-  const contraseñaWatch = watch("contraseña")
+  const claveWatch = watch("clave")
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ export const CrearPartida = () => {
           nombreSalaWatch,
           nombreJugadorWatch,
           cantidadJugadoresWatch,
-          contraseñaWatch,
+          claveWatch,
         );
         console.log(resJson);
         reset();
@@ -76,7 +76,7 @@ export const CrearPartida = () => {
             max_players: cantidadJugadoresWatch,
           });
         }
-        if ( contraseñaWatch !== null ) {
+        if ( claveWatch !== null ) {
           setDatosPartida({
             ...datosPartida,
             is_Public: false,
@@ -181,22 +181,22 @@ export const CrearPartida = () => {
                 <span className="error">{errors.nombreSala?.message}</span>
                 <input
                   type="password"
-                  aria-label="contraseña"
-                  placeholder="Contraseña de la sala (opcional)"
-                  value={contraseñaWatch}
+                  aria-label="clave"
+                  placeholder="clave de la sala (opcional)"
+                  value={claveWatch}
                   className={`input-modal-crear-partida input input-bordered w-full text-left${
                     errors.nombreSala?.message
                       ? "input-modal-crear-partida input-error input-bordered w-full text-left"
                       : ""
                   }`}
-                  {...register("contraseña", {
+                  {...register("clave", {
                     maxLength: {
                       value: 50,
-                      message: "La contraseña debe ser menor a 50 caracteres",
+                      message: "La clave debe ser menor a 50 caracteres",
                     },
                   })}
                 />
-                <span className="error">{errors.contraseña?.message}</span>
+                <span className="error">{errors.clave?.message}</span>
                 <input
                   type="number"
                   min={2}

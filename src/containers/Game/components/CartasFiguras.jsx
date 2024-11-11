@@ -132,8 +132,14 @@ export const CartasFiguras = () => {
 
         setCartasBloqueadas((prev) => [...prev, cartaId]);
       } else if (ultimoEvento.key === "UNLOCK_FIGURE") {
-        setCartaDesbloqueadaId((prev) => [...prev, ultimoEvento.payload.figure_id]);
-        cartasBloqueadas.splice(cartasBloqueadas.indexOf(ultimoEvento.payload.figure_id), 1);
+        setCartaDesbloqueadaId((prev) => [
+          ...prev,
+          ultimoEvento.payload.figure_id,
+        ]);
+        cartasBloqueadas.splice(
+          cartasBloqueadas.indexOf(ultimoEvento.payload.figure_id),
+          1,
+        );
       }
     }
   }, [ultimoEvento]);
@@ -167,7 +173,8 @@ export const CartasFiguras = () => {
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        {(cartasMazo[miTurno - 1] > 3 || (cartasMazo[miTurno - 1] - (cartasFiguras.length || 0) > 0)) && (
+        {(cartasMazo[miTurno - 1] > 3 ||
+          cartasMazo[miTurno - 1] - (cartasFiguras.length || 0) > 0) && (
           <div
             className="mazo"
             data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - (cartasFiguras.length || 0)}`}
@@ -221,10 +228,11 @@ export const CartasFiguras = () => {
             cartas-figuras-oponente-${oponenteIndex + 1} 
             ${oponentes.length > 1 ? "columnas" : "filas"}`}
         >
-          {(cartasMazo[oponente.turn_order - 1] > 3 || (cartasMazo[oponente.turn_order - 1] - (oponente.shape_cards.length || []) > 0)) && (
-            <div 
-              className="mazo"
-            >
+          {(cartasMazo[oponente.turn_order - 1] > 3 ||
+            cartasMazo[oponente.turn_order - 1] -
+              (oponente.shape_cards.length || []) >
+              0) && (
+            <div className="mazo">
               <img src={backfig} alt="back" />
             </div>
           )}

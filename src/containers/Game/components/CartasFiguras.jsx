@@ -166,10 +166,10 @@ export const CartasFiguras = () => {
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        {cartasMazo[miTurno - 1] > 3 && (
+        {(cartasMazo[miTurno - 1] > 3 || (cartasMazo[miTurno - 1] - (cartasFiguras.length || 0) > 0)) && (
           <div
             className="mazo"
-            data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - 3}`}
+            data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - (cartasFiguras.length || 0)}`}
           >
             <img src={backfig} alt="back" />
           </div>
@@ -220,8 +220,8 @@ export const CartasFiguras = () => {
             cartas-figuras-oponente-${oponenteIndex + 1} 
             ${oponentes.length > 1 ? "columnas" : "filas"}`}
         >
-          {cartasMazo[oponente.turn_order - 1] > 3 && (
-            <div
+          {(cartasMazo[oponente.turn_order - 1] > 3 || (cartasMazo[oponente.turn_order - 1] - (oponente.shape_cards.length || []) > 0)) && (
+            <div 
               className="mazo"
             >
               <img src={backfig} alt="back" />

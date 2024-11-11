@@ -115,7 +115,6 @@ export const CartasFiguras = () => {
         const cartaId = ultimoEvento.payload.figure_id;
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
         if (cartaDesbloqueadaId === cartaId) {
-          cartasBloqueadas.splice(cartasBloqueadas.indexOf(cartaId), 1);
           setBloqueado(false);
         }
       } else if (ultimoEvento.key === "BLOCKED_FIGURE") {
@@ -170,7 +169,7 @@ export const CartasFiguras = () => {
         {cartasMazo[miTurno - 1] > 3 && (
           <div
             className="mazo"
-            data-tooltip={`Cartas: ${cartasMazo[miTurno - 1] - 3}`}
+            data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - 3}\n Nombre: ${datosJugador.player_name}`}
           >
             <img src={backfig} alt="back" />
           </div>

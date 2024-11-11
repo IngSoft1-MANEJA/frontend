@@ -1,4 +1,5 @@
 import { BACKEND_URL } from "../variablesConfiguracion";
+import { ServicioToken } from "./ServicioToken";
 
 export const JugadorGanoMotivo = Object.freeze({
   NORMAL: "NORMAL",
@@ -159,12 +160,14 @@ export class ServicioPartida {
   }
 
   static async obtenerInfoPartidaParaJugador(idPartida, idJugador) {
+    const token = ServicioToken.obtenerToken(idPartida, idJugador);
     const respuesta = await fetch(
       `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/player/${idJugador}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       },
     );

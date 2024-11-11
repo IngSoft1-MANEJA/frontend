@@ -16,7 +16,7 @@ export const CrearPartida = () => {
   const [estaCargando, setEstaCargando] = useState(false);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
-
+  
   const shouldFetchRef = useRef(shouldFetch);
 
   useEffect(() => {
@@ -35,12 +35,14 @@ export const CrearPartida = () => {
       nombreJugador: "",
       nombreSala: "",
       cantidadJugadores: 2,
+      clave: "",
     },
   });
 
   const nombreJugadorWatch = watch("nombreJugador");
   const nombreSalaWatch = watch("nombreSala");
   const cantidadJugadoresWatch = watch("cantidadJugadores");
+  const claveWatch = watch("clave");
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -55,6 +57,7 @@ export const CrearPartida = () => {
           nombreSalaWatch,
           nombreJugadorWatch,
           cantidadJugadoresWatch,
+          claveWatch,
         );
         console.log(resJson);
         reset();
@@ -66,7 +69,7 @@ export const CrearPartida = () => {
         });
         if (
           cantidadJugadoresWatch !== null &&
-          cantidadJugadoresWatch !== undefined
+          cantidadJugadoresWatch !== undefined 
         ) {
           setDatosPartida({
             ...datosPartida,
@@ -170,6 +173,24 @@ export const CrearPartida = () => {
                   })}
                 />
                 <span className="error">{errors.nombreSala?.message}</span>
+                <input
+                  type="text"
+                  aria-label="clave"
+                  placeholder="clave de la sala (opcional)"
+                  value={claveWatch}
+                  className={`input-modal-crear-partida input input-bordered w-full text-left${
+                    errors.nombreSala?.message
+                      ? "input-modal-crear-partida input-error input-bordered w-full text-left"
+                      : ""
+                  }`}
+                  {...register("clave", {
+                    maxLength: {
+                      value: 50,
+                      message: "La clave debe ser menor a 50 caracteres",
+                    },
+                  })}
+                />
+                <span className="error">{errors.clave?.message}</span>
                 <input
                   type="number"
                   min={2}

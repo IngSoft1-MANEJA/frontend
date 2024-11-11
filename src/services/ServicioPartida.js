@@ -8,7 +8,7 @@ export const JugadorGanoMotivo = Object.freeze({
 export class ServicioPartida {
   static GRUPO_ENDPOINT = "matches";
 
-  static async unirsePartida(idPartida, nombreJugador) {
+  static async unirsePartida(idPartida, nombreJugador, clave) {
     const respuesta = await fetch(
       `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}`,
       {
@@ -16,7 +16,7 @@ export class ServicioPartida {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ player_name: nombreJugador }),
+        body: JSON.stringify({ player_name: nombreJugador, password: clave}),
       },
     );
 
@@ -60,7 +60,7 @@ export class ServicioPartida {
     });
   }
 
-  static async crearPartida(nombreSala, nombreJugador, cantidadJugadores) {
+  static async crearPartida(nombreSala, nombreJugador, cantidadJugadores, contraseña) {
     const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}`, {
       method: "POST",
       headers: {
@@ -70,7 +70,7 @@ export class ServicioPartida {
         lobby_name: nombreSala,
         player_name: nombreJugador,
         max_players: cantidadJugadores,
-        is_public: true,
+        password: contraseña,
         token: "asdfasdf",
       }),
     });

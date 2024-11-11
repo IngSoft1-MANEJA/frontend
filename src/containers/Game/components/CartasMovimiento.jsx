@@ -50,6 +50,11 @@ export const CartasMovimiento = () => {
         const nuevasCartas = ultimoEvento.payload.movement_card;
 
         setCartasMovimiento([...cartasNoUsadas, ...nuevasCartas]);
+      } else if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
+        setUsarMovimiento((prev) => ({
+          ...prev,
+          cartasUsadas: ultimoEvento.payload.last_movements,
+        }));
       }
     }
   }, [ultimoEvento]);

@@ -83,7 +83,7 @@ export function Lobby() {
           break;
 
         case "START_MATCH":
-          navigate(`/matches/${match_id}`);
+          navigate(`/matches/${match_id}/player/${player_id}`);
           break;
 
         default:

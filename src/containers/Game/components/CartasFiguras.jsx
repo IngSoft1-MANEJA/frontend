@@ -68,7 +68,7 @@ const urlMap = {
 };
 
 export const CartasFiguras = () => {
-  const [cartaDesbloqueadaId, setCartaDesbloqueadaId] = useState(null);
+  const [cartaDesbloqueadaId, setCartaDesbloqueadaId] = useState([]);
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
@@ -114,7 +114,8 @@ export const CartasFiguras = () => {
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
-        if (cartaDesbloqueadaId === cartaId) {
+        if (cartaDesbloqueadaId.includes(cartaId)) {
+          cartaDesbloqueadaId.splice(cartaDesbloqueadaId.indexOf(cartaId), 1);
           setBloqueado(false);
         }
       } else if (ultimoEvento.key === "BLOCKED_FIGURE") {
@@ -131,7 +132,7 @@ export const CartasFiguras = () => {
 
         setCartasBloqueadas((prev) => [...prev, cartaId]);
       } else if (ultimoEvento.key === "UNLOCK_FIGURE") {
-        setCartaDesbloqueadaId(ultimoEvento.payload.figure_id);
+        setCartaDesbloqueadaId((prev) => [...prev, ultimoEvento.payload.figure_id]);
         cartasBloqueadas.splice(cartasBloqueadas.indexOf(ultimoEvento.payload.figure_id), 1);
       }
     }

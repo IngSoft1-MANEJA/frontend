@@ -9,7 +9,7 @@ export const CompletarFiguraProvider = ({ children }) => {
     cartaSeleccionada,
     setCartaSeleccionada,
     esCartaOponente,
-    setEsCartaOponente
+    setEsCartaOponente,
   };
   return (
     <CompletarFiguraContext.Provider value={contextValue}>

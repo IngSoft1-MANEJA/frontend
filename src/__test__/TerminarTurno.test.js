@@ -9,6 +9,10 @@ import { DatosPartidaProvider } from "../contexts/DatosPartidaContext";
 import { UsarMovimientoContext } from "../contexts/UsarMovimientoContext";
 import { EventoContext, EventoProvider } from "../contexts/EventoContext";
 import { ServicioPartida } from "../services/ServicioPartida";
+import {
+  HabilitarAccionesUsuarioContext,
+  HabilitarAccionesUsuarioProvider,
+} from "../contexts/HabilitarAccionesUsuarioContext";
 
 jest.mock("react-use-websocket");
 jest.mock("../services/ServicioPartida");
@@ -46,7 +50,9 @@ describe("TerminarTurno Component", () => {
           >
             <EventoProvider>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <TerminarTurno />
+                <HabilitarAccionesUsuarioProvider>
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioProvider>
               </UsarMovimientoContext.Provider>
             </EventoProvider>
           </DatosJugadorContext.Provider>
@@ -74,7 +80,9 @@ describe("TerminarTurno Component", () => {
           <DatosJugadorContext.Provider value={datosJugadorValue}>
             <EventoContext.Provider value={ultimoEventoValue}>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <TerminarTurno />
+                <HabilitarAccionesUsuarioProvider>
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioProvider>
               </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
@@ -108,7 +116,9 @@ describe("TerminarTurno Component", () => {
           <DatosJugadorContext.Provider value={datosJugadorValue}>
             <EventoContext.Provider value={eventoValue}>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <TerminarTurno />
+                <HabilitarAccionesUsuarioProvider>
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioProvider>
               </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
@@ -142,7 +152,9 @@ describe("TerminarTurno Component", () => {
           <DatosJugadorContext.Provider value={datosJugadorValue}>
             <EventoContext.Provider value={eventoValue}>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <TerminarTurno />
+                <HabilitarAccionesUsuarioProvider>
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioProvider>
               </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
@@ -177,7 +189,9 @@ describe("TerminarTurno Component", () => {
           <DatosJugadorContext.Provider value={datosJugadorValue}>
             <EventoContext.Provider value={eventoValue}>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <TerminarTurno />
+                <HabilitarAccionesUsuarioProvider>
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioProvider>
               </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
@@ -211,7 +225,9 @@ describe("TerminarTurno Component", () => {
           >
             <EventoContext.Provider value={eventoValue}>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <TerminarTurno />
+                <HabilitarAccionesUsuarioProvider>
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioProvider>
               </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
@@ -245,7 +261,9 @@ describe("TerminarTurno Component", () => {
           >
             <EventoContext.Provider value={eventoValue}>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <TerminarTurno />
+                <HabilitarAccionesUsuarioProvider>
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioProvider>
               </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
@@ -284,7 +302,9 @@ describe("TerminarTurno Component", () => {
           >
             <EventoContext.Provider value={eventoValue}>
               <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
-                <TerminarTurno />
+                <HabilitarAccionesUsuarioProvider>
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioProvider>
               </UsarMovimientoContext.Provider>
             </EventoContext.Provider>
           </DatosJugadorContext.Provider>
@@ -300,5 +320,87 @@ describe("TerminarTurno Component", () => {
     fireEvent.click(button);
 
     expect(ServicioPartida.terminarTurno).toHaveBeenCalledWith(1, 123);
+  });
+
+  test("se llama a setHabilitarAccionesUsuario en false cuando llega END_PLAYER_TURN y no sea el turno del jugador", async () => {
+    const eventoValue = {
+      ultimoEvento: {
+        key: "END_PLAYER_TURN",
+        payload: {
+          current_player_name: "Player 1",
+          next_player_name: "Player 2",
+          next_player_turn: 2,
+        },
+      },
+    };
+    const mockSetHabilitarAccionesUsuario = jest.fn();
+    render(
+      <reactRouterDom.MemoryRouter>
+        <DatosPartidaProvider>
+          <DatosJugadorContext.Provider
+            value={{
+              datosJugador: { player_id: 123, player_turn: 1 },
+              setDatosJugador: jest.fn(),
+            }}
+          >
+            <EventoContext.Provider value={eventoValue}>
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <HabilitarAccionesUsuarioContext.Provider
+                  value={{
+                    setHabilitarAccionesUsuario:
+                      mockSetHabilitarAccionesUsuario,
+                  }}
+                >
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioContext.Provider>
+              </UsarMovimientoContext.Provider>
+            </EventoContext.Provider>
+          </DatosJugadorContext.Provider>
+        </DatosPartidaProvider>
+      </reactRouterDom.MemoryRouter>,
+    );
+
+    expect(mockSetHabilitarAccionesUsuario).toHaveBeenCalledWith(false);
+  });
+
+  test("se llama a setHabilitarAccionesUsuario en true cuando llega END_PLAYER_TURN y no sea el turno del jugador", async () => {
+    const eventoValue = {
+      ultimoEvento: {
+        key: "END_PLAYER_TURN",
+        payload: {
+          current_player_name: "Player 1",
+          next_player_name: "Player 2",
+          next_player_turn: 2,
+        },
+      },
+    };
+    const mockSetHabilitarAccionesUsuario = jest.fn();
+    render(
+      <reactRouterDom.MemoryRouter>
+        <DatosPartidaProvider>
+          <DatosJugadorContext.Provider
+            value={{
+              datosJugador: { player_id: 123, player_turn: 2 },
+              setDatosJugador: jest.fn(),
+            }}
+          >
+            <EventoContext.Provider value={eventoValue}>
+              <UsarMovimientoContext.Provider value={mockUsarMovimiento}>
+                <HabilitarAccionesUsuarioContext.Provider
+                  value={{
+                    setHabilitarAccionesUsuario:
+                      mockSetHabilitarAccionesUsuario,
+                  }}
+                >
+                  <TerminarTurno />
+                </HabilitarAccionesUsuarioContext.Provider>
+              </UsarMovimientoContext.Provider>
+            </EventoContext.Provider>
+          </DatosJugadorContext.Provider>
+        </DatosPartidaProvider>
+      </reactRouterDom.MemoryRouter>,
+    );
+
+    expect(mockSetHabilitarAccionesUsuario).toHaveBeenCalledWith(true);
   });
 });

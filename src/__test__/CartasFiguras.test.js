@@ -1,20 +1,22 @@
 import React from "react";
-import {
-  act,
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-} from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { useParams } from "react-router-dom";
 import { DatosJugadorContext } from "../contexts/DatosJugadorContext.jsx";
 import { CartasFiguras } from "../containers/Game/components/CartasFiguras.jsx";
 import { EventoContext } from "../contexts/EventoContext.jsx";
-import { CompletarFiguraProvider } from "../contexts/CompletarFiguraContext.jsx";
+import {
+  CompletarFiguraContext,
+  CompletarFiguraProvider,
+} from "../contexts/CompletarFiguraContext.jsx";
+import { DatosPartidaProvider } from "../contexts/DatosPartidaContext.jsx";
 import {
   UsarMovimientoContext,
   UsarMovimientoProvider,
 } from "../contexts/UsarMovimientoContext.jsx";
+import {
+  HabilitarAccionesUsuarioProvider,
+  HabilitarAccionesUsuarioContext,
+} from "../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
@@ -39,15 +41,37 @@ describe("CartasFiguras", () => {
     datosJugador,
     evento,
     usarMovimiento = { usarMovimiento: { cartaSeleccionada: null } },
+    completarFigura = null,
+    habilitarAccionesUsuario = {
+      habilitarAccionesUsuario: true,
+      setHabilitarAccionesUsuario: jest.fn(),
+    },
   ) => {
+    const completarFiguraConContexto = (
+      <CompletarFiguraContext.Provider value={completarFigura}>
+        <CartasFiguras />
+      </CompletarFiguraContext.Provider>
+    );
+
+    const completarFiguraConProvider = (
+      <CompletarFiguraProvider>
+        <CartasFiguras />
+      </CompletarFiguraProvider>
+    );
     return renderFunc(
       <DatosJugadorContext.Provider value={datosJugador}>
         <EventoContext.Provider value={evento}>
-          <CompletarFiguraProvider>
+          <DatosPartidaProvider>
             <UsarMovimientoContext.Provider value={usarMovimiento}>
-              <CartasFiguras />
+              <HabilitarAccionesUsuarioContext.Provider
+                value={habilitarAccionesUsuario}
+              >
+                {completarFigura
+                  ? completarFiguraConContexto
+                  : completarFiguraConProvider}
+              </HabilitarAccionesUsuarioContext.Provider>
             </UsarMovimientoContext.Provider>
-          </CompletarFiguraProvider>
+          </DatosPartidaProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
     );
@@ -86,9 +110,13 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={mockInfoJugador}>
           <CompletarFiguraProvider>
-            <UsarMovimientoProvider>
-              <CartasFiguras />
-            </UsarMovimientoProvider>
+            <DatosPartidaProvider>
+              <UsarMovimientoProvider>
+                <HabilitarAccionesUsuarioProvider>
+                  <CartasFiguras />
+                </HabilitarAccionesUsuarioProvider>
+              </UsarMovimientoProvider>
+            </DatosPartidaProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -98,9 +126,13 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={mockEvento}>
           <CompletarFiguraProvider>
-            <UsarMovimientoProvider>
-              <CartasFiguras />
-            </UsarMovimientoProvider>
+            <DatosPartidaProvider>
+              <UsarMovimientoProvider>
+                <HabilitarAccionesUsuarioProvider>
+                  <CartasFiguras />
+                </HabilitarAccionesUsuarioProvider>
+              </UsarMovimientoProvider>
+            </DatosPartidaProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -123,9 +155,13 @@ describe("CartasFiguras", () => {
       <DatosJugadorContext.Provider value={mockDatosJugador}>
         <EventoContext.Provider value={eventoValue}>
           <CompletarFiguraProvider>
-            <UsarMovimientoProvider>
-              <CartasFiguras />
-            </UsarMovimientoProvider>
+            <DatosPartidaProvider>
+              <UsarMovimientoProvider>
+                <HabilitarAccionesUsuarioProvider>
+                  <CartasFiguras />
+                </HabilitarAccionesUsuarioProvider>
+              </UsarMovimientoProvider>
+            </DatosPartidaProvider>
           </CompletarFiguraProvider>
         </EventoContext.Provider>
       </DatosJugadorContext.Provider>,
@@ -136,7 +172,14 @@ describe("CartasFiguras", () => {
     expect(screen.queryByAltText("3")).not.toBeInTheDocument();
   });
 
-  const preparaComponenteConFiguras = () => {
+  const preparaComponenteConFiguras = ({
+    usarMovimiento = { usarMovimiento: { cartaSeleccionada: null } },
+    completarFigura = null,
+    habilitarAccionesUsuario = {
+      habilitarAccionesUsuario: true,
+      setHabilitarAccionesUsuario: jest.fn(),
+    },
+  }) => {
     const eventoContext = {
       ultimoEvento: {
         key: "GET_PLAYER_MATCH_INFO",
@@ -172,14 +215,21 @@ describe("CartasFiguras", () => {
       setUltimoEvento: jest.fn(),
     };
 
-    renderComponent(rerender, datosJugadorContext, eventoContext2);
+    renderComponent(
+      rerender,
+      datosJugadorContext,
+      eventoContext2,
+      usarMovimiento,
+      completarFigura,
+      habilitarAccionesUsuario,
+    );
     return rerender;
   };
 
   const getCard = (index) => screen.getByAltText(index).parentElement;
 
   it("debe resaltar solo la figura cliqueada", () => {
-    preparaComponenteConFiguras();
+    preparaComponenteConFiguras({});
     const figure1 = getCard("1");
     const figure2 = getCard("2");
     const figure3 = getCard("3");
@@ -196,7 +246,7 @@ describe("CartasFiguras", () => {
   });
 
   it("debe deseleccionar la figura si se cliquea nuevamente", () => {
-    preparaComponenteConFiguras();
+    preparaComponenteConFiguras({});
     const figure1 = getCard("1");
     const figure2 = getCard("2");
     const figure3 = getCard("3");
@@ -214,7 +264,7 @@ describe("CartasFiguras", () => {
   });
 
   it("debe hacer hover a una figura si no hay ninguna seleccionada", () => {
-    preparaComponenteConFiguras();
+    preparaComponenteConFiguras({});
     const getCard = (index) => screen.getByAltText(index).parentElement;
     const figure1 = getCard("1");
     const figure2 = getCard("2");
@@ -229,7 +279,7 @@ describe("CartasFiguras", () => {
   });
 
   it("no debe poder seleccionar si no es el turno del jugador", () => {
-    const rerender = preparaComponenteConFiguras();
+    const rerender = preparaComponenteConFiguras({});
     renderComponent(
       rerender,
       { datosJugador: { is_player_turn: false } },
@@ -253,7 +303,7 @@ describe("CartasFiguras", () => {
   });
 
   it("No debe poder seleccionar si hay una carta de movimiento seleccionada", () => {
-    const rerender = preparaComponenteConFiguras();
+    const rerender = preparaComponenteConFiguras({});
     renderComponent(
       rerender,
       { datosJugador: { is_player_turn: true } },
@@ -278,7 +328,7 @@ describe("CartasFiguras", () => {
   });
 
   it("debe limpiar la carta seleccionada si se termina su turno", () => {
-    const rerender = preparaComponenteConFiguras();
+    const rerender = preparaComponenteConFiguras({});
 
     const figure1 = getCard("1");
     const figure2 = getCard("2");
@@ -303,5 +353,32 @@ describe("CartasFiguras", () => {
     expect(figure1.classList.length).toEqual(0);
     expect(figure2.classList.length).toEqual(0);
     expect(figure3.classList.length).toEqual(0);
+  });
+
+  it("no debe poder seleccionar si habilitarAccionesUsuarios es false", () => {
+    const mockSetCartaSeleccionada = jest.fn();
+    preparaComponenteConFiguras({
+      habilitarAccionesUsuario: {
+        habilitarAccionesUsuario: false,
+        setHabilitarAccionesUsuario: jest.fn(),
+      },
+    });
+
+    const figure1 = getCard("1");
+    const figure2 = getCard("2");
+    const figure3 = getCard("3");
+    act(() => {
+      figure3.click();
+    });
+    const hoverClass =
+      "hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105";
+    expect(figure1).not.toHaveClass(hoverClass);
+    expect(figure2).not.toHaveClass(hoverClass);
+    expect(figure3).not.toHaveClass(hoverClass);
+    expect(figure3).not.toHaveClass(
+      "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105",
+    );
+
+    expect(mockSetCartaSeleccionada).not.toHaveBeenCalled();
   });
 });

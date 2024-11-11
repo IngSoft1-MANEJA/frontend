@@ -21,7 +21,9 @@ export class ServicioPartida {
     );
 
     if (!respuesta.ok) {
-      const error = new Error(`Error al unirse a partida - estado: ${respuesta.status}`);
+      const error = new Error(
+        `Error al unirse a partida - estado: ${respuesta.status}`,
+      );
       error.status = respuesta.status;
       throw error;
     }
@@ -30,19 +32,32 @@ export class ServicioPartida {
     return json;
   }
 
-  static async listarPartidas() {
-    const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}`);
+  static async listarPartidas(buscarTermino = "", maximoJugadores = null) {
+    const params = new URLSearchParams({});
+
+    if (maximoJugadores !== null) {
+      params.append("max_players", maximoJugadores);
+    }
+
+    console.log(params.toString());
+
+    if (buscarTermino) {
+      params.append("s", buscarTermino);
+    }
+
+    const url = `${BACKEND_URL}/${this.GRUPO_ENDPOINT}?${params}`;
+
+    const respuesta = await fetch(url);
 
     if (!respuesta.ok) {
       throw new Error(`Error al listar partidas - estado: ${respuesta.status}`);
     }
 
     const json = await respuesta.json();
-    const jsonMap = json.map((partida) => {
-      partida.match_id = partida.id;
+    return json.map((partida) => {
+      partida.match_id = partida.id; // Asigna el match_id
       return partida;
     });
-    return jsonMap;
   }
 
   static async crearPartida(nombreSala, nombreJugador, cantidadJugadores) {
@@ -239,9 +254,38 @@ export class ServicioPartida {
     );
 
     if (!respuesta.ok) {
-      throw new Error(
+      const error = new Error(
         `Error al validar movimiento - estado: ${respuesta.status}`,
       );
+      error.status = respuesta.status;
+      throw error;
+    }
+
+    const json = await respuesta.json();
+    return json;
+  }
+
+  static async bloquearFicha(idPartida, idJugador, idCartaFigura, figura) {
+    const respuesta = await fetch(
+      `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/player/${idJugador}/block-figure`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          figure_id: idCartaFigura,
+          coordinates: figura,
+        }),
+      },
+    );
+
+    if (!respuesta.ok) {
+      const error = new Error(
+        `Error al bloquear ficha - estado: ${respuesta.status}`,
+      );
+      error.status = respuesta.status;
+      throw error;
     }
 
     const json = await respuesta.json();

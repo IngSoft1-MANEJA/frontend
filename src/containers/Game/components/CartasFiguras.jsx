@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
 import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 import fig1 from "../../../assets/Figuras/Blancas/fig01.svg";
 import fig2 from "../../../assets/Figuras/Blancas/fig02.svg";
@@ -36,6 +37,7 @@ import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { ServicioFigura } from "../../../services/ServicioFigura.js";
+import { set } from "react-hook-form";
 
 const urlMap = {
   1: fig1,
@@ -66,18 +68,27 @@ const urlMap = {
 };
 
 export const CartasFiguras = () => {
+  const [cartaDesbloqueadaId, setCartaDesbloqueadaId] = useState(null);
   const [cartasFiguras, setCartasFiguras] = useState([]);
-  const [datosPartida, setDatosPartida] = useState(DatosPartidaContext);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
+  const [cartasBloqueadas, setCartasBloqueadas] = useState([]);
   const [cartasMazo, setCartasMazo] = useState([]);
   const [oponentes, setOponentes] = useState([]);
-  const { cartaSeleccionada, setCartaSeleccionada } = useContext(
-    CompletarFiguraContext,
-  );
+  const [bloqueado, setBloqueado] = useState(false);
+  const {
+    cartaSeleccionada,
+    setCartaSeleccionada,
+    esCartaOponente,
+    setEsCartaOponente,
+  } = useContext(CompletarFiguraContext);
   const { usarMovimiento } = useContext(UsarMovimientoContext);
   const { datosJugador } = useContext(DatosJugadorContext);
   const { ultimoEvento } = useContext(EventoContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
+  const { habilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
 
   useEffect(() => {
     if (ultimoEvento !== null) {
@@ -103,6 +114,25 @@ export const CartasFiguras = () => {
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
+        if (cartaDesbloqueadaId === cartaId) {
+          setBloqueado(false);
+        }
+      } else if (ultimoEvento.key === "BLOCKED_FIGURE") {
+        const cartaId = ultimoEvento.payload.figure_id;
+
+        setDatosPartida({
+          ...datosPartida,
+          lastPlayerBlockedTurn: ultimoEvento.payload.player_turn,
+        });
+
+        if (miTurno === ultimoEvento.payload.player_turn) {
+          setBloqueado(true);
+        }
+
+        setCartasBloqueadas((prev) => [...prev, cartaId]);
+      } else if (ultimoEvento.key === "UNLOCK_FIGURE") {
+        setCartaDesbloqueadaId(ultimoEvento.payload.figure_id);
+        cartasBloqueadas.splice(cartasBloqueadas.indexOf(ultimoEvento.payload.figure_id), 1);
       }
     }
   }, [ultimoEvento]);
@@ -122,6 +152,7 @@ export const CartasFiguras = () => {
         oponentes,
         setOponentes,
         cartasFigurasCompletadas,
+        bloqueado,
       );
     }
   }, [ultimoEvento, miTurno]);
@@ -135,10 +166,10 @@ export const CartasFiguras = () => {
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        {cartasMazo[miTurno - 1] > 3 && (
+        {(cartasMazo[miTurno - 1] > 3 || (cartasMazo[miTurno - 1] - (cartasFiguras.length || 0) > 0)) && (
           <div
             className="mazo"
-            data-tooltip={`Cartas: ${cartasMazo[miTurno - 1] - 3}`}
+            data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - (cartasFiguras.length || 0)}`}
           >
             <img src={backfig} alt="back" />
           </div>
@@ -152,6 +183,8 @@ export const CartasFiguras = () => {
               usarMovimiento.cartaSeleccionada,
               datosJugador.is_player_turn,
               cartasFigurasCompletadas,
+              cartasBloqueadas.includes(carta[0]),
+              habilitarAccionesUsuario,
             )}
             onClick={() =>
               ServicioFigura.seleccionarCarta(
@@ -161,12 +194,24 @@ export const CartasFiguras = () => {
                 cartaSeleccionada,
                 setCartaSeleccionada,
                 cartasFigurasCompletadas,
+                setEsCartaOponente,
+                false,
+                cartasBloqueadas.includes(carta[0]),
+                habilitarAccionesUsuario,
               )
             }
           >
-            <img src={urlMap[carta[1]]} alt={carta[1]} />
+            <img
+              src={
+                cartasBloqueadas.includes(carta[0]) ? backfig : urlMap[carta[1]]
+              }
+              alt={carta[1]}
+            />
           </div>
         ))}
+        <div className="info-jugador" title={datosJugador.player_name}>
+          <p>Jugador: {datosJugador.player_name}</p>
+        </div>
       </div>
       {oponentesOrdenados.map((oponente, oponenteIndex) => (
         <div
@@ -175,19 +220,54 @@ export const CartasFiguras = () => {
             cartas-figuras-oponente-${oponenteIndex + 1} 
             ${oponentes.length > 1 ? "columnas" : "filas"}`}
         >
-          {cartasMazo[oponente.turn_order - 1] > 3 && (
-            <div
+          {(cartasMazo[oponente.turn_order - 1] > 3 || (cartasMazo[oponente.turn_order - 1] - (oponente.shape_cards.length || []) > 0)) && (
+            <div 
               className="mazo"
-              data-tooltip={`Nombre: ${oponente.player_name}`}
             >
               <img src={backfig} alt="back" />
             </div>
           )}
           {(oponente.shape_cards || []).map((carta, index) => (
-            <div key={index} className="carta-figura">
-              <img src={urlMap[carta[1]]} alt={carta[1]} />
+            <div
+              key={index}
+              className={ServicioFigura.claseCarta(
+                carta[0],
+                cartaSeleccionada,
+                usarMovimiento.cartaSeleccionada,
+                datosJugador.is_player_turn,
+                cartasFigurasCompletadas,
+                cartasBloqueadas.includes(carta[0]),
+                habilitarAccionesUsuario,
+              )}
+              onClick={() =>
+                ServicioFigura.seleccionarCarta(
+                  carta[0],
+                  datosJugador.is_player_turn,
+                  usarMovimiento.cartaSeleccionada,
+                  cartaSeleccionada,
+                  setCartaSeleccionada,
+                  cartasFigurasCompletadas,
+                  setEsCartaOponente,
+                  true,
+                  cartasBloqueadas.includes(carta[0]),
+                  habilitarAccionesUsuario,
+                )
+              }
+            >
+              <img
+                src={
+                  cartasBloqueadas.includes(carta[0])
+                    ? backfig
+                    : urlMap[carta[1]]
+                }
+                alt={carta[1]}
+              />{" "}
+              {/*dependiendo de si esta bloqueada o no mapeamos de una forma u otra*/}
             </div>
           ))}
+          <div className="info-jugador" title={oponente.player_name}>
+            <p>Jugador: {oponente.player_name}</p>
+          </div>
         </div>
       ))}
     </div>

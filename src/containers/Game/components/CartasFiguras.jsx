@@ -97,8 +97,8 @@ export const CartasFiguras = () => {
           ),
         );
         
-        if (ultimoEvento.payload.blocked_figures) {
-          setCartasBloqueadas(ultimoEvento.payload.blocked_figure.id);
+        if (ultimoEvento.payload.block_figures) {
+          setCartasBloqueadas(ultimoEvento.payload.block_figures);
         }
 
       } else if (ultimoEvento.key === "END_PLAYER_TURN") {

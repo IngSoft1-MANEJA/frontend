@@ -96,7 +96,9 @@
   display: inline-block;
   transform: translateX(-3px);
   transform: translateY(-3px);
-  box-shadow: rgba(143, 120, 120, 0.4) 3px 2px 1px, rgba(143, 120, 120, 0.3) 6px 4px 1px;
+  box-shadow:
+    rgba(143, 120, 120, 0.4) 3px 2px 1px,
+    rgba(143, 120, 120, 0.3) 6px 4px 1px;
 }
 
 .mazo[data-tooltip]:hover::after {
@@ -134,7 +136,7 @@
   border-radius: 0.6vh;
 }
 
-.info-jugador p{
+.info-jugador p {
   overflow: hidden;
   text-overflow: ellipsis;
   word-wrap: break-word;

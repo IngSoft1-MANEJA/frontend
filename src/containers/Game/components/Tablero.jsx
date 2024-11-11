@@ -151,7 +151,16 @@ export const Tablero = () => {
             console.error(err);
             if (err.status === 400) {
               setMensajeAlerta("No es posible bloquear a ese jugador");
+            } else if (err.status === 409) {
+              if (err.detail === "Conflict with coordinates and Figure Card") {
+                setMensajeAlerta(
+                  "La carta de figura seleccionada es incorrecta",
+                );
+              } else if (err.detail === "Player doesnt exist") {
+                setMensajeAlerta("El jugador ya no se encuentra en la partida");
+              }
             } else {
+              console.log(err);
               setMensajeAlerta("Error al bloquear figura");
             }
             setMostrarAlerta(true);

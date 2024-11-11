@@ -68,7 +68,7 @@ const urlMap = {
 };
 
 export const CartasFiguras = () => {
-  const [cartaDesbloqueadaId, setCartaDesbloqueadaId] = useState(null);
+  const [cartaDesbloqueadaId, setCartaDesbloqueadaId] = useState([]);
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
@@ -114,7 +114,8 @@ export const CartasFiguras = () => {
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
-        if (cartaDesbloqueadaId === cartaId) {
+        if (cartaDesbloqueadaId.includes(cartaId)) {
+          cartaDesbloqueadaId.splice(cartaDesbloqueadaId.indexOf(cartaId), 1);
           setBloqueado(false);
         }
       } else if (ultimoEvento.key === "BLOCKED_FIGURE") {
@@ -131,8 +132,14 @@ export const CartasFiguras = () => {
 
         setCartasBloqueadas((prev) => [...prev, cartaId]);
       } else if (ultimoEvento.key === "UNLOCK_FIGURE") {
-        setCartaDesbloqueadaId(ultimoEvento.payload.figure_id);
-        cartasBloqueadas.splice(cartasBloqueadas.indexOf(ultimoEvento.payload.figure_id), 1);
+        setCartaDesbloqueadaId((prev) => [
+          ...prev,
+          ultimoEvento.payload.figure_id,
+        ]);
+        cartasBloqueadas.splice(
+          cartasBloqueadas.indexOf(ultimoEvento.payload.figure_id),
+          1,
+        );
       }
     }
   }, [ultimoEvento]);
@@ -166,7 +173,8 @@ export const CartasFiguras = () => {
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        {(cartasMazo[miTurno - 1] > 3 || (cartasMazo[miTurno - 1] - (cartasFiguras.length || 0) > 0)) && (
+        {(cartasMazo[miTurno - 1] > 3 ||
+          cartasMazo[miTurno - 1] - (cartasFiguras.length || 0) > 0) && (
           <div
             className="mazo"
             data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - (cartasFiguras.length || 0)}`}
@@ -220,10 +228,11 @@ export const CartasFiguras = () => {
             cartas-figuras-oponente-${oponenteIndex + 1} 
             ${oponentes.length > 1 ? "columnas" : "filas"}`}
         >
-          {(cartasMazo[oponente.turn_order - 1] > 3 || (cartasMazo[oponente.turn_order - 1] - (oponente.shape_cards.length || []) > 0)) && (
-            <div 
-              className="mazo"
-            >
+          {(cartasMazo[oponente.turn_order - 1] > 3 ||
+            cartasMazo[oponente.turn_order - 1] -
+              (oponente.shape_cards.length || []) >
+              0) && (
+            <div className="mazo">
               <img src={backfig} alt="back" />
             </div>
           )}

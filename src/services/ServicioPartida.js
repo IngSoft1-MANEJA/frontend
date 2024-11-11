@@ -285,6 +285,8 @@ export class ServicioPartida {
         `Error al bloquear ficha - estado: ${respuesta.status}`,
       );
       error.status = respuesta.status;
+      const errorBody = await respuesta.json();
+      error.detail = errorBody?.detail || "Error al bloquear figura";
       throw error;
     }
 

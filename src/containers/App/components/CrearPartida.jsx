@@ -6,6 +6,7 @@ import { ServicioPartida } from "../../../services/ServicioPartida.js";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
 import "./CrearPartida.css";
+import { ServicioToken } from "../../../services/ServicioToken.js";
 
 export const CrearPartida = () => {
   const navegar = useNavigate();
@@ -58,6 +59,11 @@ export const CrearPartida = () => {
         );
         console.log(resJson);
         reset();
+        ServicioToken.guardarToken(
+          resJson.match_id,
+          resJson.player_id,
+          resJson.token
+        );
         setDatosJugador({
           ...datosJugador,
           is_owner: true,

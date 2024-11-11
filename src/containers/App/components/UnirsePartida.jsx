@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ServicioPartida } from "../../../services/ServicioPartida";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 import "./UnirsePartida.css";
+import { ServicioToken } from "../../../services/ServicioToken.js";
 
 function UnirsePartida({ idPartida }) {
   const [nombreUsuario, setNombreUsuario] = useState("");
@@ -28,6 +29,12 @@ function UnirsePartida({ idPartida }) {
           player_id: dataPartida.player_id,
           player_name: nombreUsuario,
         });
+
+        ServicioToken.guardarToken(
+          idPartida,
+          dataPartida.player_id,
+          dataPartida.token
+        );
 
         navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
         setEstaCargando(false);

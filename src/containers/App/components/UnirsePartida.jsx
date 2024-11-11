@@ -5,7 +5,7 @@ import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext.jsx";
 import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
 import "./UnirsePartida.css";
 
-function UnirsePartida({ idPartida }) {
+function UnirsePartida({ idPartida , esPublica }) {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [clave, setClave] = useState("");
   const [mensajeError, setMensajeError] = useState("");
@@ -16,7 +16,6 @@ function UnirsePartida({ idPartida }) {
 
   const manejarUnirse = async (e) => {
     e.preventDefault();
-
     if (nombreUsuario) {
       setEstaCargando(true);
       try {
@@ -32,22 +31,21 @@ function UnirsePartida({ idPartida }) {
           player_id: dataPartida.player_id,
           player_name: nombreUsuario,
         });
-
         navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
         setEstaCargando(false);
       } catch (error) {
         switch (error.status) {
           case 404:
-            setMensajeError("La partida no existe o ha sido cancelada.");
+            setMensajeError({ nombre: "La partida no existe o ha sido cancelada.", clave: "" });
             break;
           case 409:
-            setMensajeError("La partida ya esta llena.");
+            setMensajeError({ nombre: "La partida ya está llena.", clave: "" });
             break;
           case 422:
-            setMensajeError("Nombre invalido.");
+            setMensajeError({ nombre: "El nombre de la partida es invalido", clave: "" });
             break;
-          case 403:
-            setMensajeError("Clave invalida.")
+          case 401:
+            setMensajeError({ nombre: "", clave: "La clave ingresada es incorrecta." });
             break;
           default:
             setMensajeError("Error al unirse a partida");
@@ -57,15 +55,21 @@ function UnirsePartida({ idPartida }) {
         setEstaCargando(false);
       }
     } else {
-      setMensajeError("Por favor, ingrese un nombre de usuario");
+      setMensajeError({ nombre: "Por favor, ingrese un nombre de usuario", clave: "" });
     }
   };
+
+  useEffect(() => {
+    console.log("Valor de datosPartida:", datosPartida);
+    console.log("Valor de datosPartida.is_Public:", datosPartida.is_public);
+  }, [datosPartida]);
 
   const cerrarModal = (e) => {
     e.stopPropagation();
     document.getElementById("modal-unirse-partida").close();
     setMensajeError("");
     setNombreUsuario("");
+    setClave("")
     setEstaCargando(false);
   };
 
@@ -96,13 +100,13 @@ function UnirsePartida({ idPartida }) {
           </button>
           <div className="flex items-center">
             <form className="flex flex-col items-start">
-              <label className="form-control mb-6">
+              <label className="form-control">
                 <div className="label">
                   <span className="label-text">Ingresa tu nombre</span>
                 </div>
                 <input
                   className={`input input-bordered ${
-                    mensajeError ? "input-error" : ""
+                    mensajeError.nombre ? "input-error" : ""
                   }`}
                   type="text"
                   placeholder="Nombre"
@@ -111,22 +115,29 @@ function UnirsePartida({ idPartida }) {
                 />
                 <div className="label">
                   <span className="label-text-alt text-error">
-                    {mensajeError}
+                    {mensajeError.nombre}
                   </span>
                 </div>
               </label>
-              {!datosPartida.is_public && (
-                <label className="form-control mb-6">
+              {!esPublica && (
+                <label className="form-control">
                   <div className="label">
-                    <span className="label-text">Clave</span>
+                    <span className="label-text">Ingrese la clave de la sala</span>
                   </div>
                   <input
-                    className="input input-bordered"
-                    type="password"
+                    className={`input input-bordered ${
+                      mensajeError.clave ? "input-error" : ""
+                    }`}
+                    type="text"
                     placeholder="Clave"
                     value={clave}
                     onChange={(e) => setClave(e.target.value)}
                   />
+                  <div className="label">
+                    <span className="label-text-alt text-error">
+                      {mensajeError.clave}
+                    </span>
+                  </div>
                 </label>
               )}
               <button className="btn" onClick={manejarUnirse}>

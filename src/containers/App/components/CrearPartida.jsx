@@ -42,7 +42,7 @@ export const CrearPartida = () => {
   const nombreJugadorWatch = watch("nombreJugador");
   const nombreSalaWatch = watch("nombreSala");
   const cantidadJugadoresWatch = watch("cantidadJugadores");
-  const claveWatch = watch("clave")
+  const claveWatch = watch("clave");
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -74,12 +74,6 @@ export const CrearPartida = () => {
           setDatosPartida({
             ...datosPartida,
             max_players: cantidadJugadoresWatch,
-          });
-        }
-        if ( claveWatch !== null ) {
-          setDatosPartida({
-            ...datosPartida,
-            is_Public: false,
           });
         }
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
@@ -180,7 +174,7 @@ export const CrearPartida = () => {
                 />
                 <span className="error">{errors.nombreSala?.message}</span>
                 <input
-                  type="password"
+                  type="text"
                   aria-label="clave"
                   placeholder="clave de la sala (opcional)"
                   value={claveWatch}

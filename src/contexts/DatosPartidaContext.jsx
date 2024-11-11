@@ -8,7 +8,6 @@ export const DatosPartidaProvider = ({ children }) => {
     current_player_name: "",
     opponents: [],
     lastPlayerBlockedTurn : 0,
-    is_public : true,
   });
 
   return (

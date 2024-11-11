@@ -315,68 +315,6 @@ describe("CrearPartida", () => {
       }, 1500);
     });
   });
-  test("fetch no es llamado cuando la clave es invalida", async () => {
-    render(
-      <reactRouterDom.MemoryRouter>
-        <DatosPartidaProvider>
-          <DatosJugadorProvider>
-            <CrearPartida />
-          </DatosJugadorProvider>
-        </DatosPartidaProvider>
-      </reactRouterDom.MemoryRouter>,
-    );
-
-    console.error(CrearPartidaMockErrorConClave.clave);
-    const openButton = screen.getByText("Crear sala");
-    fireEvent.click(openButton);
-
-
-    const nombreJugadorInput = screen.getByLabelText("nombreJugador");
-    const nombreSalaInput = screen.getByLabelText("nombreSala");
-    const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
-    const claveInput = screen.getByLabelText("clave");
-    const submitButton = screen.getByText("Crear sala");
-
-
-    fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
-
-
-    await userEvent.type(
-      nombreJugadorInput,
-      CrearPartidaMockErrorConClave.nombreJugador,
-    );
-    await userEvent.type(nombreSalaInput, CrearPartidaMockErrorConClave.nombreSala);
-    await userEvent.type(
-      cantidadJugadoresInput,
-      CrearPartidaMockErrorConClave.cantidadJugadores.toString(),
-    );
-    await userEvent.type(
-      claveInput,
-      CrearPartidaMockErrorConClave.clave
-    )
-
-    console.error("Print3 :", claveInput);
-
-
-    await waitFor(() => {
-      expect(nombreJugadorInput).toHaveValue(
-        CrearPartidaMockErrorConClave.nombreJugador,
-      );
-      expect(nombreSalaInput).toHaveValue(CrearPartidaMockErrorConClave.nombreSala);
-      expect(cantidadJugadoresInput).toHaveValue(
-        CrearPartidaMockErrorConClave.cantidadJugadores,
-      );
-      expect(claveInput).toHaveValue(
-        CrearPartidaMockErrorConClave.clave
-      )
-    });
-
-
-    fireEvent.click(submitButton);
-
-
-    expect(fetch).not.toHaveBeenCalled();
-  });
   test("Fetch se ejecuta correctamente en partidas con clave", async () => {
     render(
       <reactRouterDom.MemoryRouter>

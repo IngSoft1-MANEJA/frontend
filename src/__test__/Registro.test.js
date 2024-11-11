@@ -26,8 +26,8 @@ describe("Registro Component", () => {
     is_owner: true,
     player_name: "Player1",
   };
-  const datosPartidaMock = { 
-    current_player_name: "Player1", 
+  const datosPartidaMock = {
+    current_player_name: "Player1",
     opponents: [{ turn_order: 2, player_name: "Player2" }],
     lastPlayerBlockedTurn: 2,
   };
@@ -272,7 +272,7 @@ describe("Registro Component", () => {
       expect(textarea.value).toBe("");
     });
   });
-  
+
   it("debería mostrar el mensaje cuando el jugador recibe un nuevo tablero", async () => {
     const eventoMock = {
       key: "PLAYER_RECEIVE_NEW_BOARD",
@@ -281,13 +281,13 @@ describe("Registro Component", () => {
         player_name: "Player1",
       },
     };
-  
+
     renderRegistro(eventoMock);
-  
+
     act(() => {
       jest.advanceTimersByTime(150);
     });
-  
+
     await waitFor(() =>
       expect(
         screen.getByText('El jugador "Player1" ha realizado un movimiento.'),
@@ -305,13 +305,13 @@ describe("Registro Component", () => {
         ban_color: "red",
       },
     };
-  
+
     renderRegistro(eventoMock);
-  
+
     act(() => {
       jest.advanceTimersByTime(150);
     });
-  
+
     await waitFor(() =>
       expect(
         screen.getByText(
@@ -319,7 +319,7 @@ describe("Registro Component", () => {
         ),
       ).toBeInTheDocument(),
     );
-  
+
     await waitFor(() =>
       expect(
         screen.getByText("Nuevo color prohibido: rojo."),
@@ -335,13 +335,13 @@ describe("Registro Component", () => {
         ban_color: "blue",
       },
     };
-  
+
     renderRegistro(eventoMock);
-  
+
     act(() => {
       jest.advanceTimersByTime(150);
     });
-  
+
     await waitFor(() =>
       expect(
         screen.getByText(
@@ -349,7 +349,7 @@ describe("Registro Component", () => {
         ),
       ).toBeInTheDocument(),
     );
-  
+
     await waitFor(() =>
       expect(
         screen.getByText("Nuevo color prohibido: azul."),
@@ -365,13 +365,13 @@ describe("Registro Component", () => {
         turn_order: 1,
       },
     };
-  
+
     renderRegistro(eventoMock);
-  
+
     act(() => {
       jest.advanceTimersByTime(150);
     });
-  
+
     await waitFor(() =>
       expect(
         screen.getByText('El jugador "Player1" ha abandonado la partida.'),

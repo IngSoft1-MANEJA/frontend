@@ -27,8 +27,8 @@ export const Tablero = () => {
   const {
     cartaSeleccionada: cartaFiguraSeleccionada,
     setCartaSeleccionada: setCartaFiguraSeleccionada,
-    esCartaOponente : esCartaOponente,
-    setEsCartaOponente : setEsCartaOponente
+    esCartaOponente: esCartaOponente,
+    setEsCartaOponente: setEsCartaOponente,
   } = useContext(CompletarFiguraContext);
 
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
@@ -60,7 +60,10 @@ export const Tablero = () => {
       if (ultimoEvento.key === "ALLOW_FIGURES") {
         agregarFiguras(ultimoEvento.payload);
       }
-      if (ultimoEvento.key === "COMPLETED_FIGURE" || ultimoEvento.key === "BLOCKED_FIGURE") {
+      if (
+        ultimoEvento.key === "COMPLETED_FIGURE" ||
+        ultimoEvento.key === "BLOCKED_FIGURE"
+      ) {
         setFiguras({
           ...figuras,
           color_prohibido:
@@ -82,7 +85,7 @@ export const Tablero = () => {
         figuras.figuras_actuales,
       );
       if (figura) {
-        if(!esCartaOponente && (tileColor !== figuras.color_prohibido)){
+        if (!esCartaOponente && tileColor !== figuras.color_prohibido) {
           try {
             const respuesta = await ServicioPartida.completarFicha(
               match_id,
@@ -109,13 +112,17 @@ export const Tablero = () => {
             }));
           } catch (err) {
             console.error(err);
-            setMensajeAlerta("Error al completar figura");
+            if (err.status === 409) {
+              setMensajeAlerta("Figura incorrecta");
+            } else {
+              setMensajeAlerta("Error al completar figura");
+            }
             setMostrarAlerta(true);
             setTimeout(() => {
               setMostrarAlerta(false);
             }, 1000);
           }
-        } else if (esCartaOponente && (tileColor !== figuras.color_prohibido)) {
+        } else if (esCartaOponente && tileColor !== figuras.color_prohibido) {
           try {
             const respuesta = await ServicioPartida.bloquearFicha(
               match_id,
@@ -140,10 +147,22 @@ export const Tablero = () => {
               cartasCompletadas:
                 prev.cartasUsadas.length - respuesta.movement_cards.length,
             }));
-            
           } catch (err) {
             console.error(err);
-            setMensajeAlerta("Error al bloquear figura");
+            if (err.status === 400) {
+              setMensajeAlerta("No es posible bloquear a ese jugador");
+            } else if (err.status === 409) {
+              if (err.detail === "Conflict with coordinates and Figure Card") {
+                setMensajeAlerta(
+                  "La carta de figura seleccionada es incorrecta",
+                );
+              } else if (err.detail === "Player doesnt exist") {
+                setMensajeAlerta("El jugador ya no se encuentra en la partida");
+              }
+            } else {
+              console.log(err);
+              setMensajeAlerta("Error al bloquear figura");
+            }
             setMostrarAlerta(true);
             setTimeout(() => {
               setMostrarAlerta(false);
@@ -163,7 +182,12 @@ export const Tablero = () => {
 
   const handleFichaClick = async (rowIndex, columnIndex, tileColor) => {
     if (cartaFiguraSeleccionada !== null) {
-      manejarFiguraSeleccionadaEnClick(rowIndex, columnIndex, esCartaOponente, tileColor);
+      manejarFiguraSeleccionadaEnClick(
+        rowIndex,
+        columnIndex,
+        esCartaOponente,
+        tileColor,
+      );
     }
     if (usarMovimiento.cartaSeleccionada !== null) {
       const fichaEstaSeleccionada = usarMovimiento.fichasSeleccionadas.some(

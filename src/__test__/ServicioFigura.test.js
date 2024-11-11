@@ -108,7 +108,7 @@ describe("ServicioFigura", () => {
             turn_order: 1,
             shape_cards: [
               [2, "INVERSE_SNAKE"], // Carta nueva
-              [5, "DOG"],           // Carta nueva
+              [5, "DOG"], // Carta nueva
             ],
           },
           { turn_order: 2, shape_cards: [[4, "STAIRS"]] },
@@ -118,12 +118,12 @@ describe("ServicioFigura", () => {
       const cartasFiguras = [
         [1, "T_90"], // Carta completada
         [2, "INVERSE_SNAKE"], // Carta no completada
-        [5, "DOG"],           // Carta no completada
+        [5, "DOG"], // Carta no completada
       ];
-      const setCartasFiguras = jest.fn();  // Usamos el mock de setCartasFiguras
+      const setCartasFiguras = jest.fn(); // Usamos el mock de setCartasFiguras
       const setOponentes = jest.fn();
       const cartasFigurasCompletadas = [[1, "T_90"]]; // Carta completada
-    
+
       // Llamamos a la función con isBloqued en true
       ServicioFigura.repartirCartasFigura(
         ultimoEvento,
@@ -133,13 +133,13 @@ describe("ServicioFigura", () => {
         [{ turn_order: 2, shape_cards: [[3, "SNAKE"]] }],
         setOponentes,
         cartasFigurasCompletadas,
-        true // isBloqued
+        true, // isBloqued
       );
-    
+
       // Verificamos que setCartasFiguras haya sido llamado con las cartas no completadas
       expect(setCartasFiguras).toHaveBeenCalledWith([
         [2, "INVERSE_SNAKE"], // Carta no completada
-        [5, "DOG"],           // Carta no completada
+        [5, "DOG"], // Carta no completada
       ]);
     });
 
@@ -235,7 +235,14 @@ describe("ServicioFigura", () => {
     });
 
     it("deberia retornar una cadena vacia si la carta está bloqueada", () => {
-      const resultado = ServicioFigura.claseCarta(3, null, null, true, [], true);
+      const resultado = ServicioFigura.claseCarta(
+        3,
+        null,
+        null,
+        true,
+        [],
+        true,
+      );
       expect(resultado).toBe("");
     });
     it("debería retornar vacío cuando habilitarAccionesUsuario sea falso", () => {

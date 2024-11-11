@@ -8,6 +8,9 @@ function procesarMensajeEvento(
   datosJugador,
   datosPartida,
 ) {
+  let cartaCompletadaId = null;
+  let cartasBloqueadasId = [];
+
   switch (currentEvent.key) {
     case "GET_PLAYER_MATCH_INFO":
       setRegistro((prevRegistro) => [
@@ -74,33 +77,56 @@ function procesarMensajeEvento(
       ]);
       break;
     case "COMPLETED_FIGURE":
-      setRegistro((prevRegistro) => [
-        ...prevRegistro,
-        {
-          mensaje: `El jugador "${datosPartida.current_player_name}" ha completado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}".`,
-          tipo: "evento",
-          turn_order: currentEvent.payload.turn_order ?? null,
-          player_name: currentEvent.payload.player_name ?? null,
-        },
-        {
-          mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
-          tipo: "evento",
-          turn_order: currentEvent.payload.turn_order ?? null,
-          player_name: currentEvent.payload.player_name ?? null,
-        },
-      ]);
+      if (cartasBloqueadasId.includes(currentEvent.payload.figure_id)) {
+        setRegistro((prevRegistro) => [
+          ...prevRegistro,
+          {
+            mensaje: `El jugador "${datosPartida.current_player_name}" ha completado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}".`,
+            tipo: "evento",
+            turn_order: currentEvent.payload.turn_order ?? null,
+            player_name: currentEvent.payload.player_name ?? null,
+          },
+          {
+            mensaje: `El jugador "${datosPartida.current_player_name}" ha desbloqueado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}".`,
+            tipo: "evento",
+          },
+          {
+            mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
+            tipo: "evento",
+            turn_order: currentEvent.payload.turn_order ?? null,
+            player_name: currentEvent.payload.player_name ?? null,
+          },
+        ]);
+      } else {
+        setRegistro((prevRegistro) => [
+          ...prevRegistro,
+          {
+            mensaje: `El jugador "${datosPartida.current_player_name}" ha completado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}".`,
+            tipo: "evento",
+            turn_order: currentEvent.payload.turn_order ?? null,
+            player_name: currentEvent.payload.player_name ?? null,
+          },
+          {
+            mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
+            tipo: "evento",
+            turn_order: currentEvent.payload.turn_order ?? null,
+            player_name: currentEvent.payload.player_name ?? null,
+          },
+        ]);
+      }
       break;
     case "BLOCKED_FIGURE":
+      cartasBloqueadasId.push(currentEvent.payload.figure_id);
       setRegistro((prevRegistro) => [
         ...prevRegistro,
         {
-          mensaje: `El jugador "${datosPartida.current_player_name}" ha bloqueado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}" del jugador "${datosPartida.opponents.find(oponente => oponente.turn_order === datosPartida.lastPlayerBlockedTurn)?.player_name || 'desconocido'}".`,
+          mensaje: `El jugador "${datosPartida.current_player_name}" ha bloqueado la figura "${ServicioFigura.cartaStringName(currentEvent.payload.figure_name)}" del jugador "${datosPartida.opponents.find((oponente) => oponente.turn_order === datosPartida.lastPlayerBlockedTurn)?.player_name || "desconocido"}".`,
           tipo: "evento",
         },
         {
           mensaje: `Nuevo color prohibido: ${currentEvent.payload.ban_color === null ? "Ninguno" : ServicioFigura.cambiarIdiomaColorFigura(currentEvent.payload.ban_color)}.`,
           tipo: "evento",
-        }
+        },
       ]);
       break;
     case "PLAYER_LEFT":

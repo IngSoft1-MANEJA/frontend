@@ -9,7 +9,7 @@ export const JugadorGanoMotivo = Object.freeze({
 export class ServicioPartida {
   static GRUPO_ENDPOINT = "matches";
 
-  static async unirsePartida(idPartida, nombreJugador) {
+  static async unirsePartida(idPartida, nombreJugador, clave) {
     const respuesta = await fetch(
       `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}`,
       {
@@ -17,7 +17,7 @@ export class ServicioPartida {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ player_name: nombreJugador }),
+        body: JSON.stringify({ player_name: nombreJugador, password: clave}),
       },
     );
 
@@ -33,21 +33,27 @@ export class ServicioPartida {
     return json;
   }
 
-  static async listarPartidas(buscarTermino = "") {
-  
-    const params = new URLSearchParams();
-    if (buscarTermino) {
-      params.append("s", buscarTermino); 
+  static async listarPartidas(buscarTermino = "", maximoJugadores = null) {
+    const params = new URLSearchParams({});
+
+    if (maximoJugadores !== null) {
+      params.append("max_players", maximoJugadores);
     }
-  
+
+    console.log(params.toString());
+
+    if (buscarTermino) {
+      params.append("s", buscarTermino);
+    }
+
     const url = `${BACKEND_URL}/${this.GRUPO_ENDPOINT}?${params}`;
-  
+
     const respuesta = await fetch(url);
-  
+
     if (!respuesta.ok) {
       throw new Error(`Error al listar partidas - estado: ${respuesta.status}`);
     }
-  
+
     const json = await respuesta.json();
     return json.map((partida) => {
       partida.match_id = partida.id; // Asigna el match_id
@@ -55,7 +61,7 @@ export class ServicioPartida {
     });
   }
 
-  static async crearPartida(nombreSala, nombreJugador, cantidadJugadores) {
+  static async crearPartida(nombreSala, nombreJugador, cantidadJugadores, contraseña) {
     const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}`, {
       method: "POST",
       headers: {
@@ -65,7 +71,7 @@ export class ServicioPartida {
         lobby_name: nombreSala,
         player_name: nombreJugador,
         max_players: cantidadJugadores,
-        is_public: true,
+        password: contraseña,
         token: "asdfasdf",
       }),
     });
@@ -278,9 +284,13 @@ export class ServicioPartida {
     );
 
     if (!respuesta.ok) {
-      throw new Error(
-        `Error al validar movimiento - estado: ${respuesta.status}`,
+      const error = new Error(
+        `Error al bloquear ficha - estado: ${respuesta.status}`,
       );
+      error.status = respuesta.status;
+      const errorBody = await respuesta.json();
+      error.detail = errorBody?.detail || "Error al bloquear figura";
+      throw error;
     }
 
     const json = await respuesta.json();

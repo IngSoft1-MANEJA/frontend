@@ -23,9 +23,10 @@ import { CancelarUltimoMovimiento } from "./components/CancelarUltimoMovimiento.
 import { FigurasProvider } from "../../contexts/FigurasContext.jsx";
 import { CompletarFiguraProvider } from "../../contexts/CompletarFiguraContext.jsx";
 import { HabilitarAccionesUsuarioContext } from "../../contexts/HabilitarAccionesUsuarioContext.jsx";
+import { ServicioDatosPartida } from "../../services/ServicioDatosPartida.js";
 
 export function Game() {
-  const { match_id } = useParams();
+  const { match_id, player_id } = useParams();
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
   const { ultimoEvento, setUltimoEvento } = useContext(EventoContext);
@@ -34,7 +35,7 @@ export function Game() {
   );
   const [mensaje, setMensaje] = useState("");
   const [mostrarModalGanador, setMostrarModalGanador] = useState(false);
-  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${datosJugador.player_id}`;
+  const websocket_url = `${WEBSOCKET_URL}/matches/${match_id}/ws/${player_id}`;
   const navigate = useNavigate();
   const { sendJsonMessage, lastMessage, readyState } = useWebSocket(
     websocket_url,
@@ -51,9 +52,12 @@ export function Game() {
 
   useEffect(() => {
     setHabilitarAccionesUsuario(true);
+    setDatosJugador((prev) => ({...prev, player_id: player_id}));
+    ServicioDatosPartida.guardarDatosPartida(match_id, player_id, {});
     return () => {
       setUltimoEvento(null); // Limpia el último evento al desmontar el componente
       setHabilitarAccionesUsuario(false);
+      ServicioDatosPartida.guardarDatosPartida(match_id, player_id, {});
     };
   }, []);
 
@@ -73,7 +77,7 @@ export function Game() {
       try {
         ServicioPartida.obtenerInfoPartidaParaJugador(
           match_id,
-          datosJugador.player_id,
+          player_id,
         );
       } catch (error) {
         console.error(error);
@@ -89,7 +93,10 @@ export function Game() {
           current_player_name: ultimoEvento.payload.current_turn_player,
           opponents: ultimoEvento.payload.opponents
         });
-        if (ultimoEvento.payload.turn_order === 1) {
+        if (
+          ultimoEvento.payload.turn_order ===
+          ultimoEvento.payload.current_turn_order
+        ) {
           setDatosJugador({
             ...datosJugador,
             player_turn: ultimoEvento.payload.turn_order,
@@ -98,6 +105,8 @@ export function Game() {
         } else {
           setDatosJugador({
             ...datosJugador,
+            is_owner: ultimoEvento.payload.is_owner,
+            player_name: ultimoEvento.payload.player_name,
             player_turn: ultimoEvento.payload.turn_order,
             is_player_turn: false,
           });

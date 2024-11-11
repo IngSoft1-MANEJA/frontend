@@ -169,7 +169,7 @@ export const CartasFiguras = () => {
         {cartasMazo[miTurno - 1] > 3 && (
           <div
             className="mazo"
-            data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - 3}\n Nombre: ${datosJugador.player_name}`}
+            data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - 3}`}
           >
             <img src={backfig} alt="back" />
           </div>
@@ -209,6 +209,9 @@ export const CartasFiguras = () => {
             />
           </div>
         ))}
+        <div className="info-jugador" title={datosJugador.player_name}>
+          <p>Jugador: {datosJugador.player_name}</p>
+        </div>
       </div>
       {oponentesOrdenados.map((oponente, oponenteIndex) => (
         <div
@@ -220,7 +223,6 @@ export const CartasFiguras = () => {
           {cartasMazo[oponente.turn_order - 1] > 3 && (
             <div
               className="mazo"
-              data-tooltip={`Nombre: ${oponente.player_name}`}
             >
               <img src={backfig} alt="back" />
             </div>
@@ -263,6 +265,9 @@ export const CartasFiguras = () => {
               {/*dependiendo de si esta bloqueada o no mapeamos de una forma u otra*/}
             </div>
           ))}
+          <div className="info-jugador" title={oponente.player_name}>
+            <p>Jugador: {oponente.player_name}</p>
+          </div>
         </div>
       ))}
     </div>

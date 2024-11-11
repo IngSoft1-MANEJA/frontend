@@ -94,6 +94,9 @@
 .mazo {
   position: relative;
   display: inline-block;
+  transform: translateX(-3px);
+  transform: translateY(-3px);
+  box-shadow: rgba(143, 120, 120, 0.4) 3px 2px 1px, rgba(143, 120, 120, 0.3) 6px 4px 1px;
 }
 
 .mazo[data-tooltip]:hover::after {
@@ -110,8 +113,29 @@
   color: #fff;
   padding: 5px 10px;
   border-radius: 4px;
-  font-size: 1.8vh;
+  font-size: 2vh;
   opacity: 0.9;
   width: 12vh;
   height: 12vh;
+}
+
+.info-jugador {
+  border: solid 4px rgb(143, 120, 120);
+  color: rgb(84, 77, 77);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 2vh;
+  width: 12vh;
+  height: 12vh;
+  background-color: rgb(206, 191, 172);
+  padding: 1px;
+  border-radius: 0.6vh;
+}
+
+.info-jugador p{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 }

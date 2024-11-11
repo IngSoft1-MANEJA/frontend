@@ -300,6 +300,6 @@ describe("ServicioPartida", () => {
         [1, 1],
         [2, 2],
       ]),
-    ).rejects.toThrow("Error al validar movimiento - estado: 500");
+    ).rejects.toThrow("Error al bloquear ficha - estado: 500");
   });
 });

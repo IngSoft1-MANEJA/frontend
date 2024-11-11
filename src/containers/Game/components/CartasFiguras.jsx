@@ -68,6 +68,7 @@ const urlMap = {
 };
 
 export const CartasFiguras = () => {
+  const [cartaDesbloqueadaId, setCartaDesbloqueadaId] = useState(null);
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
@@ -112,8 +113,10 @@ export const CartasFiguras = () => {
         setCartasFigurasCompletadas([]);
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
-
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
+        if (cartaDesbloqueadaId === cartaId) {
+          setBloqueado(false);
+        }
       } else if (ultimoEvento.key === "BLOCKED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
 
@@ -127,6 +130,9 @@ export const CartasFiguras = () => {
         }
 
         setCartasBloqueadas((prev) => [...prev, cartaId]);
+      } else if (ultimoEvento.key === "UNLOCK_FIGURE") {
+        setCartaDesbloqueadaId(ultimoEvento.payload.figure_id);
+        cartasBloqueadas.splice(cartasBloqueadas.indexOf(ultimoEvento.payload.figure_id), 1);
       }
     }
   }, [ultimoEvento]);
@@ -160,10 +166,10 @@ export const CartasFiguras = () => {
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        {cartasMazo[miTurno - 1] > 3 && (
+        {(cartasMazo[miTurno - 1] > 3 || (cartasMazo[miTurno - 1] - (cartasFiguras.length || 0) > 0)) && (
           <div
             className="mazo"
-            data-tooltip={`Cartas: ${cartasMazo[miTurno - 1] - 3}`}
+            data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - (cartasFiguras.length || 0)}`}
           >
             <img src={backfig} alt="back" />
           </div>
@@ -203,6 +209,9 @@ export const CartasFiguras = () => {
             />
           </div>
         ))}
+        <div className="info-jugador" title={datosJugador.player_name}>
+          <p>Jugador: {datosJugador.player_name}</p>
+        </div>
       </div>
       {oponentesOrdenados.map((oponente, oponenteIndex) => (
         <div
@@ -211,10 +220,9 @@ export const CartasFiguras = () => {
             cartas-figuras-oponente-${oponenteIndex + 1} 
             ${oponentes.length > 1 ? "columnas" : "filas"}`}
         >
-          {cartasMazo[oponente.turn_order - 1] > 3 && (
-            <div
+          {(cartasMazo[oponente.turn_order - 1] > 3 || (cartasMazo[oponente.turn_order - 1] - (oponente.shape_cards.length || []) > 0)) && (
+            <div 
               className="mazo"
-              data-tooltip={`Nombre: ${oponente.player_name}`}
             >
               <img src={backfig} alt="back" />
             </div>
@@ -257,6 +265,9 @@ export const CartasFiguras = () => {
               {/*dependiendo de si esta bloqueada o no mapeamos de una forma u otra*/}
             </div>
           ))}
+          <div className="info-jugador" title={oponente.player_name}>
+            <p>Jugador: {oponente.player_name}</p>
+          </div>
         </div>
       ))}
     </div>

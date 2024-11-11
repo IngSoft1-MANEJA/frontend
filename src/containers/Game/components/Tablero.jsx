@@ -112,7 +112,11 @@ export const Tablero = () => {
             }));
           } catch (err) {
             console.error(err);
-            setMensajeAlerta("Error al completar figura");
+            if (err.status === 409) {
+              setMensajeAlerta("Figura incorrecta");
+            } else {
+              setMensajeAlerta("Error al completar figura");
+            }
             setMostrarAlerta(true);
             setTimeout(() => {
               setMostrarAlerta(false);
@@ -145,7 +149,11 @@ export const Tablero = () => {
             }));
           } catch (err) {
             console.error(err);
-            setMensajeAlerta("Error al bloquear figura");
+            if (err.status === 400) {
+              setMensajeAlerta("No es posible bloquear a ese jugador");
+            } else {
+              setMensajeAlerta("Error al bloquear figura");
+            }
             setMostrarAlerta(true);
             setTimeout(() => {
               setMostrarAlerta(false);

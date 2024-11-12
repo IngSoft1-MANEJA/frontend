@@ -6,13 +6,13 @@ import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
 import "./UnirsePartida.css";
 import { ServicioToken } from "../../../services/ServicioToken.js";
 
-function UnirsePartida({ idPartida , esPublica }) {
+function UnirsePartida({ idPartida, esPublica }) {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [clave, setClave] = useState("");
   const [mensajeError, setMensajeError] = useState("");
   const [estaCargando, setEstaCargando] = useState(false);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
-  const { datosPartida } = useContext(DatosPartidaContext)
+  const { datosPartida } = useContext(DatosPartidaContext);
   const navigate = useNavigate();
 
   const manejarUnirse = async (e) => {
@@ -23,7 +23,7 @@ function UnirsePartida({ idPartida , esPublica }) {
         const dataPartida = await ServicioPartida.unirsePartida(
           idPartida,
           nombreUsuario,
-          clave
+          clave,
         );
 
         setDatosJugador({
@@ -36,7 +36,7 @@ function UnirsePartida({ idPartida , esPublica }) {
         ServicioToken.guardarToken(
           idPartida,
           dataPartida.player_id,
-          dataPartida.token
+          dataPartida.token,
         );
 
         navigate(`/lobby/${idPartida}/player/${dataPartida.player_id}`);
@@ -44,16 +44,25 @@ function UnirsePartida({ idPartida , esPublica }) {
       } catch (error) {
         switch (error.status) {
           case 404:
-            setMensajeError({ nombre: "La partida no existe o ha sido cancelada.", clave: "" });
+            setMensajeError({
+              nombre: "La partida no existe o ha sido cancelada.",
+              clave: "",
+            });
             break;
           case 409:
             setMensajeError({ nombre: "La partida ya está llena.", clave: "" });
             break;
           case 422:
-            setMensajeError({ nombre: "El nombre de la partida es invalido", clave: "" });
+            setMensajeError({
+              nombre: "El nombre de la partida es invalido",
+              clave: "",
+            });
             break;
           case 401:
-            setMensajeError({ nombre: "", clave: "La clave ingresada es incorrecta." });
+            setMensajeError({
+              nombre: "",
+              clave: "La clave ingresada es incorrecta.",
+            });
             break;
           default:
             setMensajeError("Error al unirse a partida");
@@ -63,7 +72,10 @@ function UnirsePartida({ idPartida , esPublica }) {
         setEstaCargando(false);
       }
     } else {
-      setMensajeError({ nombre: "Por favor, ingrese un nombre de usuario", clave: "" });
+      setMensajeError({
+        nombre: "Por favor, ingrese un nombre de usuario",
+        clave: "",
+      });
     }
   };
 
@@ -77,7 +89,7 @@ function UnirsePartida({ idPartida , esPublica }) {
     document.getElementById("modal-unirse-partida").close();
     setMensajeError("");
     setNombreUsuario("");
-    setClave("")
+    setClave("");
     setEstaCargando(false);
   };
 
@@ -130,7 +142,9 @@ function UnirsePartida({ idPartida , esPublica }) {
               {!esPublica && (
                 <label className="form-control">
                   <div className="label">
-                    <span className="label-text">Ingrese la clave de la sala</span>
+                    <span className="label-text">
+                      Ingrese la clave de la sala
+                    </span>
                   </div>
                   <input
                     className={`input input-bordered ${

@@ -52,7 +52,7 @@ export function Game() {
 
   useEffect(() => {
     setHabilitarAccionesUsuario(true);
-    setDatosJugador((prev) => ({...prev, player_id: player_id}));
+    setDatosJugador((prev) => ({ ...prev, player_id: player_id }));
     ServicioDatosPartida.guardarDatosPartida(match_id, player_id, {});
     return () => {
       setUltimoEvento(null); // Limpia el último evento al desmontar el componente
@@ -75,10 +75,7 @@ export function Game() {
   useEffect(() => {
     if (readyState === ReadyState.OPEN) {
       try {
-        ServicioPartida.obtenerInfoPartidaParaJugador(
-          match_id,
-          player_id,
-        );
+        ServicioPartida.obtenerInfoPartidaParaJugador(match_id, player_id);
       } catch (error) {
         console.error(error);
       }

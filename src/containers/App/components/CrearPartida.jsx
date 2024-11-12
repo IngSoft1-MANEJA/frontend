@@ -17,7 +17,7 @@ export const CrearPartida = () => {
   const [estaCargando, setEstaCargando] = useState(false);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
-  
+
   const shouldFetchRef = useRef(shouldFetch);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export const CrearPartida = () => {
         ServicioToken.guardarToken(
           resJson.match_id,
           resJson.player_id,
-          resJson.token
+          resJson.token,
         );
         setDatosJugador({
           ...datosJugador,
@@ -75,7 +75,7 @@ export const CrearPartida = () => {
         });
         if (
           cantidadJugadoresWatch !== null &&
-          cantidadJugadoresWatch !== undefined 
+          cantidadJugadoresWatch !== undefined
         ) {
           setDatosPartida({
             ...datosPartida,

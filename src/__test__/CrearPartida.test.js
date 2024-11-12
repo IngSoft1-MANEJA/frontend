@@ -13,7 +13,7 @@ import {
   CrearPartidaMock,
   CrearPartidaMockError,
   CrearPartidaMockErrorConClave,
-  CrearPartidaMockConClave
+  CrearPartidaMockConClave,
 } from "../__mocks__/CrearPartidaForm.mock.js";
 import * as reactRouterDom from "react-router-dom";
 import { BACKEND_URL } from "../variablesConfiguracion.js";
@@ -37,7 +37,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () =>
-      Promise.resolve({ player_name: "test", match_id: 1, player_id: 2}),
+      Promise.resolve({ player_name: "test", match_id: 1, player_id: 2 }),
   }),
 );
 
@@ -256,7 +256,7 @@ describe("CrearPartida", () => {
               player_name: CrearPartidaMock.nombreJugador,
               max_players: CrearPartidaMock.cantidadJugadores,
               is_public: true,
-              pass : "",
+              pass: "",
               token: "asdfasdf",
             }),
           }),
@@ -310,7 +310,7 @@ describe("CrearPartida", () => {
         expect(mockSetDatosJugador).toHaveBeenCalledWith({
           is_owner: true,
           player_id: 2,
-          player_name: CrearPartidaMock.nombreJugador
+          player_name: CrearPartidaMock.nombreJugador,
         });
       }, 1500);
     });
@@ -332,7 +332,7 @@ describe("CrearPartida", () => {
     const nombreJugadorInput = screen.getByLabelText("nombreJugador");
     const nombreSalaInput = screen.getByLabelText("nombreSala");
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
-    const claveInput = screen.getByLabelText("clave")
+    const claveInput = screen.getByLabelText("clave");
     const submitButton = screen.getByText("Crear Sala de Partida");
 
     expect(nombreJugadorInput).toHaveValue("");
@@ -341,21 +341,26 @@ describe("CrearPartida", () => {
     fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
     expect(claveInput).toHaveValue("");
 
-    await userEvent.type(nombreJugadorInput, CrearPartidaMockConClave.nombreJugador);
+    await userEvent.type(
+      nombreJugadorInput,
+      CrearPartidaMockConClave.nombreJugador,
+    );
     await userEvent.type(nombreSalaInput, CrearPartidaMockConClave.nombreSala);
     await userEvent.type(
       cantidadJugadoresInput,
       CrearPartidaMockConClave.cantidadJugadores.toString(),
     );
-    await userEvent.type(claveInput,CrearPartidaMockConClave.clave )
+    await userEvent.type(claveInput, CrearPartidaMockConClave.clave);
 
     await waitFor(() => {
-      expect(nombreJugadorInput).toHaveValue(CrearPartidaMockConClave.nombreJugador);
+      expect(nombreJugadorInput).toHaveValue(
+        CrearPartidaMockConClave.nombreJugador,
+      );
       expect(nombreSalaInput).toHaveValue(CrearPartidaMockConClave.nombreSala);
       expect(cantidadJugadoresInput).toHaveValue(
         CrearPartidaMockConClave.cantidadJugadores,
       );
-      expect(claveInput).toHaveValue(CrearPartidaMockConClave.clave)
+      expect(claveInput).toHaveValue(CrearPartidaMockConClave.clave);
     });
 
     fireEvent.click(submitButton);
@@ -374,7 +379,7 @@ describe("CrearPartida", () => {
               player_name: CrearPartidaMock.nombreJugador,
               max_players: CrearPartidaMock.cantidadJugadores,
               is_public: true,
-              pass : "123456",
+              pass: "123456",
               token: "asdfasdf",
             }),
           }),

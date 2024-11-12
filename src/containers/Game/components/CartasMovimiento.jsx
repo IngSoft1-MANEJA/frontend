@@ -30,14 +30,14 @@ export const CartasMovimiento = () => {
 
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { usarMovimiento, setUsarMovimiento } = useContext(
-    UsarMovimientoContext
+    UsarMovimientoContext,
   );
   const { cartaSeleccionada: cartaFiguraSeleccionada } = useContext(
-    CompletarFiguraContext
+    CompletarFiguraContext,
   );
   const { ultimoEvento } = useContext(EventoContext);
   const { habilitarAccionesUsuario } = useContext(
-    HabilitarAccionesUsuarioContext
+    HabilitarAccionesUsuarioContext,
   );
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export const CartasMovimiento = () => {
       if (ultimoEvento.key == "GET_MOVEMENT_CARD") {
         const cartasNoUsadas = cartasMovimiento.filter(
           (carta) =>
-            !usarMovimiento.cartasUsadas.some((usada) => usada[0] === carta[0])
+            !usarMovimiento.cartasUsadas.some((usada) => usada[0] === carta[0]),
         );
 
         const nuevasCartas = ultimoEvento.payload.movement_card;
@@ -92,7 +92,7 @@ export const CartasMovimiento = () => {
                 prev.fichasSeleccionadas.length
                   ? prev.fichasSeleccionadas[0].columnIndex
                   : null,
-                carta[1]
+                carta[1],
               );
 
             return {
@@ -120,7 +120,7 @@ export const CartasMovimiento = () => {
       <div className="cartas-movimientos-propias">
         {cartasMovimiento.map((carta, index) => {
           const estaUsada = usarMovimiento.cartasUsadas.some(
-            (cartaUsada) => carta[0] === cartaUsada[0]
+            (cartaUsada) => carta[0] === cartaUsada[0],
           );
 
           return (

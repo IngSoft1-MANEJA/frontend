@@ -44,12 +44,18 @@ export const CartasMovimiento = () => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key == "GET_MOVEMENT_CARD") {
         const cartasNoUsadas = cartasMovimiento.filter(
-          (carta) => !usarMovimiento.cartasUsadas.includes(carta),
+          (carta) =>
+            !usarMovimiento.cartasUsadas.some((usada) => usada[0] === carta[0]),
         );
 
         const nuevasCartas = ultimoEvento.payload.movement_card;
 
         setCartasMovimiento([...cartasNoUsadas, ...nuevasCartas]);
+      } else if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
+        setUsarMovimiento((prev) => ({
+          ...prev,
+          cartasUsadas: ultimoEvento.payload.last_movements,
+        }));
       }
     }
   }, [ultimoEvento]);
@@ -112,25 +118,31 @@ export const CartasMovimiento = () => {
   return (
     <div>
       <div className="cartas-movimientos-propias">
-        {cartasMovimiento.map((carta, index) => (
-          <div
-            key={index}
-            onMouseEnter={() =>
-              setUsarMovimiento({ ...usarMovimiento, cartaHovering: true })
-            }
-            onMouseLeave={() =>
-              setUsarMovimiento({ ...usarMovimiento, cartaHovering: false })
-            }
-            className={`carta-movimiento 
+        {cartasMovimiento.map((carta, index) => {
+          const estaUsada = usarMovimiento.cartasUsadas.some(
+            (cartaUsada) => carta[0] === cartaUsada[0],
+          );
+
+          return (
+            <div
+              key={index}
+              onMouseEnter={() =>
+                setUsarMovimiento({ ...usarMovimiento, cartaHovering: true })
+              }
+              onMouseLeave={() =>
+                setUsarMovimiento({ ...usarMovimiento, cartaHovering: false })
+              }
+              className={`carta-movimiento 
               ${usarMovimiento.cartaHovering && !usarMovimiento.highlightCarta.state ? "hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)] hover:scale-105" : ""} 
-              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index && !usarMovimiento.cartasUsadas.includes(carta) ? "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105" : ""}
-              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index && !usarMovimiento.cartasUsadas.includes(carta) ? "opacity-75 hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" : ""}
-              ${cartaFiguraSeleccionada !== null || usarMovimiento.cartasUsadas.includes(carta) ? "opacity-25 pointer-events-none greyscale" : ""}`}
-            onClick={() => handleCartaClick({ carta, index })}
-          >
-            <img className="carta" src={urlMap[carta[1]]} alt={carta[1]} />
-          </div>
-        ))}
+              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key === index && !estaUsada ? "cursor-pointer shadow-[0px_0px_20px_rgba(100,200,44,1)] scale-105" : ""}
+              ${usarMovimiento.highlightCarta.state && usarMovimiento.highlightCarta.key !== index && !estaUsada ? "opacity-75 hover:cursor-pointer hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" : ""}
+              ${cartaFiguraSeleccionada !== null || estaUsada ? "opacity-25 pointer-events-none greyscale" : ""}`}
+              onClick={() => handleCartaClick({ carta, index })}
+            >
+              <img className="carta" src={urlMap[carta[1]]} alt={carta[1]} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

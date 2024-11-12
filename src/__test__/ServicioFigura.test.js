@@ -101,48 +101,6 @@ describe("ServicioFigura", () => {
       expect(setCartasFiguras).not.toHaveBeenCalled();
     });
 
-    it("debería solo setear las cartas no usadas si isBloqued es true", () => {
-      const ultimoEvento = {
-        payload: [
-          {
-            turn_order: 1,
-            shape_cards: [
-              [2, "INVERSE_SNAKE"], // Carta nueva
-              [5, "DOG"], // Carta nueva
-            ],
-          },
-          { turn_order: 2, shape_cards: [[4, "STAIRS"]] },
-        ],
-      };
-      const miTurno = 1;
-      const cartasFiguras = [
-        [1, "T_90"], // Carta completada
-        [2, "INVERSE_SNAKE"], // Carta no completada
-        [5, "DOG"], // Carta no completada
-      ];
-      const setCartasFiguras = jest.fn(); // Usamos el mock de setCartasFiguras
-      const setOponentes = jest.fn();
-      const cartasFigurasCompletadas = [[1, "T_90"]]; // Carta completada
-
-      // Llamamos a la función con isBloqued en true
-      ServicioFigura.repartirCartasFigura(
-        ultimoEvento,
-        miTurno,
-        cartasFiguras,
-        setCartasFiguras,
-        [{ turn_order: 2, shape_cards: [[3, "SNAKE"]] }],
-        setOponentes,
-        cartasFigurasCompletadas,
-        true, // isBloqued
-      );
-
-      // Verificamos que setCartasFiguras haya sido llamado con las cartas no completadas
-      expect(setCartasFiguras).toHaveBeenCalledWith([
-        [2, "INVERSE_SNAKE"], // Carta no completada
-        [5, "DOG"], // Carta no completada
-      ]);
-    });
-
     it("debería agregar nuevas cartas a los oponentes si las cartas no han sido completadas", () => {
       const ultimoEvento = {
         payload: [

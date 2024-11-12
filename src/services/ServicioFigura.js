@@ -92,9 +92,7 @@ function repartirCartasFigura(
       ),
   );
 
-  if (isBloqued) {
-    setCartasFiguras(cartasNoUsadas);
-  } else if (jugadorData) {
+  if (jugadorData) {
     const nuevasCartas = jugadorData.shape_cards;
     setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
   } else {

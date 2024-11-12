@@ -36,7 +36,7 @@ function App() {
             }
           />
           <Route
-            path="/matches/:match_id"
+            path="/matches/:match_id/player/:player_id"
             element={
               <DatosPartidaProvider>
                 <DatosJugadorProvider>

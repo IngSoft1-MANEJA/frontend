@@ -3,6 +3,9 @@ import { HttpResponse, http } from "msw";
 import { BACKEND_URL } from "../variablesConfiguracion";
 import { cleanup } from "@testing-library/react";
 import { ServicioPartida } from "../services/ServicioPartida";
+import { ServicioToken } from "../services/ServicioToken";
+
+jest.mock("../services/ServicioToken.js");
 
 const server = setupServer(
   http.post(`${BACKEND_URL}/matches/:id`, () => {
@@ -219,6 +222,7 @@ describe("ServicioPartida", () => {
   });
 
   it("debería obtener información del jugador correctamente", async () => {
+    ServicioToken.mockImplementation(() => "test-token");
     const response = await ServicioPartida.obtenerInfoPartidaParaJugador(1, 2);
     expect(response).toEqual({ playerData: { name: "Jugador 1", score: 100 } });
   });

@@ -222,11 +222,11 @@ describe("UnirsePartida", () => {
     render(
       <MemoryRouter>
         <DatosPartidaProvider>
-        <DatosJugadorContext.Provider
-          value={{ datosJugador: {}, setDatosJugador: mockSetDatosJugador }}
-        >
-          <UnirsePartida idPartida={1} />
-        </DatosJugadorContext.Provider>
+          <DatosJugadorContext.Provider
+            value={{ datosJugador: {}, setDatosJugador: mockSetDatosJugador }}
+          >
+            <UnirsePartida idPartida={1} />
+          </DatosJugadorContext.Provider>
         </DatosPartidaProvider>
       </MemoryRouter>,
     );

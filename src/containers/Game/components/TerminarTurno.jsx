@@ -32,7 +32,10 @@ export const TerminarTurno = () => {
     if (ultimoEvento !== null) {
       switch (ultimoEvento.key) {
         case "GET_PLAYER_MATCH_INFO":
-          if (ultimoEvento.payload.turn_order === 1) {
+          if (
+            ultimoEvento.payload.turn_order ===
+            ultimoEvento.payload.current_turn_order
+          ) {
             setHabilitarBoton(true);
           } else {
             setHabilitarBoton(false);

@@ -100,7 +100,9 @@ describe("TerminarTurno Component", () => {
         key: "GET_PLAYER_MATCH_INFO",
         payload: {
           current_turn_player: "Player 1",
+          current_turn_order: 1,
           turn_order: 1,
+          last_movements: [],
         },
       },
     };

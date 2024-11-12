@@ -1,4 +1,5 @@
 import { BACKEND_URL } from "../variablesConfiguracion";
+import { ServicioToken } from "./ServicioToken";
 
 export const JugadorGanoMotivo = Object.freeze({
   NORMAL: "NORMAL",
@@ -16,7 +17,7 @@ export class ServicioPartida {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ player_name: nombreJugador, password: clave}),
+        body: JSON.stringify({ player_name: nombreJugador, password: clave }),
       },
     );
 
@@ -60,7 +61,12 @@ export class ServicioPartida {
     });
   }
 
-  static async crearPartida(nombreSala, nombreJugador, cantidadJugadores, contraseña) {
+  static async crearPartida(
+    nombreSala,
+    nombreJugador,
+    cantidadJugadores,
+    contraseña,
+  ) {
     const respuesta = await fetch(`${BACKEND_URL}/${this.GRUPO_ENDPOINT}`, {
       method: "POST",
       headers: {
@@ -165,12 +171,14 @@ export class ServicioPartida {
   }
 
   static async obtenerInfoPartidaParaJugador(idPartida, idJugador) {
+    const token = ServicioToken.obtenerToken(idPartida, idJugador);
     const respuesta = await fetch(
       `${BACKEND_URL}/${this.GRUPO_ENDPOINT}/${idPartida}/player/${idJugador}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       },
     );

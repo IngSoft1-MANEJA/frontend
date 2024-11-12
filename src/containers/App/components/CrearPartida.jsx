@@ -78,7 +78,7 @@ export const CrearPartida = () => {
             max_players: cantidadJugadoresWatch,
           });
         }
-        setPuedeCrear(false);
+        setPuedeCrear(true);
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
         setEstaCargando(false);
       } catch (err) {

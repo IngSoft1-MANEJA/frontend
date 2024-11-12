@@ -44,7 +44,8 @@ export const CartasMovimiento = () => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key == "GET_MOVEMENT_CARD") {
         const cartasNoUsadas = cartasMovimiento.filter(
-          (carta) => !usarMovimiento.cartasUsadas.includes(carta)
+          (carta) =>
+            !usarMovimiento.cartasUsadas.some((usada) => usada[0] === carta[0])
         );
 
         const nuevasCartas = ultimoEvento.payload.movement_card;

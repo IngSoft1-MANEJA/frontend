@@ -15,6 +15,7 @@ export const CrearPartida = () => {
   const [message, setMessage] = useState("");
   const [shouldFetch, setShouldFetch] = useState(true);
   const [estaCargando, setEstaCargando] = useState(false);
+  const [puedeCrear, setPuedeCrear] = useState(true);
   const { datosJugador, setDatosJugador } = useContext(DatosJugadorContext);
   const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
 
@@ -47,6 +48,7 @@ export const CrearPartida = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setPuedeCrear(false);
     setShouldFetch(true);
     setEstaCargando(true);
 
@@ -82,10 +84,12 @@ export const CrearPartida = () => {
             max_players: cantidadJugadoresWatch,
           });
         }
+        setPuedeCrear(true);
         navegar(`/lobby/${resJson.match_id}/player/${resJson.player_id}`);
         setEstaCargando(false);
       } catch (err) {
         setEstaCargando(false);
+        setPuedeCrear(true);
         setMessage("Error creando sala de partida");
         setShowSuccess("error");
         console.log(err);
@@ -96,6 +100,7 @@ export const CrearPartida = () => {
   const handleClose = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    setPuedeCrear(true);
     setShowSuccess(null);
     setMessage("");
     setShouldFetch(false);
@@ -233,7 +238,7 @@ export const CrearPartida = () => {
                 <Alerts type={showSuccess} message={message} />
               ) : null}
               <div className="formButtons">
-                <button className="btn" onClick={onSubmit}>
+                <button className="btn" onClick={onSubmit} disabled={puedeCrear ? "" : "disabled"}>
                   Crear Sala de Partida
                   {estaCargando && <span className="loading loading-spinner" />}
                 </button>

@@ -46,16 +46,4 @@ export class ServicioToken {
     ServicioLocalStorage.guardar_objeto("tokens", tokens);
   }
 
-  /**
-   * Elimina el token correspondiente al id de la partida.
-   * @param {Int | String} idPartida id de la partida a la que pertenece el token.
-   * @param {Int | String} idJugador id del jugador al que pertenece el token.
-   */
-  static eliminarToken(idPartida, idJugador) {
-    const tokens = ServicioLocalStorage.obtener_objeto("tokens");
-    const tokensFiltrados = tokens.filter(
-      (token) => token.idPartida != idPartida && token.idJugador != idJugador,
-    );
-    ServicioLocalStorage.guardar_objeto("tokens", tokensFiltrados);
-  }
 }

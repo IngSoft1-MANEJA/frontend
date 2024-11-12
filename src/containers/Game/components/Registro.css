@@ -1,0 +1,17 @@
+.registro-container {
+  border: 1px solid #464343;
+  border-radius: 5px;
+  word-wrap: break-word;
+}
+
+.registro-container-inner {
+  border-radius: 5px;
+}
+
+.chatbox {
+  height: 90%;
+}
+
+.textarea {
+  height: 10%;
+}

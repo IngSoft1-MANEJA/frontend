@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import { useEffect, useContext, useState } from "react";
 import { EventoContext } from "../../../contexts/EventoContext";
+import { DatosPartidaContext } from "../../../contexts/DatosPartidaContext.jsx";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext.jsx";
 
 import fig1 from "../../../assets/Figuras/Blancas/fig01.svg";
 import fig2 from "../../../assets/Figuras/Blancas/fig02.svg";
@@ -34,6 +36,8 @@ import "./CartasFiguras.css";
 import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext";
 import { DatosJugadorContext } from "../../../contexts/DatosJugadorContext";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
+import { ServicioFigura } from "../../../services/ServicioFigura.js";
+import { set } from "react-hook-form";
 
 const urlMap = {
   1: fig1,
@@ -64,26 +68,82 @@ const urlMap = {
 };
 
 export const CartasFiguras = () => {
+  const [cartaDesbloqueadaId, setCartaDesbloqueadaId] = useState([]);
   const [cartasFiguras, setCartasFiguras] = useState([]);
   const [miTurno, setMiTurno] = useState(0);
   const [cartasFigurasCompletadas, setCartasFigurasCompletadas] = useState([]);
-  const { cartaSeleccionada, setCartaSeleccionada } = useContext(
-    CompletarFiguraContext,
-  );
+  const [cartasBloqueadas, setCartasBloqueadas] = useState([]);
+  const [cartasMazo, setCartasMazo] = useState([]);
+  const [oponentes, setOponentes] = useState([]);
+  const [bloqueado, setBloqueado] = useState(false);
+  const {
+    cartaSeleccionada,
+    setCartaSeleccionada,
+    esCartaOponente,
+    setEsCartaOponente,
+  } = useContext(CompletarFiguraContext);
   const { usarMovimiento } = useContext(UsarMovimientoContext);
   const { datosJugador } = useContext(DatosJugadorContext);
   const { ultimoEvento } = useContext(EventoContext);
+  const { datosPartida, setDatosPartida } = useContext(DatosPartidaContext);
+  const { habilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
+  );
 
   useEffect(() => {
     if (ultimoEvento !== null) {
       if (ultimoEvento.key === "GET_PLAYER_MATCH_INFO") {
         setMiTurno(ultimoEvento.payload.turn_order);
+        setOponentes(ultimoEvento.payload.opponents);
+        setCartasMazo(
+          Array((ultimoEvento.payload.opponents || []).length + 1).fill(
+            ultimoEvento.payload.deck_size,
+          ),
+        );
+
+        if (ultimoEvento.payload.block_figures) {
+          setCartasBloqueadas(ultimoEvento.payload.block_figures);
+        }
       } else if (ultimoEvento.key === "END_PLAYER_TURN") {
+        setCartasMazo((prevCartasMazo) => {
+          const nuevasCartasMazo = [...prevCartasMazo];
+          const indice = ultimoEvento.payload.current_player_turn - 1;
+          if (nuevasCartasMazo[indice] !== undefined) {
+            nuevasCartasMazo[indice] -= cartasFigurasCompletadas.length;
+          }
+          return nuevasCartasMazo;
+        });
         setCartaSeleccionada(null);
         setCartasFigurasCompletadas([]);
       } else if (ultimoEvento.key === "COMPLETED_FIGURE") {
         const cartaId = ultimoEvento.payload.figure_id;
         setCartasFigurasCompletadas((prev) => [...prev, cartaId]);
+        if (cartaDesbloqueadaId.includes(cartaId)) {
+          cartaDesbloqueadaId.splice(cartaDesbloqueadaId.indexOf(cartaId), 1);
+          setBloqueado(false);
+        }
+      } else if (ultimoEvento.key === "BLOCKED_FIGURE") {
+        const cartaId = ultimoEvento.payload.figure_id;
+
+        setDatosPartida({
+          ...datosPartida,
+          lastPlayerBlockedTurn: ultimoEvento.payload.player_turn,
+        });
+
+        if (miTurno === ultimoEvento.payload.player_turn) {
+          setBloqueado(true);
+        }
+
+        setCartasBloqueadas((prev) => [...prev, cartaId]);
+      } else if (ultimoEvento.key === "UNLOCK_FIGURE") {
+        setCartaDesbloqueadaId((prev) => [
+          ...prev,
+          ultimoEvento.payload.figure_id,
+        ]);
+        cartasBloqueadas.splice(
+          cartasBloqueadas.indexOf(ultimoEvento.payload.figure_id),
+          1,
+        );
       }
     }
   }, [ultimoEvento]);
@@ -95,100 +155,134 @@ export const CartasFiguras = () => {
         ultimoEvento.key === "PLAYER_RECEIVE_SHAPE_CARD") &&
       miTurno !== 0
     ) {
-      const jugadorData = ultimoEvento.payload.find(
-        (jugador) => jugador.turn_order === miTurno,
+      ServicioFigura.repartirCartasFigura(
+        ultimoEvento,
+        miTurno,
+        cartasFiguras,
+        setCartasFiguras,
+        oponentes,
+        setOponentes,
+        cartasFigurasCompletadas,
+        bloqueado,
       );
-
-      if (jugadorData) {
-        const cartasNoUsadas = cartasFiguras.filter(
-          (carta) => !cartasFigurasCompletadas.includes(carta[0]),
-        );
-
-        const nuevasCartas = jugadorData.shape_cards;
-
-        setCartasFiguras([...cartasNoUsadas, ...nuevasCartas]);
-      } else {
-        console.log(
-          "CartasFiguras - No se encontró jugador con turn_order:",
-          miTurno,
-        );
-      }
     }
   }, [ultimoEvento, miTurno]);
 
-  const claseCarta = useCallback(
-    (cartaId) => {
-      const efectoHover =
-        " hover:cursor-pointer" +
-        " hover:shadow-[0px_0px_15px_rgba(224,138,44,1)]" +
-        " hover:scale-105";
-
-      const efectoSeleccionada =
-        " cursor-pointer" +
-        " shadow-[0px_0px_20px_rgba(100,200,44,1)]" +
-        " scale-105";
-
-      const deshabilitada = "opacity-25 pointer-events-none greyscale";
-
-      if (cartasFigurasCompletadas.includes(cartaId)) {
-        return deshabilitada;
-      }
-
-      if (!datosJugador.is_player_turn) {
-        return "";
-      }
-
-      if (usarMovimiento.cartaSeleccionada !== null) {
-        return deshabilitada;
-      }
-
-      if (cartaSeleccionada !== null) {
-        if (cartaSeleccionada === cartaId) {
-          return efectoSeleccionada;
-        } else {
-          return deshabilitada;
-        }
-      }
-
-      return efectoHover;
-    },
-    [cartaSeleccionada, usarMovimiento, datosJugador, cartasFigurasCompletadas],
+  const oponentesOrdenados = ServicioFigura.ordenarOponentes(
+    oponentes,
+    datosPartida.max_players,
+    miTurno,
   );
-
-  const seleccionarCarta = (cartaId) => {
-    if (
-      !datosJugador.is_player_turn ||
-      usarMovimiento.cartaSeleccionada !== null ||
-      cartasFigurasCompletadas.includes(cartaId)
-    ) {
-      return;
-    }
-
-    if (cartaSeleccionada !== null) {
-      if (cartaSeleccionada === cartaId) {
-        setCartaSeleccionada(null);
-      }
-    } else {
-      setCartaSeleccionada(cartaId);
-    }
-  };
 
   return (
     <div className="cartas-figuras">
       <div className="cartas-figuras-propias">
-        <div className="mazo-propio">
-          <img src={backfig} alt="back" />
-        </div>
+        {(cartasMazo[miTurno - 1] > 3 ||
+          cartasMazo[miTurno - 1] - (cartasFiguras.length || 0) > 0) && (
+          <div
+            className="mazo"
+            data-tooltip={`Mazo: ${cartasMazo[miTurno - 1] - (cartasFiguras.length || 0)}`}
+          >
+            <img src={backfig} alt="back" />
+          </div>
+        )}
         {cartasFiguras.map((carta, index) => (
           <div
             key={index}
-            className={claseCarta(carta[0])}
-            onClick={() => seleccionarCarta(carta[0])}
+            className={ServicioFigura.claseCarta(
+              carta[0],
+              cartaSeleccionada,
+              usarMovimiento.cartaSeleccionada,
+              datosJugador.is_player_turn,
+              cartasFigurasCompletadas,
+              cartasBloqueadas.includes(carta[0]),
+              habilitarAccionesUsuario,
+            )}
+            onClick={() =>
+              ServicioFigura.seleccionarCarta(
+                carta[0],
+                datosJugador.is_player_turn,
+                usarMovimiento.cartaSeleccionada,
+                cartaSeleccionada,
+                setCartaSeleccionada,
+                cartasFigurasCompletadas,
+                setEsCartaOponente,
+                false,
+                cartasBloqueadas.includes(carta[0]),
+                habilitarAccionesUsuario,
+              )
+            }
           >
-            <img src={urlMap[carta[1]]} alt={carta[1]} />
+            <img
+              src={
+                cartasBloqueadas.includes(carta[0]) ? backfig : urlMap[carta[1]]
+              }
+              alt={carta[1]}
+            />
           </div>
         ))}
+        <div className="info-jugador" title={datosJugador.player_name}>
+          <p>Jugador: {datosJugador.player_name}</p>
+        </div>
       </div>
+      {oponentesOrdenados.map((oponente, oponenteIndex) => (
+        <div
+          key={oponenteIndex}
+          className={`
+            cartas-figuras-oponente-${oponenteIndex + 1} 
+            ${oponentes.length > 1 ? "columnas" : "filas"}`}
+        >
+          {(cartasMazo[oponente.turn_order - 1] > 3 ||
+            cartasMazo[oponente.turn_order - 1] -
+              (oponente.shape_cards.length || []) >
+              0) && (
+            <div className="mazo">
+              <img src={backfig} alt="back" />
+            </div>
+          )}
+          {(oponente.shape_cards || []).map((carta, index) => (
+            <div
+              key={index}
+              className={ServicioFigura.claseCarta(
+                carta[0],
+                cartaSeleccionada,
+                usarMovimiento.cartaSeleccionada,
+                datosJugador.is_player_turn,
+                cartasFigurasCompletadas,
+                cartasBloqueadas.includes(carta[0]),
+                habilitarAccionesUsuario,
+              )}
+              onClick={() =>
+                ServicioFigura.seleccionarCarta(
+                  carta[0],
+                  datosJugador.is_player_turn,
+                  usarMovimiento.cartaSeleccionada,
+                  cartaSeleccionada,
+                  setCartaSeleccionada,
+                  cartasFigurasCompletadas,
+                  setEsCartaOponente,
+                  true,
+                  cartasBloqueadas.includes(carta[0]),
+                  habilitarAccionesUsuario,
+                )
+              }
+            >
+              <img
+                src={
+                  cartasBloqueadas.includes(carta[0])
+                    ? backfig
+                    : urlMap[carta[1]]
+                }
+                alt={carta[1]}
+              />{" "}
+              {/*dependiendo de si esta bloqueada o no mapeamos de una forma u otra*/}
+            </div>
+          ))}
+          <div className="info-jugador" title={oponente.player_name}>
+            <p>Jugador: {oponente.player_name}</p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

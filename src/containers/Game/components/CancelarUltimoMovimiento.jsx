@@ -4,11 +4,11 @@ import { ServicioMovimiento } from "../../../services/ServicioMovimiento";
 import { UsarMovimientoContext } from "../../../contexts/UsarMovimientoContext";
 import { TilesContext } from "../../../contexts/tilesContext";
 import { EventoContext } from "../../../contexts/EventoContext";
-import { FigurasContext } from "../../../contexts/FigurasContext";
 import { Alerts } from "../../../components/Alerts";
 import { useParams } from "react-router-dom";
 import { WebsocketEvents } from "../../../services/ServicioWebsocket";
 import { CompletarFiguraContext } from "../../../contexts/CompletarFiguraContext";
+import { HabilitarAccionesUsuarioContext } from "../../../contexts/HabilitarAccionesUsuarioContext";
 
 export const CancelarUltimoMovimiento = () => {
   const { match_id } = useParams();
@@ -18,9 +18,11 @@ export const CancelarUltimoMovimiento = () => {
   );
   const { ultimoEvento } = useContext(EventoContext);
   const { tiles, setTiles } = useContext(TilesContext);
-  const { deshacerFiguras } = useContext(FigurasContext);
   const { cartaSeleccionada: cartaFiguraSeleccionada } = useContext(
     CompletarFiguraContext,
+  );
+  const { habilitarAccionesUsuario } = useContext(
+    HabilitarAccionesUsuarioContext,
   );
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState("Error");
@@ -30,13 +32,12 @@ export const CancelarUltimoMovimiento = () => {
       if (ultimoEvento.key === WebsocketEvents.UNDO_PARTIAL_MOVE) {
         const { tiles: tilesAIntercambiar } = ultimoEvento.payload;
         ServicioMovimiento.swapFichas(tilesAIntercambiar, tiles, setTiles);
-        deshacerFiguras();
       }
     }
   }, [ultimoEvento]);
 
   const manejarClick = () => {
-    if (datosJugador.is_player_turn) {
+    if (datosJugador.is_player_turn && habilitarAccionesUsuario) {
       ServicioMovimiento.deshacerMovimiento(
         match_id,
         datosJugador.player_id,
@@ -50,6 +51,7 @@ export const CancelarUltimoMovimiento = () => {
   };
 
   const puedeCancelar =
+    habilitarAccionesUsuario &&
     datosJugador.is_player_turn &&
     !cartaFiguraSeleccionada &&
     usarMovimiento.cartasUsadas.length - usarMovimiento.cartasCompletadas > 0;

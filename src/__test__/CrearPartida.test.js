@@ -12,6 +12,8 @@ import { CrearPartida } from "../containers/App/components/CrearPartida.jsx";
 import {
   CrearPartidaMock,
   CrearPartidaMockError,
+  CrearPartidaMockErrorConClave,
+  CrearPartidaMockConClave,
 } from "../__mocks__/CrearPartidaForm.mock.js";
 import * as reactRouterDom from "react-router-dom";
 import { BACKEND_URL } from "../variablesConfiguracion.js";
@@ -23,7 +25,6 @@ import {
   DatosPartidaContext,
   DatosPartidaProvider,
 } from "../contexts/DatosPartidaContext.jsx";
-import { set } from "react-hook-form";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -217,7 +218,7 @@ describe("CrearPartida", () => {
     const nombreJugadorInput = screen.getByLabelText("nombreJugador");
     const nombreSalaInput = screen.getByLabelText("nombreSala");
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
-    const submitButton = screen.getByText("Crear sala de partida");
+    const submitButton = screen.getByText("Crear Sala de Partida");
 
     expect(nombreJugadorInput).toHaveValue("");
     expect(nombreSalaInput).toHaveValue("");
@@ -242,29 +243,32 @@ describe("CrearPartida", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
-        `${BACKEND_URL}/matches`,
-        expect.objectContaining({
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            lobby_name: CrearPartidaMock.nombreSala,
-            player_name: CrearPartidaMock.nombreJugador,
-            max_players: CrearPartidaMock.cantidadJugadores,
-            is_public: true,
-            token: "asdfasdf",
+      setTimeout(() => {
+        expect(fetch).toHaveBeenCalledWith(
+          `${BACKEND_URL}/matches`,
+          expect.objectContaining({
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              lobby_name: CrearPartidaMock.nombreSala,
+              player_name: CrearPartidaMock.nombreJugador,
+              max_players: CrearPartidaMock.cantidadJugadores,
+              is_public: true,
+              pass: "",
+              token: "asdfasdf",
+            }),
           }),
-        }),
-      );
+        );
+      }, 1500);
     });
 
     await waitFor(() => {
       setTimeout(() => {
         expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
         expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
-      }, 2000);
+      }, 1500);
     });
   });
 
@@ -288,7 +292,7 @@ describe("CrearPartida", () => {
     const nombreJugadorInput = screen.getByLabelText("nombreJugador");
     const nombreSalaInput = screen.getByLabelText("nombreSala");
     const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
-    const submitButton = screen.getByText("Crear sala de partida");
+    const submitButton = screen.getByText("Crear Sala de Partida");
 
     fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
 
@@ -302,10 +306,92 @@ describe("CrearPartida", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(mockSetDatosJugador).toHaveBeenCalledWith({
-        is_owner: true,
-        player_id: 2,
-      });
+      setTimeout(() => {
+        expect(mockSetDatosJugador).toHaveBeenCalledWith({
+          is_owner: true,
+          player_id: 2,
+          player_name: CrearPartidaMock.nombreJugador,
+        });
+      }, 1500);
+    });
+  });
+  test("Fetch se ejecuta correctamente en partidas con clave", async () => {
+    render(
+      <reactRouterDom.MemoryRouter>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <CrearPartida />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
+      </reactRouterDom.MemoryRouter>,
+    );
+
+    const openButton = screen.getByText("Crear sala");
+    fireEvent.click(openButton);
+
+    const nombreJugadorInput = screen.getByLabelText("nombreJugador");
+    const nombreSalaInput = screen.getByLabelText("nombreSala");
+    const cantidadJugadoresInput = screen.getByLabelText("cantidadJugadores");
+    const claveInput = screen.getByLabelText("clave");
+    const submitButton = screen.getByText("Crear Sala de Partida");
+
+    expect(nombreJugadorInput).toHaveValue("");
+    expect(nombreSalaInput).toHaveValue("");
+    expect(cantidadJugadoresInput).toHaveValue(2);
+    fireEvent.change(cantidadJugadoresInput, { target: { value: 0 } });
+    expect(claveInput).toHaveValue("");
+
+    await userEvent.type(
+      nombreJugadorInput,
+      CrearPartidaMockConClave.nombreJugador,
+    );
+    await userEvent.type(nombreSalaInput, CrearPartidaMockConClave.nombreSala);
+    await userEvent.type(
+      cantidadJugadoresInput,
+      CrearPartidaMockConClave.cantidadJugadores.toString(),
+    );
+    await userEvent.type(claveInput, CrearPartidaMockConClave.clave);
+
+    await waitFor(() => {
+      expect(nombreJugadorInput).toHaveValue(
+        CrearPartidaMockConClave.nombreJugador,
+      );
+      expect(nombreSalaInput).toHaveValue(CrearPartidaMockConClave.nombreSala);
+      expect(cantidadJugadoresInput).toHaveValue(
+        CrearPartidaMockConClave.cantidadJugadores,
+      );
+      expect(claveInput).toHaveValue(CrearPartidaMockConClave.clave);
+    });
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      setTimeout(() => {
+        expect(fetch).toHaveBeenCalledWith(
+          `${BACKEND_URL}/matches`,
+          expect.objectContaining({
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              lobby_name: CrearPartidaMock.nombreSala,
+              player_name: CrearPartidaMock.nombreJugador,
+              max_players: CrearPartidaMock.cantidadJugadores,
+              is_public: true,
+              pass: "123456",
+              token: "asdfasdf",
+            }),
+          }),
+        );
+      }, 1500);
+    });
+
+    await waitFor(() => {
+      setTimeout(() => {
+        expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
+        expect(mockedUsedNavigate).toHaveBeenCalledWith("/lobby/1/player/2");
+      }, 1500);
     });
   });
 });

@@ -14,6 +14,7 @@ import {
   DatosJugadorContext,
   DatosJugadorProvider,
 } from "../contexts/DatosJugadorContext";
+import { DatosPartidaProvider } from "../contexts/DatosPartidaContext";
 import { BACKEND_URL } from "../variablesConfiguracion";
 import { MemoryRouter } from "react-router-dom";
 
@@ -47,17 +48,21 @@ describe("UnirsePartida", () => {
 
   it("deberia renderizar correctamente", () => {
     render(
-      <DatosJugadorProvider>
-        <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>,
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <UnirsePartida idPartida={1} />
+        </DatosJugadorProvider>
+      </DatosPartidaProvider>,
     );
   });
 
   it("deberia llamar a showModal se clickea el boton", () => {
     render(
-      <DatosJugadorProvider>
-        <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>,
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <UnirsePartida idPartida={1} />
+        </DatosJugadorProvider>
+      </DatosPartidaProvider>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -67,9 +72,11 @@ describe("UnirsePartida", () => {
 
   it("deberia llamar a close cuando el boton de cerrar se clickea", () => {
     render(
-      <DatosJugadorProvider>
-        <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>,
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <UnirsePartida idPartida={1} />
+        </DatosJugadorProvider>
+      </DatosPartidaProvider>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -80,9 +87,11 @@ describe("UnirsePartida", () => {
 
   it("deberia limpiar el input del modal cuando se cierra", () => {
     render(
-      <DatosJugadorProvider>
-        <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>,
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <UnirsePartida idPartida={1} />
+        </DatosJugadorProvider>
+      </DatosPartidaProvider>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -99,9 +108,11 @@ describe("UnirsePartida", () => {
 
   it("debería mostrar un mensaje de error cuando no se ingresa un nombre de usuario y se hace click en unirse", () => {
     render(
-      <DatosJugadorProvider>
-        <UnirsePartida idPartida={1} />
-      </DatosJugadorProvider>,
+      <DatosPartidaProvider>
+        <DatosJugadorProvider>
+          <UnirsePartida idPartida={1} />
+        </DatosJugadorProvider>
+      </DatosPartidaProvider>,
     );
 
     fireEvent.click(screen.getByText("Unirse a partida"));
@@ -133,9 +144,11 @@ describe("UnirsePartida", () => {
 
     render(
       <MemoryRouter>
-        <DatosJugadorProvider>
-          <UnirsePartida idPartida={1} />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <UnirsePartida idPartida={1} />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </MemoryRouter>,
     );
 
@@ -164,9 +177,11 @@ describe("UnirsePartida", () => {
 
     render(
       <MemoryRouter>
-        <DatosJugadorProvider>
-          <UnirsePartida idPartida={1} />
-        </DatosJugadorProvider>
+        <DatosPartidaProvider>
+          <DatosJugadorProvider>
+            <UnirsePartida idPartida={1} />
+          </DatosJugadorProvider>
+        </DatosPartidaProvider>
       </MemoryRouter>,
     );
 
@@ -206,11 +221,13 @@ describe("UnirsePartida", () => {
     const mockSetDatosJugador = jest.fn();
     render(
       <MemoryRouter>
-        <DatosJugadorContext.Provider
-          value={{ datosJugador: {}, setDatosJugador: mockSetDatosJugador }}
-        >
-          <UnirsePartida idPartida={1} />
-        </DatosJugadorContext.Provider>
+        <DatosPartidaProvider>
+          <DatosJugadorContext.Provider
+            value={{ datosJugador: {}, setDatosJugador: mockSetDatosJugador }}
+          >
+            <UnirsePartida idPartida={1} />
+          </DatosJugadorContext.Provider>
+        </DatosPartidaProvider>
       </MemoryRouter>,
     );
 
@@ -226,6 +243,7 @@ describe("UnirsePartida", () => {
       expect(mockSetDatosJugador).toHaveBeenCalledWith({
         is_owner: false,
         player_id: 2,
+        player_name: "test",
       });
     });
   });
